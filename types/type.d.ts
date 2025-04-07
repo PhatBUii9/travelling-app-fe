@@ -111,7 +111,11 @@ declare interface InputFieldProps extends TextInputProps {
 
 declare interface IFormInputs {
   username: string;
-  password: string;
+  password?: string;
+  email?: string;
+  phoneNumber?: string;
+  dob?: string;
+  confirmPassword?: string;
 }
 
 declare interface PaymentProps {

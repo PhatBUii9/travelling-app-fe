@@ -2,38 +2,135 @@ import { useForm, Controller } from "react-hook-form";
 import { View, Text, TextInput, Button, Alert, ScrollView } from "react-native";
 import CustomButton from "@/components/CustomButton";
 import InputField from "@/components/InputField";
-import { icons, images } from "@/constant";
 import { Link, useRouter } from "expo-router";
-
-interface IFormInputs {
-  username: string;
-}
+import { SafeAreaView } from "react-native-safe-area-context";
+import validationRules from "@/utils/validationRules";
+import { IFormInputs } from "@/types/type";
 
 const SignUp = () => {
   const {
     control,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<IFormInputs>();
 
-  const submit = (data: IFormInputs) => {
-    console.log(data);
-    Alert.alert(JSON.stringify(data));
+  const pwd = watch("password");
+  const eml = watch("email");
+  const phn = watch("phoneNumber");
+
+  const onRegisterPressed = (data: IFormInputs) => {
+    if (!eml && !phn) {
+      Alert.alert("Alert", "Email or phone number is required!");
+    } else {
+      console.log(data);
+      //navigation.navigate("OTPOptions");
+    }
+  };
+  const onSignInPressed = () => {
+    //navigation.navigate("SignIn");
+  };
+
+  const onTermsOfUsePressed = () => {
+    console.warn("Terms of Use pressed");
+  };
+
+  const onPrivacyPolicyPressed = () => {
+    console.warn("Privacy Policy pressed");
   };
 
   const router = useRouter();
 
   return (
-    <View className="flex-1 items-center justify-center ">
-      <Text className="text-3xl mb-5">Sign Up Screen</Text>
-      <View className="mt-8 flex-row justify-center items-">
-        <Text className="text-gerenal-100 mr-2">Back to sign in</Text>{" "}
-        <Link href="/sign-in" className="text-black font-bold">
-          Sign up{" "}
-        </Link>
-        //{" "}
-      </View>
-    </View>
+    <SafeAreaView className="flex-1">
+      <ScrollView className="flex-1 bg-white-200">
+        <View className="flex-1 items-center justify-center mt-[10%]">
+          <Text className="text-4xl font-JakartaSemiBold">Register</Text>
+        </View>
+        <View className="flex-1 px-5 mt-5">
+          {/* Username */}{" "}
+          <InputField
+            name="username"
+            control={control}
+            placeholder="Username"
+            rules={validationRules.registerUsername}
+            label="Username"
+          />
+          {/* Email */}{" "}
+          <InputField
+            name="email"
+            control={control}
+            placeholder="Email"
+            rules={validationRules.email}
+            label="Email"
+          />
+          {/* Phone Number */}{" "}
+          <InputField
+            name="phoneNumber"
+            control={control}
+            placeholder="Phone Number"
+            rules={validationRules.phoneNumber}
+            label="Phone Number"
+          />
+          {/* Date of Birth */}{" "}
+          <InputField
+            name="dob"
+            control={control}
+            placeholder="Date of Birth"
+            rules={validationRules.dob}
+            label="Date of Birth"
+          />
+          {/* Password */}{" "}
+          <InputField
+            name="password"
+            control={control}
+            placeholder="Password"
+            rules={validationRules.password}
+            secureTextEntry={true}
+            label="Password"
+          />
+          {/* Confirm Password */}{" "}
+          <InputField
+            name="confirmPassword"
+            control={control}
+            placeholder="Confirm Password"
+            secureTextEntry={true}
+            rules={{
+              required: "Confirm Password is required",
+              validate: (value: string | undefined) =>
+                value === pwd || "Passwords do not match",
+            }}
+            label="Confirm Password"
+          />
+          {/* Register Button */}{" "}
+          <CustomButton
+            title="Register"
+            onPress={handleSubmit(onRegisterPressed)}
+            className="mt-6"
+            bgVariant="default"
+            textVariant="default"
+          />{" "}
+          <Text className="mt-3 text-gray-500">
+            By registering, you confirm that you accept our{" "}
+            <Text className="text-[#FDB075]" onPress={onTermsOfUsePressed}>
+              Term of Use
+            </Text>{" "}
+            and{" "}
+            <Text className="text-[#FDB075]" onPress={onPrivacyPolicyPressed}>
+              Privacy Policy
+            </Text>
+          </Text>
+          {/* Signin Link */}{" "}
+          <View className=" flex-row justify-center items-center mt-5">
+            <Text className="text-gerenal-100 mr-2 ">Have an account?</Text>{" "}
+            <Link href="/sign-in" className="text-black font-bold">
+              Sign in{" "}
+            </Link>
+            //{" "}
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
