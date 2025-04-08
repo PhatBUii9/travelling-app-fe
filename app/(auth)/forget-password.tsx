@@ -32,6 +32,7 @@ const ForgetPassword = () => {
           </Text>
         </View>
         <View className="px-5 mt-5">
+          {/* Email */}
           <InputField
             name="email"
             control={control}
@@ -39,6 +40,7 @@ const ForgetPassword = () => {
             rules={{ required: "Email address is required" }}
             label=""
           />
+          {/* Send button */}
           <CustomButton
             title="Send"
             onPress={handleSubmit(onSendPressed)}
@@ -46,7 +48,7 @@ const ForgetPassword = () => {
             textVariant="default"
           />{" "}
         </View>
-        {/* Signup Link */}{" "}
+        {/* Signup link */}{" "}
         <View className="mt-8 flex-row justify-center items-">
           <Link href="/sign-in" className="text-black font-bold">
             Back to Sign in{" "}

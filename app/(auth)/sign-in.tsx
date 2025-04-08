@@ -43,6 +43,7 @@ const SignIn = () => {
             <Text className="text-4xl font-JakartaSemiBold">Welcome 👋</Text>
           </View>
           <View className="flex-1 px-5 mt-5">
+            {/* Username */}
             <InputField
               name="username"
               control={control}
@@ -50,6 +51,7 @@ const SignIn = () => {
               rules={validationRules.username}
               label="Email"
             />
+            {/* Password */}
             <InputField
               name="password"
               control={control}
@@ -63,6 +65,7 @@ const SignIn = () => {
                 Forget Password?{" "}
               </Link>{" "}
             </View>
+            {/* Sign In button */}
             <CustomButton
               title="Sign In"
               onPress={handleSubmit(onSignInPress)}

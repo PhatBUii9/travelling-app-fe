@@ -15,6 +15,7 @@ const SocialButtons = () => {
 
   return (
     <View className="flex-1">
+      {/* Google */}
       <CustomButton
         bgVariant="google"
         textVariant="primary"
@@ -29,6 +30,7 @@ const SocialButtons = () => {
           />
         )}
       />
+      {/* Facebook */}
       <CustomButton
         bgVariant="facebook"
         textVariant="facebook"
@@ -43,6 +45,7 @@ const SocialButtons = () => {
           />
         )}
       />
+      {/* Apple */}
       {Platform.OS === "ios" && (
         <CustomButton
           bgVariant="apple"

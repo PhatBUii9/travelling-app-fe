@@ -58,6 +58,7 @@ const NewPassword = () => {
             }}
             label="Confirm Password"
           />
+          {/* Send button */}
           <CustomButton
             title="Send"
             onPress={handleSubmit(onSubmitPressed)}

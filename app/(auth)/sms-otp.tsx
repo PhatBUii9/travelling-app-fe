@@ -40,6 +40,7 @@ const SMSOTP = () => {
           </Text>
         </View>
         <View className="px-5 mt-5">
+          {/* Confirmation code */}
           <InputField
             name="confirmationCode"
             control={control}
@@ -47,12 +48,14 @@ const SMSOTP = () => {
             rules={{ required: "Confirmation code is required" }}
             label=""
           />
+          {/* Confirm button */}
           <CustomButton
             title="Confirm"
             onPress={handleSubmit(onConfirmPressed)}
             bgVariant="default"
             textVariant="default"
           />{" "}
+          {/* Resend button */}
           <CustomButton
             title="Resend Code"
             onPress={handleSubmit(onResendPressed)}

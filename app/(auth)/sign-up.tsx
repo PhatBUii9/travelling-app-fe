@@ -37,10 +37,6 @@ const SignUp = () => {
     }
   };
 
-  const onSignInPressed = () => {
-    // navigation.navigate("SignIn");
-  };
-
   const onTermsOfUsePressed = () => {
     console.warn("Terms of Use pressed");
   };
@@ -131,6 +127,7 @@ const SignUp = () => {
               bgVariant="default"
               textVariant="default"
             />
+            {/* Terms and Privacy Policy */}
             <Text className="mt-3 text-gray-500">
               By registering, you confirm that you accept our{" "}
               <Text className="text-[#FDB075]" onPress={onTermsOfUsePressed}>

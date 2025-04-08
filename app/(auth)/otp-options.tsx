@@ -29,12 +29,14 @@ const OTPOptions = () => {
           </Text>
         </View>
         <View className="px-5 mt-5">
+          {/* Email */}
           <CustomButton
             title="Email"
             onPress={handleSubmit(onEmailPressed)}
             bgVariant="default"
             textVariant="default"
           />{" "}
+          {/* SMS */}
           <CustomButton
             title="SMS"
             onPress={handleSubmit(onSMSPressed)}
