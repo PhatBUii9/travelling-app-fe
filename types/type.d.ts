@@ -166,3 +166,21 @@ declare interface DriverCardProps {
   selected: number;
   setSelected: () => void;
 }
+
+interface ValidationRuleObject {
+  required?: boolean | string;
+  minLength?: { value: number; message: string };
+  maxLength?: { value: number; message: string };
+  pattern?: { value: RegExp; message: string };
+  validate?: (value: any) => boolean | string;
+}
+
+interface ValidationRules {
+  username: ValidationRuleObject;
+  registerUsername: ValidationRuleObject;
+  dob: ValidationRuleObject;
+  email: ValidationRuleObject;
+  phoneNumber: ValidationRuleObject;
+  password: ValidationRuleObject;
+  confirmPassword: (password: string) => ValidationRuleObject;
+}
