@@ -1,5 +1,6 @@
 import { TextInputProps, TouchableOpacityProps } from "react-native";
 
+// Driver and Ride Types
 declare interface Driver {
   driver_id: number;
   first_name: string;
@@ -10,6 +11,27 @@ declare interface Driver {
   rating: number;
 }
 
+declare interface Ride {
+  origin_address: string;
+  destination_address: string;
+  origin_latitude: number;
+  origin_longitude: number;
+  destination_latitude: number;
+  destination_longitude: number;
+  ride_time: number;
+  fare_price: number;
+  payment_status: string;
+  driver_id: number;
+  user_email: string;
+  created_at: string;
+  driver: {
+    first_name: string;
+    last_name: string;
+    car_seats: number;
+  };
+}
+
+// Marker and Map Props
 declare interface MarkerData {
   latitude: number;
   longitude: number;
@@ -33,26 +55,7 @@ declare interface MapProps {
   onMapReady?: () => void;
 }
 
-declare interface Ride {
-  origin_address: string;
-  destination_address: string;
-  origin_latitude: number;
-  origin_longitude: number;
-  destination_latitude: number;
-  destination_longitude: number;
-  ride_time: number;
-  fare_price: number;
-  payment_status: string;
-  driver_id: number;
-  user_email: string;
-  created_at: string;
-  driver: {
-    first_name: string;
-    last_name: string;
-    car_seats: number;
-  };
-}
-
+// Button & Input Props
 declare interface ButtonProps extends TouchableOpacityProps {
   title: string;
   bgVariant?:
@@ -78,6 +81,21 @@ declare interface ButtonProps extends TouchableOpacityProps {
   className?: string;
 }
 
+declare interface InputFieldProps extends TextInputProps {
+  label: string;
+  icon?: any;
+  secureTextEntry?: boolean;
+  labelStyle?: string;
+  containerStyle?: string;
+  inputStyle?: string;
+  iconStyle?: string;
+  className?: string;
+  control: Control<T>;
+  name: string;
+  rules?: object;
+  defaultValue?: string;
+}
+
 declare interface GoogleInputProps {
   icon?: string;
   initialLocation?: string;
@@ -94,38 +112,31 @@ declare interface GoogleInputProps {
   }) => void;
 }
 
-declare interface InputFieldProps extends TextInputProps {
-  label: string;
-  icon?: any;
-  secureTextEntry?: boolean;
-  labelStyle?: string;
-  containerStyle?: string;
-  inputStyle?: string;
-  iconStyle?: string;
-  className?: string;
-  control: Control<T>;
-  name: string;
-  rules?: object;
-  defaultValue?: string;
-}
+// User & OTP Related Types
+declare type EmailEnum = "EMAIL_OTP_REGISTER" | "EMAIL_OTP_LOGIN";
+declare type OTPVerificationMethod = "EMAIL_OTP" | "SMS_OTP";
 
 declare interface IFormInputs {
-  username: string;
+  username?: string;
   password?: string;
   email?: string;
   phoneNumber?: string;
   dob?: string;
   confirmPassword?: string;
+  otp?: string;
+  otpVerificationMethod?: OTPVerificationMethod;
+  emailEnum?: EmailEnum;
+  smsEnum?: EmailEnum;
 }
 
-declare interface PaymentProps {
-  fullName: string;
+declare interface EmailOTPRequest {
+  userName: string;
   email: string;
-  amount: string;
-  driverId: number;
-  rideTime: number;
+  otpVerificationMethod: "EMAIL_OTP";
+  emailEnum: string;
 }
 
+// Stores
 declare interface LocationStore {
   userLatitude: number | null;
   userLongitude: number | null;
@@ -161,12 +172,22 @@ declare interface DriverStore {
   clearSelectedDriver: () => void;
 }
 
+// Props
 declare interface DriverCardProps {
   item: MarkerData;
   selected: number;
   setSelected: () => void;
 }
 
+declare interface PaymentProps {
+  fullName: string;
+  email: string;
+  amount: string;
+  driverId: number;
+  rideTime: number;
+}
+
+// Validation Rules
 interface ValidationRuleObject {
   required?: boolean | string;
   minLength?: { value: number; message: string };

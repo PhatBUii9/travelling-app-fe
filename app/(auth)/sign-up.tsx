@@ -1,4 +1,4 @@
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import {
   View,
   Text,
@@ -13,6 +13,10 @@ import { Link, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import validationRules from "@/utils/validationRules";
 import { IFormInputs } from "@/types/type";
+import {
+  checkUserDetail,
+  checkUsernameExists,
+} from "@/services/api/authService";
 
 const SignUp = () => {
   const router = useRouter();
@@ -22,27 +26,45 @@ const SignUp = () => {
     handleSubmit,
     formState: { errors },
     watch,
+    reset,
   } = useForm<IFormInputs>();
 
   const pwd = watch("password");
-  const eml = watch("email");
-  const phn = watch("phoneNumber");
+  const email = watch("email");
+  const phone = watch("phoneNumber");
 
-  const onRegisterPressed = (data: IFormInputs) => {
-    if (!eml && !phn) {
-      Alert.alert("Alert", "Email or phone number is required!");
-    } else {
+  const onRegisterPressed = async (data: IFormInputs) => {
+    // if (!data.email && !data.phoneNumber) {
+    //   Alert.alert("Validation Error", "Email or phone number is required.");
+    //   return;
+    // }
+
+    try {
       console.log(data);
-      router.replace("/(auth)/otp-options");
+      const checkDetail = await checkUserDetail(data);
+      console.log("fetching checkUserDetail...");
+      if (!checkDetail) {
+        Alert.alert("Register Error", "Registration Failed.");
+        return;
+      }
+
+      Alert.alert("✅ User Detail Valid", "Proceeding to next step...");
+
+      // TODO: Submit register request when backend is ready
+      router.push({
+        pathname: "/(auth)/otp-options",
+        params: {
+          userName: data.username,
+          email: data.email,
+          phoneNumber: data.phoneNumber,
+          dob: data.dob,
+          password: data.password,
+        },
+      });
+    } catch (error: any) {
+      console.log("❌ User Deatil Check Error:", error);
+      Alert.alert("Error", error?.message || "Something went wrong.");
     }
-  };
-
-  const onTermsOfUsePressed = () => {
-    console.warn("Terms of Use pressed");
-  };
-
-  const onPrivacyPolicyPressed = () => {
-    console.warn("Privacy Policy pressed");
   };
 
   return (
@@ -61,11 +83,14 @@ const SignUp = () => {
               Press this text to go to next screen
             </Link>
           </View>
+
+          {/* Title */}
           <View className="flex-1 items-center justify-center mt-[10%]">
             <Text className="text-4xl font-JakartaSemiBold">Register</Text>
           </View>
+
+          {/* Input Fields */}
           <View className="flex-1 px-5 mt-5">
-            {/* Username */}
             <InputField
               name="username"
               control={control}
@@ -73,7 +98,6 @@ const SignUp = () => {
               rules={validationRules.registerUsername}
               label="Username"
             />
-            {/* Email */}
             <InputField
               name="email"
               control={control}
@@ -81,7 +105,6 @@ const SignUp = () => {
               rules={validationRules.email}
               label="Email"
             />
-            {/* Phone Number */}
             <InputField
               name="phoneNumber"
               control={control}
@@ -89,7 +112,6 @@ const SignUp = () => {
               rules={validationRules.phoneNumber}
               label="Phone Number"
             />
-            {/* Date of Birth */}
             <InputField
               name="dob"
               control={control}
@@ -97,28 +119,27 @@ const SignUp = () => {
               rules={validationRules.dob}
               label="Date of Birth"
             />
-            {/* Password */}
             <InputField
               name="password"
               control={control}
               placeholder="Password"
               rules={validationRules.password}
-              secureTextEntry={true}
+              secureTextEntry
               label="Password"
             />
-            {/* Confirm Password */}
             <InputField
               name="confirmPassword"
               control={control}
               placeholder="Confirm Password"
-              secureTextEntry={true}
+              secureTextEntry
               rules={{
                 required: "Confirm Password is required",
-                validate: (value: string | undefined) =>
+                validate: (value: string) =>
                   value === pwd || "Passwords do not match",
               }}
               label="Confirm Password"
             />
+
             {/* Register Button */}
             <CustomButton
               title="Register"
@@ -127,18 +148,15 @@ const SignUp = () => {
               bgVariant="default"
               textVariant="default"
             />
-            {/* Terms and Privacy Policy */}
+
+            {/* Terms and Privacy */}
             <Text className="mt-3 text-gray-500">
               By registering, you confirm that you accept our{" "}
-              <Text className="text-[#FDB075]" onPress={onTermsOfUsePressed}>
-                Term of Use
-              </Text>{" "}
-              and{" "}
-              <Text className="text-[#FDB075]" onPress={onPrivacyPolicyPressed}>
-                Privacy Policy
-              </Text>
+              <Text className="text-[#FDB075]">Terms of Use</Text> and{" "}
+              <Text className="text-[#FDB075]">Privacy Policy</Text>
             </Text>
-            {/* Signin Link */}
+
+            {/* Sign-in Link */}
             <View className="flex-row justify-center items-center mt-5">
               <Text className="mr-2">Have an account?</Text>{" "}
               <Link href="/sign-in" className="text-black font-bold">

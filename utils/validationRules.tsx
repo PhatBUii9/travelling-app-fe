@@ -58,7 +58,7 @@ const validationRules: ValidationRules = {
     pattern: {
       value: PHONE_VN_PATTERN,
       message:
-        "Phone numbers must start with either +84, 84, or 0 (03, 05, 07, 08, 09)",
+        "Phone number must start with 0, 84, or +84, followed by 3, 5, 7, 8, or 9, and contain 7 to 8 digits",
     },
   },
   password: {

@@ -2,7 +2,7 @@ import { useForm, Controller } from "react-hook-form";
 import { View, Text, ScrollView } from "react-native";
 import CustomButton from "@/components/CustomButton";
 import InputField from "@/components/InputField";
-import { Link, useRouter } from "expo-router";
+import { Link, useRouter, useLocalSearchParams } from "expo-router";
 import { IFormInputs } from "@/types/type";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -13,7 +13,17 @@ const EmailOTP = () => {
     formState: { errors },
   } = useForm<IFormInputs>();
 
-  const onConfirmPressed = (data: IFormInputs) => {
+  const {
+    userName,
+    email,
+    phoneNumber,
+    otpVerificationMethod,
+    otp,
+    smsEnum,
+    emailEnum,
+  } = useLocalSearchParams();
+
+  const onConfirmPressed = async (data: IFormInputs) => {
     console.log(data);
     router.replace("/(auth)/sign-in");
   };

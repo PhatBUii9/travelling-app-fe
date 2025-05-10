@@ -8,7 +8,14 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.Travelling-Front-End"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "developer": {
+      "sourceMaps": true
     },
     "android": {
       "adaptiveIcon": {
