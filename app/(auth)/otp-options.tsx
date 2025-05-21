@@ -3,34 +3,42 @@ import CustomButton from "@/components/CustomButton";
 import { Link, useRouter, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { sendEmailOTP } from "@/services/api/authService";
-import { EmailOTPRequest } from "@/types/type";
+import { EmailOTPRequest, PhoneOTPRequest } from "@/types/type";
+import { useLoading } from "@/contexts/LoadingContext";
+import { hide } from "expo-splash-screen";
+import { ROUTES } from "@/constant/routes";
+import { useRegistration } from "@/contexts/RegistrationContext";
+import { useEffect } from "react";
 
 const OTPOptions = () => {
   const router = useRouter();
 
-  const { userName, email, phoneNumber, dob, password } = useLocalSearchParams<{
-    userName: string;
-    email?: string;
-    phoneNumber?: string;
-    dob?: string;
-    password?: string;
-  }>();
+  const { showLoading, hideLoading } = useLoading();
+
+  const { data, setData } = useRegistration();
 
   const onEmailPressed = async () => {
     try {
-      if (!email) {
+      if (!data || !data.username) {
+        Alert.alert("Error", "Registration data missing—please sign up again.");
+        return;
+      }
+      if (!data.email) {
         Alert.alert("Validation Error", "Email is required to send OTP");
         return;
       }
 
       console.log("📨 Sending OTP via email...");
+      showLoading();
 
       const payload: EmailOTPRequest = {
-        userName: userName,
+        username: data?.username,
         otpVerificationMethod: "EMAIL_OTP",
         emailEnum: "EMAIL_OTP_REGISTER",
-        email,
+        email: data.email,
       };
+
+      console.log(payload);
 
       const isSendingOTP = await sendEmailOTP(payload);
 
@@ -41,42 +49,55 @@ const OTPOptions = () => {
 
       Alert.alert("✅ OTP Sent", "Proceeding to next step...");
 
-      router.push({
-        pathname: "/(auth)/email-otp",
-        params: {
-          otpVerificationMethod: "EMAIL_OTP",
-          userName,
-          email,
-          phoneNumber,
-          dob,
-          password,
-          emailEnum: "EMAIL_OTP_REGISTER",
-        },
+      setData({
+        ...data,
+        otpVerificationMethod: "EMAIL_OTP",
+        emailEnum: "EMAIL_OTP_REGISTER",
       });
+      router.push(ROUTES.AUTH.EMAIL_OTP);
     } catch (error: any) {
       console.log("❌ Sending OTP Error:", error);
       Alert.alert("Error", error?.message || "Something went wrong.");
+    } finally {
+      hideLoading();
     }
   };
 
-  const onSMSPressed = () => {
-    if (!phoneNumber) {
-      Alert.alert("Validation Error", "Phone number is required to send OTP");
+  const onSMSPressed = async () => {
+    if (!data || !data.username) {
+      Alert.alert("Error", "Registration data missing—please sign up again.");
+      return;
+    }
+    if (!data.phoneNumber) {
+      Alert.alert("Validation Error", "Email is required to send OTP");
       return;
     }
 
-    router.push({
-      pathname: "/(auth)/sms-otp",
-      params: {
-        otpVerificationMethod: "SMS_OTP",
-        userName,
-        email,
-        phoneNumber,
-        dob,
-        password,
-        smsEnum: "SMS_OTP_REGISTER",
-      },
+    console.log("📨 Sending OTP via email...");
+    showLoading();
+
+    const payload: PhoneOTPRequest = {
+      username: data.username,
+      otpVerificationMethod: "PHONE_OTP",
+      phoneEnum: "PHONE_OTP_REGISTER",
+      phoneNumber: data.phoneNumber,
+    };
+
+    // const isSendingOTP = await sendEmailOTP(payload);
+
+    // if (!isSendingOTP) {
+    //   Alert.alert("Sending OTP Error", "Sending OTP Failed.");
+    //   return;
+    // }
+
+    // Alert.alert("✅ OTP Sent", "Proceeding to next step...");
+
+    setData({
+      ...data,
+      otpVerificationMethod: "EMAIL_OTP",
+      emailEnum: "EMAIL_OTP_REGISTER",
     });
+    router.push(ROUTES.AUTH.EMAIL_OTP);
   };
 
   return (
@@ -89,23 +110,23 @@ const OTPOptions = () => {
         </View>
 
         <View className="px-5 mt-5">
-          {email ? (
+          {data?.email ? (
             <CustomButton
               title="Email"
               onPress={onEmailPressed}
               bgVariant="default"
               textVariant="default"
-              disabled={!email}
+              disabled={!data?.email}
             />
           ) : null}
 
-          {phoneNumber ? (
+          {data?.phoneNumber ? (
             <CustomButton
               title="SMS"
               onPress={onSMSPressed}
               bgVariant="default"
               textVariant="default"
-              disabled={!phoneNumber}
+              disabled={!data?.phoneNumber}
             />
           ) : null}
 

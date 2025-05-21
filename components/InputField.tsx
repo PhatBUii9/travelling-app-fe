@@ -1,8 +1,6 @@
-import { InputFieldProps } from "@/types/type";
 import React from "react";
 import { Controller } from "react-hook-form";
 import {
-  KeyboardAvoidingView,
   View,
   TouchableWithoutFeedback,
   Text,
@@ -11,81 +9,68 @@ import {
   Platform,
   Keyboard,
 } from "react-native";
+import { InputFieldProps } from "@/types/type";
 
-const InputField = ({
+const InputField: React.FC<InputFieldProps> = ({
   control,
   name,
   rules = {},
   placeholder,
   label,
-  labelStyle,
+  labelStyle = "",
   icon,
   secureTextEntry = false,
-  containerStyle,
-  inputStyle,
-  iconStyle,
-  className,
-  ...Props
-}: InputFieldProps) => {
-  return (
-    <Controller
-      control={control}
-      name={name}
-      rules={rules}
-      defaultValue=""
-      render={({
-        field: { value, onChange, onBlur },
-        fieldState: { error },
-      }) => {
-        return (
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
+  containerStyle = "",
+  inputStyle = "",
+  iconStyle = "",
+  className = "",
+  ...props
+}) => (
+  <Controller
+    control={control}
+    name={name}
+    rules={rules}
+    defaultValue=""
+    render={({ field: { value, onChange, onBlur }, fieldState: { error } }) => (
+      <View className={`my-2 w-full ${className}`}>
+        {label && (
+          <Text
+            className={`text-black text-xl font-JakartaSemiBold mb-3 ${labelStyle}`}
           >
-            <>
-              <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View className="my-2 w-full">
-                  {label && (
-                    <Text
-                      className={`text-black text-xl font-JakartaSemiBold mb-3 ${labelStyle}`}
-                    >
-                      {label}
-                    </Text>
-                  )}
-                  <View
-                    className={`bg-white w-full border ${
-                      error ? "border-red-500" : "border-gray-300"
-                    } rounded-xl p-2 my-2 ${containerStyle}`}
-                  >
-                    {icon && (
-                      <Image
-                        source={icon}
-                        className={`w-6 h-6 ml-4 ${iconStyle}`}
-                      />
-                    )}
-                    <TextInput
-                      className={`text-black h-50 p-4 font-JakartaSemiBold text-[15px] flex-1 ${inputStyle} text-left`}
-                      secureTextEntry={secureTextEntry}
-                      value={value}
-                      onChangeText={onChange}
-                      onBlur={onBlur}
-                      placeholder={placeholder}
-                      {...Props}
-                    />
-                  </View>
-                </View>
-              </TouchableWithoutFeedback>
+            {label}
+          </Text>
+        )}
 
-              {error && (
-                <Text className="text-red-300 self-stretch">
-                  {error.message || "Error"}
-                </Text>
-              )}
-            </>
-          </KeyboardAvoidingView>
-        );
-      }}
-    />
-  );
-};
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View
+            className={`bg-white w-full border rounded-xl p-2 my-2 ${
+              error ? "border-red-500" : "border-gray-300"
+            } ${containerStyle}`}
+          >
+            {icon && (
+              <Image source={icon} className={`w-6 h-6 ml-4 ${iconStyle}`} />
+            )}
+
+            <TextInput
+              className={`text-black h-12 p-4 font-JakartaSemiBold text-[15px] flex-1 text-left ${inputStyle}`}
+              placeholder={placeholder}
+              value={value}
+              onChangeText={onChange}
+              onBlur={onBlur}
+              secureTextEntry={secureTextEntry}
+              {...props}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+
+        {error && (
+          <Text className="text-red-300 self-stretch">
+            {error.message || "Error"}
+          </Text>
+        )}
+      </View>
+    )}
+  />
+);
 
 export default InputField;

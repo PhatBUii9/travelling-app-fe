@@ -5,6 +5,7 @@ import InputField from "@/components/InputField";
 import { Link, useRouter, useLocalSearchParams } from "expo-router";
 import { IFormInputs } from "@/types/type";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useRegistration } from "@/contexts/RegistrationContext";
 
 const EmailOTP = () => {
   const {
@@ -13,15 +14,7 @@ const EmailOTP = () => {
     formState: { errors },
   } = useForm<IFormInputs>();
 
-  const {
-    userName,
-    email,
-    phoneNumber,
-    otpVerificationMethod,
-    otp,
-    smsEnum,
-    emailEnum,
-  } = useLocalSearchParams();
+  const { data } = useRegistration();
 
   const onConfirmPressed = async (data: IFormInputs) => {
     console.log(data);

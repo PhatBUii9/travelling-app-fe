@@ -1,4 +1,4 @@
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import {
   View,
   Text,
@@ -9,11 +9,15 @@ import {
 } from "react-native";
 import CustomButton from "@/components/CustomButton";
 import InputField from "@/components/InputField";
-import { Link, useRouter } from "expo-router";
+import { Link, RelativePathString, useRouter } from "expo-router";
 import { IFormInputs } from "@/types/type";
 import validationRules from "@/utils/validationRules";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SocialButtons from "@/components/SocialButtons";
+import { withLoading } from "@/utils/withLoading";
+import { useLoading } from "@/contexts/LoadingContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { ROUTES } from "@/constant/routes";
 
 const SignIn = () => {
   const {
@@ -22,12 +26,42 @@ const SignIn = () => {
     formState: { errors },
   } = useForm<IFormInputs>();
 
-  const onSignInPress = (data: IFormInputs) => {
-    console.log(data);
-    Alert.alert(JSON.stringify(data));
-  };
-
+  const { showLoading, hideLoading } = useLoading();
+  const auth = useAuth();
   const router = useRouter();
+
+  const onSignInPress = async (data: IFormInputs) => {
+    console.log("Login data:", data);
+
+    await withLoading(
+      async () => {
+        const dummyToken =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.mock.token.string";
+
+        await auth.login(dummyToken);
+        console.log();
+        Alert.alert("Login Success", "Token saved in AsyncStorage.");
+        router.push(ROUTES.ROOT.HOME);
+      },
+      showLoading,
+      hideLoading
+    );
+
+    // await withLoading(
+    //   async () => {
+    //     const response = await fetch("dummyTokenAPI");
+    //     const result = await response.json();
+    //     const accessToken = String(result.token);
+
+    //     await auth.login(accessToken);
+    //     Alert.alert("Login Success", "Token saved in AsyncStorage.");
+
+    //     router.push(ROUTES.ROOT.HOME);
+    //   },
+    //   showLoading,
+    //   hideLoading
+    // );
+  };
 
   return (
     <SafeAreaView className="flex-1">
@@ -43,7 +77,6 @@ const SignIn = () => {
             <Text className="text-4xl font-JakartaSemiBold">Welcome 👋</Text>
           </View>
           <View className="flex-1 px-5 mt-5">
-            {/* Username */}
             <InputField
               name="username"
               control={control}
@@ -51,7 +84,6 @@ const SignIn = () => {
               rules={validationRules.username}
               label="Email"
             />
-            {/* Password */}
             <InputField
               name="password"
               control={control}
@@ -62,18 +94,16 @@ const SignIn = () => {
             />
             <View className="ml-2 mb-2 mt-2 flex-row justify-start">
               <Link href="/forget-password" className="text-gray-500 font-bold">
-                Forget Password?{" "}
-              </Link>{" "}
+                Forget Password?
+              </Link>
             </View>
-            {/* Sign In button */}
             <CustomButton
               title="Sign In"
               onPress={handleSubmit(onSignInPress)}
               className="mt-6"
               bgVariant="default"
               textVariant="default"
-            />{" "}
-            {/* -- Or -- */}
+            />
             <View>
               <View className="flex flex-row justify-center items-center gap-x-3">
                 <View className="flex-1 h-[1px] bg-general-100" />
@@ -81,16 +111,13 @@ const SignIn = () => {
                 <View className="flex-1 h-[1px] bg-general-100" />
               </View>
             </View>
-            {/* Social Buttons */}
             <SocialButtons />
           </View>
-          {/* Signup Link */}{" "}
           <View className="mt-8 flex-row justify-center">
-            <Text className="mr-2 ">Don’t have an account?</Text>{" "}
+            <Text className="mr-2">Don’t have an account?</Text>
             <Link href="/sign-up" className="text-black font-bold">
-              Sign up{" "}
+              Sign up
             </Link>
-            //{" "}
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

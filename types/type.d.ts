@@ -130,10 +130,17 @@ declare interface IFormInputs {
 }
 
 declare interface EmailOTPRequest {
-  userName: string;
+  username: string;
   email: string;
   otpVerificationMethod: "EMAIL_OTP";
-  emailEnum: string;
+  emailEnum: "EMAIL_OTP_REGISTER";
+}
+
+declare interface PhoneOTPRequest {
+  username: string;
+  phoneNumber: string;
+  otpVerificationMethod: "PHONE_OTP";
+  phoneEnum: "PHONE_OTP_REGISTER";
 }
 
 // Stores
@@ -204,4 +211,47 @@ interface ValidationRules {
   phoneNumber: ValidationRuleObject;
   password: ValidationRuleObject;
   confirmPassword: (password: string) => ValidationRuleObject;
+}
+
+interface LoadingContextType {
+  isLoading: boolean;
+  showLoading: () => void;
+  hideLoading: () => void;
+}
+
+declare type WithLoadingFunction = (
+  action: () => Promise<void>,
+  showLoading: () => void,
+  hideLoading: () => void
+) => Promise<void>;
+
+interface AuthContextType {
+  isAuthenticated: boolean;
+  login: (token: string) => Promise<void>;
+  logout: () => Promise<void>;
+  token: string | null;
+  loading: boolean;
+}
+
+interface RegContextType {
+  data: IFormInputs | null;
+  setData: (d: IFormInputs) => void;
+}
+
+export interface StoredAuthData {
+  token: string;
+  user?: {
+    id?: string;
+    username?: string;
+    email?: string;
+    [key: string]: any;
+  };
+}
+
+interface AuthContextType {
+  isAuthenticated: boolean;
+  login: (token: string) => Promise<void>;
+  logout: () => Promise<void>;
+  token: string | null;
+  loading: boolean;
 }
