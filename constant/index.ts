@@ -33,6 +33,7 @@ import onboarding3 from "@/assets/images/onboarding3.png";
 import signUpCar from "@/assets/images/signup-car.png";
 import signInBackground from "@/assets/images/log-in.png";
 import facebook from "@/assets/icons/facebook.png";
+import calendar from "@/assets/icons/calendar.jpg";
 
 export const images = {
   onboarding1,
@@ -73,6 +74,7 @@ export const icons = {
   target,
   to,
   facebook,
+  calendar,
 };
 
 export const onboarding = [

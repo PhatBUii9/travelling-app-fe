@@ -255,3 +255,20 @@ interface AuthContextType {
   token: string | null;
   loading: boolean;
 }
+
+export type Member = {
+  id: string;
+  username: string;
+  avatar: string;
+};
+
+export type Trip = {
+  id: string;
+  title: string;
+  destination: string;
+  dates: string;
+  imageUrl: string | number;
+  createdAt: string;
+  members?: Member[];
+  status: "upcoming" | "completed" | "cancelled";
+};

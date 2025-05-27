@@ -41,7 +41,7 @@ const SignIn = () => {
         await auth.login(dummyToken);
         console.log();
         Alert.alert("Login Success", "Token saved in AsyncStorage.");
-        router.push(ROUTES.ROOT.HOME);
+        router.push(ROUTES.ROOT.TABS.HOME);
       },
       showLoading,
       hideLoading

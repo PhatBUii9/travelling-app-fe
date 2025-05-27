@@ -1,11 +1,19 @@
-import { View, Text } from "react-native";
+import { FlatList } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import TripCard from "@/components/TripCard";
+import { mockTrips } from "@/data/mockTrip";
 
-const Home = () => {
+const Dashboard = () => {
   return (
-    <View className="flex justify-center items-center">
-      <Text>This is Dashboard</Text>
-    </View>
+    <SafeAreaView className="flex-1 bg-white">
+      <FlatList
+        data={mockTrips}
+        renderItem={({ item }) => <TripCard trip={item} />}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={{ paddingBottom: 20 }}
+      />
+    </SafeAreaView>
   );
 };
 
-export default Home;
+export default Dashboard;

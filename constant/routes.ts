@@ -9,8 +9,11 @@ export const ROUTES = {
     EMAIL_OTP: "(auth)/email-otp" as RelativePathString,
   },
   ROOT: {
-    HOME: "/(root)/(tabs)/home" as RelativePathString,
-    CHAT: "/(root)/(tabs)/chat" as RelativePathString,
-    PROFILE: "/(root)/(tabs)/profile" as RelativePathString,
+    TABS: {
+      HOME: "/(root)/(tabs)/home" as RelativePathString,
+      CHAT: "/(root)/(tabs)/chat" as RelativePathString,
+      PROFILE: "/(root)/(tabs)/profile" as RelativePathString,
+    },
+    TRIP_DETAIL: "/(root)/trip-detail" as RelativePathString,
   },
-};
+} as const;
