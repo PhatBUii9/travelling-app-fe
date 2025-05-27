@@ -6,34 +6,50 @@ import {
   Image,
   View,
   FlatList,
+  TouchableOpacity,
 } from "react-native";
 import { mockTrips } from "@/data/mockTrip";
 import Icon from "react-native-vector-icons/FontAwesome";
+import MemberAvatar from "@/components/MemberAvatar";
+import { useState } from "react";
+import { Trip } from "@/types/type";
 
 const TripDetail = () => {
   const { tripId } = useLocalSearchParams();
   const trip = mockTrips.find((t) => t.id === tripId);
+  const [isExtended, setIsExtended] = useState(false);
+
+  const expandMember = () => {
+    setIsExtended(true);
+  };
 
   if (!trip) {
     return <Text>Data is not available</Text>;
   }
 
-  let statusTextColor = "text-black";
-  let statusBgColor = "bg-green-100";
+  const getStatusStyles = (status: Trip["status"]) => {
+    switch (status) {
+      case "completed":
+        return ["text-black", "bg-gray-200"];
+      case "cancelled":
+        return ["text-black", "bg-red-100"];
+      default:
+        return ["text-black", "bg-green-100"];
+    }
+  };
+  const [statusTextColor, statusBgColor] = getStatusStyles(trip.status);
 
-  switch (trip.status) {
-    case "completed":
-      statusTextColor = "text-black";
-      statusBgColor = "bg-gray-200";
-      break;
-    case "cancelled":
-      statusTextColor = "text-black";
-      statusBgColor = "bg-red-100";
-      break;
-  }
-
-  const visibleMembers = trip.members?.slice(0, 5) || [];
+  const visibleMembers = trip.members?.slice(0, 4) || [];
   const extraCount = (trip.members?.length || 0) - visibleMembers.length;
+
+  const renderFooter = () =>
+    extraCount > 0 ? (
+      <TouchableOpacity onPress={expandMember}>
+        <View className="w-12 h-12 rounded-full bg-gray-300 items-center justify-center">
+          <Text className="text-sm text-black font-medium">+{extraCount}</Text>
+        </View>
+      </TouchableOpacity>
+    ) : null;
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -107,48 +123,25 @@ const TripDetail = () => {
 
         {/* Members Section */}
         <Text className="text-xl font-semibold text-black mb-2">Members</Text>
-        <FlatList
-          data={visibleMembers}
-          horizontal
-          keyExtractor={(item) => item.id}
-          showsHorizontalScrollIndicator={false}
-          className="mb-4"
-          renderItem={({ item }) => {
-            const hasAvatar = !!item.avatar;
-            const initials = item.username
-              .split(" ")
-              .map((word) => word[0])
-              .join("")
-              .slice(0, 2)
-              .toUpperCase();
-
-            return hasAvatar ? (
-              <View className="items-center mr-4">
-                <Image
-                  source={{ uri: item.avatar }}
-                  className="w-12 h-12 rounded-full"
-                />
-                <Text className="text-xs text-black mt-1">{item.username}</Text>
-              </View>
-            ) : (
-              <View className="w-12 h-12 rounded-full bg-gray-700 items-center justify-center mr-4">
-                <Text className="text-white text-sm font-bold">{initials}</Text>
-              </View>
-            );
-          }}
-          ListFooterComponent={
-            extraCount > 0 ? (
-              <View className="w-12 h-12 rounded-full bg-gray-300 items-center justify-center">
-                <Text className="text-sm text-black font-medium">
-                  +{extraCount}
-                </Text>
-              </View>
-            ) : null
-          }
-        />
-
-        {/* Separator */}
-        <View className="my-4 border-t border-gray-200" />
+        {isExtended ? (
+          <View className="flex-row flex-wrap justify-start gap-4">
+            {trip.members?.map((item) => {
+              return <MemberAvatar member={item} />;
+            })}
+          </View>
+        ) : (
+          <FlatList
+            data={visibleMembers}
+            horizontal
+            keyExtractor={(item) => item.id}
+            showsHorizontalScrollIndicator={false}
+            className="mb-4"
+            renderItem={({ item }) => {
+              return <MemberAvatar key={item.id} member={item} />;
+            }}
+            ListFooterComponent={renderFooter}
+          />
+        )}
       </ScrollView>
     </SafeAreaView>
   );
