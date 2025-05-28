@@ -1,4 +1,5 @@
 import { Stack } from "expo-router";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 const Layout = () => {
   return (

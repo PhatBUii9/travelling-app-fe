@@ -259,7 +259,7 @@ interface AuthContextType {
 export type Member = {
   id: string;
   username: string;
-  avatar: string;
+  avatar?: string;
 };
 
 export type Trip = {

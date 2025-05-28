@@ -7,6 +7,10 @@ import "../global.css";
 import { LoadingProvider } from "@/contexts/LoadingContext";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { RegistrationProvider } from "@/contexts/RegistrationContext";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import ActionSheet from "react-native-actions-sheet";
+import TripActionSheet from "@/components/TripActionSheet";
+import SheetsPortal from "@/components/SheetsPortal";
 
 // Prevent splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -46,12 +50,15 @@ export default function RootLayout() {
   if (!loaded) return null;
 
   return (
-    <AuthProvider>
-      <RegistrationProvider>
-        <LoadingProvider>
-          <AppStack />
-        </LoadingProvider>
-      </RegistrationProvider>
-    </AuthProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <AuthProvider>
+        <RegistrationProvider>
+          <LoadingProvider>
+            <AppStack />
+            <SheetsPortal />
+          </LoadingProvider>
+        </RegistrationProvider>
+      </AuthProvider>
+    </GestureHandlerRootView>
   );
 }

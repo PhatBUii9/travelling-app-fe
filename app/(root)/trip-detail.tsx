@@ -11,16 +11,24 @@ import {
 import { mockTrips } from "@/data/mockTrip";
 import Icon from "react-native-vector-icons/FontAwesome";
 import MemberAvatar from "@/components/MemberAvatar";
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { Trip } from "@/types/type";
+import { useNavigation } from "expo-router";
+import { SheetManager } from "react-native-actions-sheet";
 
 const TripDetail = () => {
   const { tripId } = useLocalSearchParams();
   const trip = mockTrips.find((t) => t.id === tripId);
   const [isExtended, setIsExtended] = useState(false);
+  const navigation = useNavigation();
 
   const expandMember = () => {
     setIsExtended(true);
+  };
+
+  const handleModifyCard = () => {
+    console.log("Share, Edit, or Delete.");
+    SheetManager.show("trip-actions");
   };
 
   if (!trip) {
@@ -41,6 +49,21 @@ const TripDetail = () => {
 
   const visibleMembers = trip.members?.slice(0, 4) || [];
   const extraCount = (trip.members?.length || 0) - visibleMembers.length;
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={handleModifyCard}>
+          <Icon
+            name="ellipsis-h"
+            size={20}
+            color="#000"
+            style={{ marginRight: 8 }}
+          />
+        </TouchableOpacity>
+      ),
+    });
+  }, []);
 
   const renderFooter = () =>
     extraCount > 0 ? (
@@ -126,7 +149,7 @@ const TripDetail = () => {
         {isExtended ? (
           <View className="flex-row flex-wrap justify-start gap-4">
             {trip.members?.map((item) => {
-              return <MemberAvatar member={item} />;
+              return <MemberAvatar key={item.id} member={item} />;
             })}
           </View>
         ) : (
@@ -137,7 +160,7 @@ const TripDetail = () => {
             showsHorizontalScrollIndicator={false}
             className="mb-4"
             renderItem={({ item }) => {
-              return <MemberAvatar key={item.id} member={item} />;
+              return <MemberAvatar member={item} />;
             }}
             ListFooterComponent={renderFooter}
           />
