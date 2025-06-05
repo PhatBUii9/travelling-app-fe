@@ -11,8 +11,9 @@ import { IFormInputs } from "@/types/type";
 import { useForm } from "react-hook-form";
 import { icons } from "@/constant";
 import SectionHeader from "@/components/SectionHeader";
-import SuggestedLocation from "@/components/SuggestedLocation";
-import UpcomingTripCard from "@/components/UpcomingTripCard";
+import SuggestedLocation from "@/components/Card/SuggestedLocation";
+import MiniMap from "@/components/MiniMap";
+import TripPreviewCard from "@/components/Card/TripPreviewCard";
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
@@ -48,27 +49,12 @@ const Dashboard: React.FC = () => {
         containerStyle="bg-gray-200"
       />
 
-      {/* ---------- Mini Map ---------- */}
-      <View className="h-40 w-full rounded-2xl overflow-hidden mb-6">
-        <MapView
-          style={{ flex: 1 }}
-          initialRegion={melbourneRegion}
-          region={melbourneRegion}
-          showsUserLocation={false}
-          showsMyLocationButton={false}
-          scrollEnabled
-          zoomEnabled
-          mapType="standard"
-          loadingEnabled
-        >
-          <Marker coordinate={melbourneRegion} />
-        </MapView>
-      </View>
+      <MiniMap region={melbourneRegion} />
 
       {/* ---------- Suggested Locations (horizontal) ---------- */}
       <SectionHeader title="Suggested Locations" />
 
-      <View className="h-48 mb-6">
+      <View className="mb-6">
         <FlatList
           data={mockTrips}
           renderItem={({ item }) => <SuggestedLocation trip={item} />}
@@ -86,10 +72,10 @@ const Dashboard: React.FC = () => {
       {/* ---------- Upcoming Trips (horizontal) ---------- */}
       <SectionHeader title="Upcoming Trips" />
 
-      <View className="h-48 mb-6">
+      <View className="mb-6">
         <FlatList
           data={upcomingTrips}
-          renderItem={({ item }) => <UpcomingTripCard trip={item} />}
+          renderItem={({ item }) => <TripPreviewCard trip={item} />}
           keyExtractor={(item) => item.id}
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -103,10 +89,10 @@ const Dashboard: React.FC = () => {
       {/* ---------- Shared with Me (horizontal) ---------- */}
       <SectionHeader title="Shared with Me" />
 
-      <View className="h-48">
+      <View className="mb-6">
         <FlatList
           data={sharedTrips}
-          renderItem={({ item }) => <UpcomingTripCard trip={item} />}
+          renderItem={({ item }) => <TripPreviewCard trip={item} />}
           keyExtractor={(item) => item.id}
           horizontal
           showsHorizontalScrollIndicator={false}

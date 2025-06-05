@@ -14,7 +14,7 @@ const ScreenContainer: React.FC<ScreenContainerProps> = ({
   children,
 }) => {
   return (
-    <SafeAreaView className={` bg-white ${className}`}>
+    <SafeAreaView className={`flex-1 bg-white ${className}`}>
       {scrollable ? (
         <ScrollView
           contentContainerStyle={{ flexGrow: 1, paddingBottom: 32 }}
