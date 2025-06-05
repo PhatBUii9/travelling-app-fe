@@ -43,7 +43,7 @@ const InputField: React.FC<InputFieldProps> = ({
 
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View
-            className={`bg-white w-full border rounded-xl p-2 my-2 ${
+            className={`flex-row items-center w-full border rounded-xl p-2 my-2 ${
               error ? "border-red-500" : "border-gray-300"
             } ${containerStyle}`}
           >
@@ -52,7 +52,7 @@ const InputField: React.FC<InputFieldProps> = ({
             )}
 
             <TextInput
-              className={`text-black h-12 p-4 font-JakartaSemiBold text-[15px] flex-1 text-left ${inputStyle}`}
+              className={`text-black h-14 p-4 font-JakartaSemiBold text-[15px] flex-1 text-left ${inputStyle}`}
               placeholder={placeholder}
               value={value}
               onChangeText={onChange}

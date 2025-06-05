@@ -34,6 +34,18 @@ import signUpCar from "@/assets/images/signup-car.png";
 import signInBackground from "@/assets/images/log-in.png";
 import facebook from "@/assets/icons/facebook.png";
 import calendar from "@/assets/icons/calendar.jpg";
+import placeholderCover from "@//assets/images/placeholder.png";
+import goldcoast from "@/assets/images/goldcoast.jpeg";
+import barossa_valley from "@/assets/images/barossa_valley.jpeg";
+import berlin from "@/assets/images/berlin.jpeg";
+import bluemountains from "@/assets/images/bluemountains.jpeg";
+import bondi_beach from "@/assets/images/bondi_beach.jpeg";
+import dubai from "@/assets/images/dubai.jpeg";
+import kyoto from "@/assets/images/kyoto.jpeg";
+import melbourne from "@/assets/images/melbourne.jpeg";
+import perisher from "@/assets/images/perisher.jpeg";
+import phuquoc from "@/assets/images/phuquoc.jpeg";
+import whitsundays from "@/assets/images/whitsundays.jpeg";
 
 export const images = {
   onboarding1,
@@ -45,6 +57,18 @@ export const images = {
   noResult,
   message,
   signInBackground,
+  placeholderCover,
+  goldcoast,
+  barossa_valley,
+  berlin,
+  bluemountains,
+  bondi_beach,
+  dubai,
+  kyoto,
+  melbourne,
+  perisher,
+  phuquoc,
+  whitsundays,
 };
 
 export const icons = {

@@ -9,7 +9,7 @@ const Home: React.FC = () => {
 
   if (loading) return null;
   return isAuthenticated ? (
-    <Redirect href={ROUTES.ROOT.TABS.HOME} />
+    <Redirect href={ROUTES.ROOT.TABS.DASHBOARD} />
   ) : (
     <Redirect href={ROUTES.AUTH.SIGN_IN} />
   );

@@ -225,40 +225,32 @@ declare type WithLoadingFunction = (
   hideLoading: () => void
 ) => Promise<void>;
 
-interface AuthContextType {
-  isAuthenticated: boolean;
-  login: (token: string) => Promise<void>;
-  logout: () => Promise<void>;
-  token: string | null;
-  loading: boolean;
-}
-
 interface RegContextType {
   data: IFormInputs | null;
   setData: (d: IFormInputs) => void;
 }
 
-export interface StoredAuthData {
-  token: string;
-  user?: {
-    id?: string;
-    username?: string;
-    email?: string;
-    [key: string]: any;
-  };
+export interface User {
+  id: string;
+  username: string;
+  email?: string;
+  phoneNumber?: string;
+  dob?: string;
 }
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  login: (token: string) => Promise<void>;
+  login: (token: string, userData?: User) => Promise<void>;
   logout: () => Promise<void>;
   token: string | null;
   loading: boolean;
+  user: User | null;
 }
 
 export type Member = {
   id: string;
   username: string;
+  email?: string;
   avatar?: string;
 };
 
@@ -271,4 +263,9 @@ export type Trip = {
   createdAt: string;
   members?: Member[];
   status: "upcoming" | "completed" | "cancelled";
+  shared?: boolean;
+  locationTag?: string;
+  recentlyViewed?: boolean;
+  trending?: boolean;
+  viewedAt?: string;
 };

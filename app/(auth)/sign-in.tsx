@@ -31,17 +31,23 @@ const SignIn = () => {
   const router = useRouter();
 
   const onSignInPress = async (data: IFormInputs) => {
+    const dummyUser = {
+      id: "1",
+      username: data.username!,
+      email: data.email ?? "",
+    };
     console.log("Login data:", data);
+    console.log("auth.login exists:", typeof auth?.login);
+    console.log("auth context:", auth);
 
     await withLoading(
       async () => {
         const dummyToken =
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.mock.token.string";
 
-        await auth.login(dummyToken);
-        console.log();
+        await auth.login(dummyToken, dummyUser);
         Alert.alert("Login Success", "Token saved in AsyncStorage.");
-        router.push(ROUTES.ROOT.TABS.HOME);
+        router.push(ROUTES.ROOT.TABS.DASHBOARD);
       },
       showLoading,
       hideLoading

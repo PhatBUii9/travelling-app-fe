@@ -21,7 +21,7 @@ extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
   }
 }
 
-rootProject.name = 'TravellingFrontEnd'
+rootProject.name = 'Travelling_Front_End'
 
 dependencyResolutionManagement {
   versionCatalogs {

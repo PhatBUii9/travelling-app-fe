@@ -1,28 +1,29 @@
-import { icons } from "@/constant";
 import { Tabs } from "expo-router";
-import { View, Image, ImageSourcePropType } from "react-native";
+import { View, Image, Text, ImageSourcePropType } from "react-native";
+import { icons } from "@/constant";
 
-const TabIcon = ({
-  source,
-  focused,
-}: {
+type TabIconProps = {
   source: ImageSourcePropType;
   focused: boolean;
-}) => {
+  label: string;
+};
+
+const TabIcon = ({ source, focused, label }: TabIconProps) => {
   return (
-    <View className="items-center justify-center w-full h-full">
-      <View
-        className={`rounded-full p-3 items-center justify-center ${
-          focused ? "bg-green-500" : ""
-        }`}
+    <View className="items-center justify-center h-full w-20">
+      <Image
+        source={source}
+        className="w-6 h-6"
+        style={{
+          tintColor: focused ? "#00C851" : "#A0A0A0",
+        }}
+      />
+      <Text
+        className={`text-xs mt-1 ${focused ? "text-black" : "text-gray-400"}`}
+        //numberOfLines={1}
       >
-        <Image
-          source={source}
-          tintColor="white"
-          resizeMode="contain"
-          className="w-6 h-6"
-        />
-      </View>
+        {label}
+      </Text>
     </View>
   );
 };
@@ -30,54 +31,41 @@ const TabIcon = ({
 const Layout = () => {
   return (
     <Tabs
-      initialRouteName="home"
+      initialRouteName="dashboard"
       screenOptions={{
-        tabBarActiveTintColor: "white",
-        tabBarInactiveTintColor: "white",
         tabBarShowLabel: false,
+        headerShown: false,
         tabBarStyle: {
-          backgroundColor: "#333333",
-          borderRadius: 50,
-          marginHorizontal: 20,
-          marginBottom: 20,
           height: 70,
-          paddingHorizontal: 30,
-          position: "absolute",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexDirection: "row",
-          borderWidth: 1,
-          borderColor: "#444",
+          backgroundColor: "#fff",
+          paddingTop: 10,
+          paddingBottom: 10,
+          borderTopWidth: 0,
+          elevation: 8,
         },
       }}
     >
       <Tabs.Screen
-        name="home"
+        name="dashboard"
         options={{
-          title: "Home",
-          headerShown: false,
           tabBarIcon: ({ focused }: { focused: boolean }) => (
-            <TabIcon focused={focused} source={icons.home} />
+            <TabIcon source={icons.home} focused={focused} label="Home" />
           ),
         }}
       />
       <Tabs.Screen
         name="chat"
         options={{
-          title: "Chat",
-          headerShown: false,
           tabBarIcon: ({ focused }: { focused: boolean }) => (
-            <TabIcon focused={focused} source={icons.chat} />
+            <TabIcon source={icons.chat} focused={focused} label="Trips" />
           ),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Profile",
-          headerShown: false,
           tabBarIcon: ({ focused }: { focused: boolean }) => (
-            <TabIcon focused={focused} source={icons.profile} />
+            <TabIcon source={icons.profile} focused={focused} label="Profile" />
           ),
         }}
       />
