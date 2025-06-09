@@ -12,7 +12,7 @@ const TripCard = ({ trip }: { trip: Trip }) => {
   const onPress = () => {
     console.log("Trip card pressed!");
     router.push({
-      pathname: ROUTES.ROOT.TRIP_DETAIL,
+      pathname: ROUTES.ROOT.TRIPS.TRIP_DETAIL,
       params: {
         tripId: id,
       },

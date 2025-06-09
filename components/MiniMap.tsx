@@ -15,38 +15,40 @@ interface MiniMapProps {
   containerHeight?: number;
 }
 
-const MiniMap: React.FC<MiniMapProps> = ({
-  region,
-  markerCoordinate,
-  containerHeight = 160, // 40 × 4px (Tailwind h-40 is 160px)
-}) => {
-  return (
-    <View
-      style={{ height: containerHeight, width: "100%" }}
-      className="rounded-2xl overflow-hidden mb-6"
-    >
-      <MapView
-        style={{ flex: 1 }}
-        initialRegion={region}
-        region={region}
-        showsUserLocation={false}
-        showsMyLocationButton={false}
-        scrollEnabled
-        zoomEnabled
-        mapType="standard"
-        loadingEnabled
+const MiniMap: React.FC<MiniMapProps> = React.memo(
+  ({
+    region,
+    markerCoordinate,
+    containerHeight = 160, // 40 × 4px (Tailwind h-40 is 160px)
+  }) => {
+    return (
+      <View
+        style={{ height: containerHeight, width: "100%" }}
+        className="rounded-2xl overflow-hidden mb-6"
       >
-        <Marker
-          coordinate={
-            markerCoordinate ?? {
-              latitude: region.latitude,
-              longitude: region.longitude,
+        <MapView
+          style={{ flex: 1 }}
+          initialRegion={region}
+          region={region}
+          showsUserLocation={false}
+          showsMyLocationButton={false}
+          scrollEnabled
+          zoomEnabled
+          mapType="standard"
+          loadingEnabled
+        >
+          <Marker
+            coordinate={
+              markerCoordinate ?? {
+                latitude: region.latitude,
+                longitude: region.longitude,
+              }
             }
-          }
-        />
-      </MapView>
-    </View>
-  );
-};
+          />
+        </MapView>
+      </View>
+    );
+  }
+);
 
 export default MiniMap;

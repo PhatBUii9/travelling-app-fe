@@ -2,6 +2,7 @@
 import { ROUTES } from "@/constant/routes";
 import { Trip } from "@/types/type";
 import { useRouter } from "expo-router";
+import React, { useCallback } from "react";
 import {
   useWindowDimensions,
   TouchableOpacity,
@@ -10,7 +11,7 @@ import {
   Text,
 } from "react-native";
 
-const TripPreviewCard = ({ trip }: { trip: Trip }) => {
+const TripPreviewCard = React.memo(({ trip }: { trip: Trip }) => {
   const { id, title, dates, imageUrl } = trip;
   const router = useRouter();
 
@@ -21,12 +22,12 @@ const TripPreviewCard = ({ trip }: { trip: Trip }) => {
   const cardHeight = cardWidth * 1.1;
   const imageHeight = cardWidth * 0.5;
 
-  const onCardPress = () => {
+  const onCardPress = useCallback(() => {
     router.push({
-      pathname: ROUTES.ROOT.TRIP_DETAIL,
+      pathname: ROUTES.ROOT.TRIPS.TRIP_DETAIL,
       params: { tripId: id },
     });
-  };
+  }, [id]);
 
   return (
     <TouchableOpacity
@@ -36,6 +37,9 @@ const TripPreviewCard = ({ trip }: { trip: Trip }) => {
         height: cardHeight,
       }}
       className="bg-gray-50 flex-none rounded-2xl shadow-md shadow-gray-200 overflow-hidden mr-3"
+      accessibilityRole="button"
+      accessibilityLabel={`Upcoming trip: ${title}`}
+      accessibilityHint={`View details for ${title}.`}
     >
       {/* The image container: */}
       <Image
@@ -48,7 +52,7 @@ const TripPreviewCard = ({ trip }: { trip: Trip }) => {
       />
 
       {/* Text area below the image */}
-      <View className="px-4 py-2">
+      <View className="px-4 py-2 flex-1">
         <Text
           className="font-JakartaSemiBold text-base text-primary-900"
           numberOfLines={2}
@@ -60,6 +64,6 @@ const TripPreviewCard = ({ trip }: { trip: Trip }) => {
       </View>
     </TouchableOpacity>
   );
-};
+});
 
 export default TripPreviewCard;

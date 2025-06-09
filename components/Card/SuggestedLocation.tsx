@@ -1,9 +1,7 @@
-// components/SuggestedLocation.tsx
-import { ROUTES } from "@/constant/routes";
 import { Trip } from "@/types/type";
 import { useRouter } from "expo-router";
+import React from "react";
 import {
-  Dimensions,
   useWindowDimensions,
   TouchableOpacity,
   View,
@@ -11,7 +9,7 @@ import {
   Text,
 } from "react-native";
 
-const SuggestedLocation = ({ trip }: { trip: Trip }) => {
+const SuggestedLocation = React.memo(({ trip }: { trip: Trip }) => {
   const { title, destination, imageUrl } = trip;
   const router = useRouter();
 
@@ -34,6 +32,9 @@ const SuggestedLocation = ({ trip }: { trip: Trip }) => {
         height: cardHeight,
       }}
       className="bg-gray-50 flex-none rounded-2xl shadow-md shadow-gray-200 overflow-hidden mr-3"
+      accessibilityRole="button"
+      accessibilityLabel={`Upcoming trip: ${title}`}
+      accessibilityHint={`View details for ${title}.`}
     >
       {/* The image container: */}
       <Image
@@ -58,6 +59,6 @@ const SuggestedLocation = ({ trip }: { trip: Trip }) => {
       </View>
     </TouchableOpacity>
   );
-};
+});
 
 export default SuggestedLocation;

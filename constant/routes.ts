@@ -14,6 +14,11 @@ export const ROUTES = {
       CHAT: "/(root)/(tabs)/chat" as RelativePathString,
       PROFILE: "/(root)/(tabs)/profile" as RelativePathString,
     },
-    TRIP_DETAIL: "/(root)/trip-detail" as RelativePathString,
+    TRIPS: {
+      TRIP_DETAIL: "/(root)/(trips)/[tripId]" as RelativePathString,
+      SHARED: "/(root)/(trips)/shared" as RelativePathString,
+      SUGGESTED: "/(root)/(trips)/suggested" as RelativePathString,
+      UPCOMING: "/(root)/(trips)/upcoming" as RelativePathString,
+    },
   },
 } as const;
