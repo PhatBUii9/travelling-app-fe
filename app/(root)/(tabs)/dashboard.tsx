@@ -1,5 +1,5 @@
 // screens/Dashboard.tsx
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { useAuth } from "@/contexts/AuthContext";
 import ScreenContainer from "@/components/ScreenContainer";
@@ -16,10 +16,13 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { Trip } from "@/types/type";
 import { router } from "expo-router";
 import { ROUTES } from "@/constant/routes";
+import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
   const { control } = useForm<IFormInputs>();
+  const [isLoading, setIsLoading] = useState(true);
+  const skeletonItems = Array.from({ length: 5 });
 
   const melbourneRegion = {
     latitude: -37.809811,
@@ -58,6 +61,10 @@ const Dashboard: React.FC = () => {
     router.push(ROUTES.ROOT.TRIPS.SUGGESTED);
   }, []);
 
+  useEffect(() => {
+    setTimeout(() => setIsLoading(false), 3000);
+  }, []);
+
   return (
     <View className="flex-1 relative">
       <ScreenContainer>
@@ -83,40 +90,71 @@ const Dashboard: React.FC = () => {
         {/* Suggested Locations */}
         <SectionHeader title="Suggested Locations" onPress={onSuggestedPress} />
         <View className="mb-6">
-          <FlatList
-            data={mockTrips.slice(0, 4)}
-            renderItem={renderSuggested}
-            keyExtractor={(item) => item.id}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            className="px-4"
-            initialNumToRender={3}
-            maxToRenderPerBatch={5}
-            windowSize={5}
-          />
+          {isLoading ? (
+            <FlatList
+              data={skeletonItems}
+              renderItem={() => <LoadingSkeleton />}
+              keyExtractor={(_, i) => `skel-suggested-${i}`}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              className="px-4"
+            />
+          ) : (
+            <FlatList
+              data={mockTrips.slice(0, 4)}
+              renderItem={renderSuggested}
+              keyExtractor={(item) => item.id}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              className="px-4"
+              initialNumToRender={3}
+              maxToRenderPerBatch={5}
+              windowSize={5}
+            />
+          )}
         </View>
 
         {/* Upcoming Trips */}
         <SectionHeader title="Upcoming Trips" onPress={onUpcomingPress} />
         <View className="mb-6">
-          <FlatList
-            data={upcomingTrips.slice(0, 4)}
-            renderItem={renderTripPreview}
-            keyExtractor={(item) => item.id}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            className="px-4"
-            initialNumToRender={3}
-            maxToRenderPerBatch={5}
-            windowSize={5}
-          />
+          {isLoading ? (
+            <FlatList
+              data={skeletonItems}
+              renderItem={() => <LoadingSkeleton />}
+              keyExtractor={(_, i) => `skel-suggested-${i}`}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              className="px-4"
+            />
+          ) : (
+            <FlatList
+              data={mockTrips.slice(0, 4)}
+              renderItem={renderTripPreview}
+              keyExtractor={(item) => item.id}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              className="px-4"
+              initialNumToRender={3}
+              maxToRenderPerBatch={5}
+              windowSize={5}
+            />
+          )}
         </View>
 
         {/* Shared with Me */}
         <SectionHeader title="Shared with Me" onPress={onSharedPress} />
-        <View className="mb-6">
+        {isLoading ? (
           <FlatList
-            data={sharedTrips.slice(0, 4)}
+            data={skeletonItems}
+            renderItem={() => <LoadingSkeleton />}
+            keyExtractor={(_, i) => `skel-suggested-${i}`}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            className="px-4"
+          />
+        ) : (
+          <FlatList
+            data={mockTrips.slice(0, 4)}
             renderItem={renderTripPreview}
             keyExtractor={(item) => item.id}
             horizontal
@@ -126,7 +164,7 @@ const Dashboard: React.FC = () => {
             maxToRenderPerBatch={5}
             windowSize={5}
           />
-        </View>
+        )}
       </ScreenContainer>
 
       {/* Floating “Plan a Trip” FAB */}
