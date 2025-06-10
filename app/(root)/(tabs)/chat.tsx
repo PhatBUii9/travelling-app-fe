@@ -1,8 +1,10 @@
+import ErrorFallback from "@/components/ErrorFallBack";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 import { View, Text } from "react-native";
 
 const Home = () => {
-  return <LoadingSkeleton />;
+  const onPress = () => {};
+  return <ErrorFallback onPress={onPress} />;
 };
 
 export default Home;

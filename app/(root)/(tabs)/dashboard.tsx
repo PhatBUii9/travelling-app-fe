@@ -1,29 +1,63 @@
 // screens/Dashboard.tsx
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { useAuth } from "@/contexts/AuthContext";
+import useTrips from "@/hooks/useTrips";
 import ScreenContainer from "@/components/ScreenContainer";
-import { mockTrips } from "@/data/mockTrip";
 import InputField from "@/components/InputField";
-import { IFormInputs } from "@/types/type";
-import { useForm } from "react-hook-form";
-import { icons } from "@/constant";
 import SectionHeader from "@/components/SectionHeader";
 import SuggestedLocation from "@/components/Card/SuggestedLocation";
 import MiniMap from "@/components/MiniMap";
 import TripPreviewCard from "@/components/Card/TripPreviewCard";
+import LoadingSkeleton from "@/components/LoadingSkeleton";
+import ErrorFallback from "@/components/ErrorFallBack";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { Trip } from "@/types/type";
+import { IFormInputs } from "@/types/type";
+import { useForm } from "react-hook-form";
 import { router } from "expo-router";
 import { ROUTES } from "@/constant/routes";
-import LoadingSkeleton from "@/components/LoadingSkeleton";
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
   const { control } = useForm<IFormInputs>();
   const [isLoading, setIsLoading] = useState(true);
-  const skeletonItems = Array.from({ length: 5 });
 
+  const {
+    data: suggestedData,
+    isLoading: sugLoading,
+    isError: sugError,
+    refetch: sugRefetch,
+  } = useTrips({ filter: "all" });
+
+  const {
+    data: upcomingData,
+    isLoading: upLoading,
+    isError: upError,
+    refetch: upRefetch,
+  } = useTrips({ filter: "upcoming", simulateError: true });
+
+  const {
+    data: sharedData,
+    isLoading: shLoading,
+    isError: shError,
+    refetch: shRefetch,
+  } = useTrips({ filter: "shared" });
+
+  // Handlers for "See more" buttons
+  const onSuggestedPress = useCallback(
+    () => router.push(ROUTES.ROOT.TRIPS.SUGGESTED),
+    []
+  );
+  const onUpcomingPress = useCallback(
+    () => router.push(ROUTES.ROOT.TRIPS.UPCOMING),
+    []
+  );
+  const onSharedPress = useCallback(
+    () => router.push(ROUTES.ROOT.TRIPS.SHARED),
+    []
+  );
+
+  // Region for MiniMap
   const melbourneRegion = {
     latitude: -37.809811,
     longitude: 144.965195,
@@ -31,35 +65,10 @@ const Dashboard: React.FC = () => {
     longitudeDelta: 0.01,
   };
 
-  const upcomingTrips = useMemo(() => {
-    return mockTrips.filter((t) => t.status === "upcoming");
-  }, [mockTrips]);
+  const VISIBLE_COUNT = 4;
 
-  const sharedTrips = useMemo(() => {
-    return mockTrips.filter((t) => t.shared);
-  }, [mockTrips]);
-
-  const renderSuggested = useCallback(
-    ({ item }: { item: Trip }) => <SuggestedLocation trip={item} />,
-    []
-  );
-
-  const renderTripPreview = useCallback(
-    ({ item }: { item: Trip }) => <TripPreviewCard trip={item} />,
-    []
-  );
-
-  const onUpcomingPress = useCallback(() => {
-    router.push(ROUTES.ROOT.TRIPS.UPCOMING);
-  }, []);
-
-  const onSharedPress = useCallback(() => {
-    router.push(ROUTES.ROOT.TRIPS.SHARED);
-  }, []);
-
-  const onSuggestedPress = useCallback(() => {
-    router.push(ROUTES.ROOT.TRIPS.SUGGESTED);
-  }, []);
+  // Skeleton placeholder array
+  const skeletonItems = Array.from({ length: VISIBLE_COUNT });
 
   useEffect(() => {
     setTimeout(() => setIsLoading(false), 3000);
@@ -81,7 +90,7 @@ const Dashboard: React.FC = () => {
           control={control}
           label=""
           className="mb-4"
-          icon={icons.search}
+          icon={require("@/assets/icons/search.png")}
           containerStyle="bg-gray-200"
         />
 
@@ -90,26 +99,25 @@ const Dashboard: React.FC = () => {
         {/* Suggested Locations */}
         <SectionHeader title="Suggested Locations" onPress={onSuggestedPress} />
         <View className="mb-6">
-          {isLoading ? (
+          {sugError ? (
+            <ErrorFallback onPress={sugRefetch} />
+          ) : sugLoading ? (
             <FlatList
               data={skeletonItems}
-              renderItem={() => <LoadingSkeleton />}
-              keyExtractor={(_, i) => `skel-suggested-${i}`}
               horizontal
               showsHorizontalScrollIndicator={false}
               className="px-4"
+              keyExtractor={(_, i) => `skel-suggested-${i}`}
+              renderItem={() => <LoadingSkeleton />}
             />
           ) : (
             <FlatList
-              data={mockTrips.slice(0, 4)}
-              renderItem={renderSuggested}
-              keyExtractor={(item) => item.id}
+              data={suggestedData.slice(0, VISIBLE_COUNT)}
               horizontal
               showsHorizontalScrollIndicator={false}
               className="px-4"
-              initialNumToRender={3}
-              maxToRenderPerBatch={5}
-              windowSize={5}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => <SuggestedLocation trip={item} />}
             />
           )}
         </View>
@@ -117,54 +125,54 @@ const Dashboard: React.FC = () => {
         {/* Upcoming Trips */}
         <SectionHeader title="Upcoming Trips" onPress={onUpcomingPress} />
         <View className="mb-6">
-          {isLoading ? (
+          {upError ? (
+            <ErrorFallback onPress={upRefetch} />
+          ) : upLoading ? (
             <FlatList
               data={skeletonItems}
-              renderItem={() => <LoadingSkeleton />}
-              keyExtractor={(_, i) => `skel-suggested-${i}`}
               horizontal
               showsHorizontalScrollIndicator={false}
               className="px-4"
+              keyExtractor={(_, i) => `skel-upcoming-${i}`}
+              renderItem={() => <LoadingSkeleton />}
             />
           ) : (
             <FlatList
-              data={mockTrips.slice(0, 4)}
-              renderItem={renderTripPreview}
-              keyExtractor={(item) => item.id}
+              data={upcomingData.slice(0, VISIBLE_COUNT)}
               horizontal
               showsHorizontalScrollIndicator={false}
               className="px-4"
-              initialNumToRender={3}
-              maxToRenderPerBatch={5}
-              windowSize={5}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => <TripPreviewCard trip={item} />}
             />
           )}
         </View>
 
         {/* Shared with Me */}
         <SectionHeader title="Shared with Me" onPress={onSharedPress} />
-        {isLoading ? (
-          <FlatList
-            data={skeletonItems}
-            renderItem={() => <LoadingSkeleton />}
-            keyExtractor={(_, i) => `skel-suggested-${i}`}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            className="px-4"
-          />
-        ) : (
-          <FlatList
-            data={mockTrips.slice(0, 4)}
-            renderItem={renderTripPreview}
-            keyExtractor={(item) => item.id}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            className="px-4"
-            initialNumToRender={3}
-            maxToRenderPerBatch={5}
-            windowSize={5}
-          />
-        )}
+        <View className="mb-6">
+          {shError ? (
+            <ErrorFallback onPress={shRefetch} />
+          ) : shLoading ? (
+            <FlatList
+              data={skeletonItems}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              className="px-4"
+              keyExtractor={(_, i) => `skel-shared-${i}`}
+              renderItem={() => <LoadingSkeleton />}
+            />
+          ) : (
+            <FlatList
+              data={sharedData.slice(0, VISIBLE_COUNT)}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              className="px-4"
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => <TripPreviewCard trip={item} />}
+            />
+          )}
+        </View>
       </ScreenContainer>
 
       {/* Floating “Plan a Trip” FAB */}
@@ -175,7 +183,7 @@ const Dashboard: React.FC = () => {
         accessibilityLabel="Create a trip plan"
         accessibilityHint="Opens the trip creation screen"
       >
-        <Icon name="plus-square" size={20} color="#fff" />
+        <Icon name="plus" size={24} color="#fff" />
       </TouchableOpacity>
     </View>
   );

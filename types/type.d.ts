@@ -195,7 +195,7 @@ declare interface PaymentProps {
 }
 
 // Validation Rules
-interface ValidationRuleObject {
+declare interface ValidationRuleObject {
   required?: boolean | string;
   minLength?: { value: number; message: string };
   maxLength?: { value: number; message: string };
@@ -203,7 +203,7 @@ interface ValidationRuleObject {
   validate?: (value: any) => boolean | string;
 }
 
-interface ValidationRules {
+declare interface ValidationRules {
   username: ValidationRuleObject;
   registerUsername: ValidationRuleObject;
   dob: ValidationRuleObject;
@@ -213,7 +213,7 @@ interface ValidationRules {
   confirmPassword: (password: string) => ValidationRuleObject;
 }
 
-interface LoadingContextType {
+declare interface LoadingContextType {
   isLoading: boolean;
   showLoading: () => void;
   hideLoading: () => void;
@@ -225,12 +225,12 @@ declare type WithLoadingFunction = (
   hideLoading: () => void
 ) => Promise<void>;
 
-interface RegContextType {
+declare interface RegContextType {
   data: IFormInputs | null;
   setData: (d: IFormInputs) => void;
 }
 
-export interface User {
+declare interface User {
   id: string;
   username: string;
   email?: string;
@@ -238,13 +238,33 @@ export interface User {
   dob?: string;
 }
 
-interface AuthContextType {
+declare interface AuthContextType {
   isAuthenticated: boolean;
   login: (token: string, userData?: User) => Promise<void>;
   logout: () => Promise<void>;
   token: string | null;
   loading: boolean;
   user: User | null;
+}
+
+declare interface UseTripsOptions {
+  filter: "all" | "upcoming" | "shared";
+  simulateError?: boolean;
+}
+
+declare interface UseTripsResult {
+  data: Trip[];
+  isLoading: boolean;
+  isError: boolean;
+  refetch: () => void;
+}
+
+declare interface TripCarouselProps {
+  title: string;
+  filter: "all" | "upcoming" | "shared";
+  renderItem: (info: ListRenderItemInfo<Trip>) => ReactNode;
+  onSeeMore: () => void;
+  visibleCount?: number;
 }
 
 export type Member = {
