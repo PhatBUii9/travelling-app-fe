@@ -247,6 +247,12 @@ declare interface AuthContextType {
   user: User | null;
 }
 
+interface SectionHeaderProps {
+  title: string;
+  onPress?: () => void;
+  canSeeMore: boolean;
+}
+
 declare interface UseTripsOptions {
   filter: "all" | "upcoming" | "shared";
   simulateError?: boolean;
@@ -265,6 +271,12 @@ declare interface TripCarouselProps {
   renderItem: (info: ListRenderItemInfo<Trip>) => ReactNode;
   onSeeMore: () => void;
   visibleCount?: number;
+  simulateError?: boolean;
+}
+
+declare interface EmptyStateCardProps {
+  message: string;
+  onRetry: () => void;
 }
 
 export type Member = {

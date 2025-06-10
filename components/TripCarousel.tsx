@@ -1,42 +1,74 @@
 // components/TripCarousel.tsx
-import React, { ReactNode, useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { View, FlatList, ListRenderItemInfo } from "react-native";
 import SectionHeader from "@/components/SectionHeader";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
-import ErrorFallback from "@/components/ErrorFallBack";
+import EmptyStateCard from "@/components/EmptyStateCard";
 import useTrips from "@/hooks/useTrips";
 import { TripCarouselProps } from "@/types/type";
 
 const TripCarousel: React.FC<TripCarouselProps> = React.memo(
-  ({ title, filter, renderItem, onSeeMore, visibleCount = 4 }) => {
-    const { data, isLoading, isError, refetch } = useTrips({ filter });
+  ({
+    title,
+    filter,
+    simulateError = false,
+    renderItem,
+    onSeeMore,
+    visibleCount = 4,
+  }) => {
+    const {
+      data = [],
+      isLoading,
+      isError,
+      refetch,
+    } = useTrips({
+      filter,
+      simulateError,
+    });
 
-    const skeletonItems = useMemo(
-      () => Array(visibleCount).fill(null),
-      [visibleCount]
-    );
-
-    const flatListProps = {
-      horizontal: true,
-      showsHorizontalScrollIndicator: false,
-      className: "px-4",
-      initialNumToRender: visibleCount,
-      maxToRenderPerBatch: visibleCount,
-      windowSize: visibleCount,
-      data: isLoading ? skeletonItems : data.slice(0, visibleCount),
-      keyExtractor: (_: any, i: number) =>
-        isLoading ? `skel-${filter}-${i}` : data[i].id,
-      renderItem: isLoading ? () => <LoadingSkeleton /> : (renderItem as any),
-    };
+    // derive this boolean instead of using extra state
+    const canSeeMore = !isLoading && !isError;
 
     return (
       <View className="mb-6">
-        <SectionHeader title={title} onPress={onSeeMore} />
+        <SectionHeader
+          title={title}
+          onPress={canSeeMore ? onSeeMore : undefined}
+          canSeeMore={canSeeMore}
+        />
 
         {isError ? (
-          <ErrorFallback onPress={refetch} />
+          <FlatList
+            horizontal
+            data={[{}]}
+            keyExtractor={(_, i) => `error-${filter}-${i}`}
+            renderItem={() => (
+              <EmptyStateCard
+                message={`Unable to load ${title.toLowerCase()}`}
+                onRetry={refetch}
+              />
+            )}
+            showsHorizontalScrollIndicator={false}
+            className="px-4"
+          />
+        ) : isLoading ? (
+          <FlatList
+            horizontal
+            data={Array(visibleCount).fill(null)}
+            keyExtractor={(_, i) => `skel-${filter}-${i}`}
+            renderItem={() => <LoadingSkeleton />}
+            showsHorizontalScrollIndicator={false}
+            className="px-4"
+          />
         ) : (
-          <FlatList {...flatListProps} />
+          <FlatList
+            horizontal
+            data={data.slice(0, visibleCount)}
+            keyExtractor={(item) => item.id}
+            renderItem={renderItem}
+            showsHorizontalScrollIndicator={false}
+            className="px-4"
+          />
         )}
       </View>
     );
