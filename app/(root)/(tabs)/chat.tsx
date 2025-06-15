@@ -1,4 +1,4 @@
-import ErrorFallback from "@/components/ErrorFallBack";
+import ErrorFallback from "@/components/ErrorFallback";
 import LoadingSkeleton from "@/components/LoadingSkeleton";
 import { View, Text } from "react-native";
 

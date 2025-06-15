@@ -1,4 +1,4 @@
-import { TextInputProps, TouchableOpacityProps } from "react-native";
+import { TextInputProps, TouchableOpacityProps, ViewStyle } from "react-native";
 
 // Driver and Ride Types
 declare interface Driver {
@@ -96,16 +96,12 @@ declare interface InputFieldProps extends TextInputProps {
   defaultValue?: string;
 }
 
-declare interface GoogleInputProps {
-  icon?: string;
+export interface GoogleInputProps {
+  icon?: ImageSourcePropType;
   initialLocation?: string;
   containerStyle?: string;
   textInputBackgroundColor?: string;
-  handlePress: ({
-    latitude,
-    longitude,
-    address,
-  }: {
+  handlePress: (location: {
     latitude: number;
     longitude: number;
     address: string;
@@ -277,6 +273,22 @@ declare interface TripCarouselProps {
 declare interface EmptyStateCardProps {
   message: string;
   onRetry: () => void;
+}
+
+interface MiniMapProps {
+  region: Region;
+  markerCoordinate?: { latitude: number; longitude: number };
+  containerHeight?: number;
+}
+
+interface ScreenContainerProps {
+  scrollable?: boolean;
+  className?: string;
+  children: React.ReactNode;
+}
+
+interface MyAppExtra {
+  googleMapsApiKey: string;
 }
 
 export type Member = {

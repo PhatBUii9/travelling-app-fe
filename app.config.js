@@ -10,6 +10,9 @@ export default {
     userInterfaceStyle: "automatic",
     newArchEnabled: true,
     icon: "./assets/images/adaptive-icon.png",
+    extra: {
+      googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY,
+    },
     ios: {
       supportsTablet: true,
       bundleIdentifier: "com.anonymous.Travelling-Front-End",

@@ -1,87 +1,173 @@
-// screens/Dashboard.tsx
-import React, { useCallback } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  ListRenderItemInfo,
+  Alert,
+  Platform,
+} from "react-native";
+import * as Location from "expo-location";
 import { useAuth } from "@/contexts/AuthContext";
 import ScreenContainer from "@/components/ScreenContainer";
-import InputField from "@/components/InputField";
+import GoogleTextInput from "@/components/GoogleTextInput";
 import MiniMap from "@/components/MiniMap";
 import TripCarousel from "@/components/TripCarousel";
 import SuggestedLocation from "@/components/Card/SuggestedLocation";
 import TripPreviewCard from "@/components/Card/TripPreviewCard";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { useForm } from "react-hook-form";
-import { IFormInputs, Trip } from "@/types/type";
-import { RelativePathString, router } from "expo-router";
+import { useUserLocationStore } from "@/store/userLocationStore";
+import { useRouter, RelativePathString } from "expo-router";
 import { ROUTES } from "@/constant/routes";
+import { Trip } from "@/types/type";
+import { icons } from "@/constant";
+
+type SectionKey = "header" | "suggested" | "upcoming" | "shared";
+const SECTIONS: SectionKey[] = ["header", "suggested", "upcoming", "shared"];
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
-  const { control } = useForm<IFormInputs>();
+  const router = useRouter();
 
-  const melbourneRegion = {
+  const setUserLocation = useUserLocationStore((s) => s.setUserLocation);
+  const setDestination = useUserLocationStore((s) => s.setDestination);
+  const destLat = useUserLocationStore((s) => s.destLat);
+  const destLng = useUserLocationStore((s) => s.destLng);
+
+  const [hasPermissions, setHasPermissions] = useState(false);
+
+  const defaultRegion = {
     latitude: -37.8098,
     longitude: 144.9652,
     latitudeDelta: 0.01,
     longitudeDelta: 0.01,
   };
 
+  // ask for device location once
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setHasPermissions(false);
+        return;
+      }
+      const { coords } = await Location.getCurrentPositionAsync();
+      setHasPermissions(true);
+      setUserLocation(coords.latitude, coords.longitude);
+    })();
+  }, [setUserLocation]);
+
+  // when user taps the “search” prompt
+  const onPickLocation = useCallback(
+    async (query: string) => {
+      try {
+        const results = await Location.geocodeAsync(query);
+        if (results[0]) {
+          setDestination(results[0].latitude, results[0].longitude);
+        } else {
+          Alert.alert("No results", "Couldn't find that address.");
+        }
+      } catch (e) {
+        Alert.alert("Error", "Failed to look up location.");
+      }
+    },
+    [setDestination]
+  );
+
+  // choose which center to use
+  const mapRegion =
+    hasPermissions && destLat != null && destLng != null
+      ? { ...defaultRegion, latitude: destLat, longitude: destLng }
+      : defaultRegion;
+
   const nav = useCallback(
     (path: RelativePathString) => () => router.push(path),
-    []
+    [router]
+  );
+
+  const renderSection = useCallback(
+    ({ item }: ListRenderItemInfo<SectionKey>) => {
+      switch (item) {
+        case "header":
+          return (
+            <>
+              <View className="justify-center items-center mb-4">
+                <Text className="text-3xl font-JakartaSemiBold">
+                  Welcome back, {user?.username} 👋
+                </Text>
+              </View>
+              <GoogleTextInput
+                icon={<Icon name="search" size={20} color="#888" />}
+                placeholder="Search location…"
+                onSubmit={(query) => {
+                  // same geocodeAsync flow
+                  onPickLocation(query);
+                }}
+              />
+              <Text className="text-xl font-JakartaBold mt-5 mb-2">
+                Your Current Location
+              </Text>
+              <View className="h-[200px] mb-6">
+                <MiniMap region={mapRegion} />
+              </View>
+            </>
+          );
+        case "suggested":
+          return (
+            <TripCarousel
+              title="Suggested Locations"
+              filter="all"
+              renderItem={({ item }: { item: Trip }) => (
+                <SuggestedLocation trip={item} />
+              )}
+              onSeeMore={nav(ROUTES.ROOT.TRIPS.SUGGESTED)}
+              simulateError
+            />
+          );
+        case "upcoming":
+          return (
+            <TripCarousel
+              title="Upcoming Trips"
+              filter="upcoming"
+              renderItem={({ item }: { item: Trip }) => (
+                <TripPreviewCard trip={item} />
+              )}
+              onSeeMore={nav(ROUTES.ROOT.TRIPS.UPCOMING)}
+            />
+          );
+        case "shared":
+          return (
+            <TripCarousel
+              title="Shared with Me"
+              filter="shared"
+              renderItem={({ item }: { item: Trip }) => (
+                <TripPreviewCard trip={item} />
+              )}
+              onSeeMore={nav(ROUTES.ROOT.TRIPS.SHARED)}
+            />
+          );
+      }
+    },
+    [user, mapRegion, onPickLocation, nav]
   );
 
   return (
     <View className="flex-1 relative">
-      <ScreenContainer>
-        <View className="justify-center items-center mb-4">
-          <Text className="text-3xl font-JakartaSemiBold">
-            Welcome back, {user?.username} 👋
-          </Text>
-        </View>
-
-        <InputField
-          name="location"
-          placeholder="Places to go…"
-          control={control}
-          label=""
-          className="mb-4"
-          icon={require("@/assets/icons/search.png")}
-          containerStyle="bg-gray-200"
-        />
-
-        <MiniMap region={melbourneRegion} />
-
-        <TripCarousel
-          title="Suggested Locations"
-          filter="all"
-          renderItem={({ item }: { item: Trip }) => (
-            <SuggestedLocation trip={item} />
-          )}
-          onSeeMore={nav(ROUTES.ROOT.TRIPS.SUGGESTED)}
-          simulateError={true}
-        />
-
-        <TripCarousel
-          title="Upcoming Trips"
-          filter="upcoming"
-          renderItem={({ item }: { item: Trip }) => (
-            <TripPreviewCard trip={item} />
-          )}
-          onSeeMore={nav(ROUTES.ROOT.TRIPS.UPCOMING)}
-        />
-
-        <TripCarousel
-          title="Shared with Me"
-          filter="shared"
-          renderItem={({ item }: { item: Trip }) => (
-            <TripPreviewCard trip={item} />
-          )}
-          onSeeMore={nav(ROUTES.ROOT.TRIPS.SHARED)}
+      <ScreenContainer scrollable={false}>
+        <FlatList
+          data={SECTIONS}
+          renderItem={renderSection}
+          keyExtractor={(key) => key}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{ paddingBottom: 100 }}
         />
       </ScreenContainer>
 
       <TouchableOpacity
-        onPress={() => console.log("Create a trip plan pressed.")}
+        //onPress={() => router.push(ROUTES.ROOT.TRIP_CREATE)}
+        onPress={() => console.log("Create a trip plan pressed!")}
         className="bg-primary-500 rounded-full w-16 h-16 justify-center items-center absolute bottom-6 right-6 shadow-lg shadow-gray-200"
         accessibilityRole="button"
         accessibilityLabel="Create a trip plan"

@@ -26,7 +26,6 @@ const TripCarousel: React.FC<TripCarouselProps> = React.memo(
       simulateError,
     });
 
-    // derive this boolean instead of using extra state
     const canSeeMore = !isLoading && !isError;
 
     return (
