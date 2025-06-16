@@ -21,7 +21,7 @@ import { useUserLocationStore } from "@/store/userLocationStore";
 import { useRouter, RelativePathString } from "expo-router";
 import { ROUTES } from "@/constant/routes";
 import { Trip } from "@/types/type";
-import { icons } from "@/constant";
+import { Region } from "react-native-maps";
 
 type SectionKey = "header" | "suggested" | "upcoming" | "shared";
 const SECTIONS: SectionKey[] = ["header", "suggested", "upcoming", "shared"];
@@ -32,6 +32,8 @@ const Dashboard: React.FC = () => {
 
   const setUserLocation = useUserLocationStore((s) => s.setUserLocation);
   const setDestination = useUserLocationStore((s) => s.setDestination);
+  const userLat = useUserLocationStore((s) => s.userLat);
+  const userLng = useUserLocationStore((s) => s.userLng);
   const destLat = useUserLocationStore((s) => s.destLat);
   const destLng = useUserLocationStore((s) => s.destLng);
 
@@ -75,16 +77,27 @@ const Dashboard: React.FC = () => {
     [setDestination]
   );
 
-  // choose which center to use
-  const mapRegion =
-    hasPermissions && destLat != null && destLng != null
-      ? { ...defaultRegion, latitude: destLat, longitude: destLng }
-      : defaultRegion;
-
   const nav = useCallback(
     (path: RelativePathString) => () => router.push(path),
     [router]
   );
+
+  let mapRegion: Region;
+  if (destLat != null && destLng != null) {
+    mapRegion = {
+      ...defaultRegion,
+      latitude: destLat,
+      longitude: destLng,
+    };
+  } else if (hasPermissions && userLat != null && userLng != null) {
+    mapRegion = {
+      ...defaultRegion,
+      latitude: userLat,
+      longitude: userLng,
+    };
+  } else {
+    mapRegion = defaultRegion;
+  }
 
   const renderSection = useCallback(
     ({ item }: ListRenderItemInfo<SectionKey>) => {
@@ -101,7 +114,6 @@ const Dashboard: React.FC = () => {
                 icon={<Icon name="search" size={20} color="#888" />}
                 placeholder="Search location…"
                 onSubmit={(query) => {
-                  // same geocodeAsync flow
                   onPickLocation(query);
                 }}
               />

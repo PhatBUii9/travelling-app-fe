@@ -96,18 +96,6 @@ declare interface InputFieldProps extends TextInputProps {
   defaultValue?: string;
 }
 
-export interface GoogleInputProps {
-  icon?: ImageSourcePropType;
-  initialLocation?: string;
-  containerStyle?: string;
-  textInputBackgroundColor?: string;
-  handlePress: (location: {
-    latitude: number;
-    longitude: number;
-    address: string;
-  }) => void;
-}
-
 // User & OTP Related Types
 declare type EmailEnum = "EMAIL_OTP_REGISTER" | "EMAIL_OTP_LOGIN";
 declare type OTPVerificationMethod = "EMAIL_OTP" | "SMS_OTP";
@@ -289,6 +277,14 @@ interface ScreenContainerProps {
 
 interface MyAppExtra {
   googleMapsApiKey: string;
+}
+
+interface GoogleInputProps {
+  icon?: JSX.Element;
+  placeholder?: string;
+  containerStyle?: string;
+  inputStyle?: object;
+  onSubmit: (query: string) => void;
 }
 
 export type Member = {

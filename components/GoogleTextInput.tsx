@@ -1,3 +1,4 @@
+import { GoogleInputProps } from "@/types/type";
 import React, { useState } from "react";
 import {
   View,
@@ -6,14 +7,6 @@ import {
   NativeSyntheticEvent,
   TextInputSubmitEditingEventData,
 } from "react-native";
-
-interface GoogleInputProps {
-  icon?: JSX.Element; // you can render your search icon here
-  placeholder?: string;
-  containerStyle?: string; // tailwind classes
-  inputStyle?: object; // any extra inline styles
-  onSubmit: (query: string) => void;
-}
 
 const GoogleTextInput: React.FC<GoogleInputProps> = ({
   icon,
