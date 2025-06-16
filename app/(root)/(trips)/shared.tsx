@@ -6,11 +6,7 @@ import { useCallback, useMemo } from "react";
 import { FlatList } from "react-native";
 
 const Shared = () => {
-  const sharedTrips = useMemo(() => {
-    return mockTrips.filter((t) => t.shared);
-  }, [mockTrips]);
-
-  return <TripList trips={sharedTrips} />;
+  return <TripList title="shared trips" filter="shared" />;
 };
 
 export default Shared;

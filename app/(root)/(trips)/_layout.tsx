@@ -1,7 +1,7 @@
 import { Stack, useRouter } from "expo-router";
 import { TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import Ionicons from "react-native-vector-icons/";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const Layout = () => {
   const router = useRouter();
@@ -11,7 +11,7 @@ const Layout = () => {
       screenOptions={{
         headerShown: true,
         headerBackTitleVisible: false,
-        headerBackImage: () => (
+        headerLeft: () => (
           <TouchableOpacity
             onPress={() => router.back()}
             style={{ paddingHorizontal: 16 }}
@@ -25,7 +25,7 @@ const Layout = () => {
             onPress={() => {}}
             style={{ paddingHorizontal: 16 }}
           >
-            <Icon name="navicon" size={24} color="#000" />
+            <Ionicons name="options" size={24} color="#000" />
           </TouchableOpacity>
         ),
       }}

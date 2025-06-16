@@ -1,10 +1,6 @@
+import { ScreenContainerProps } from "@/types/type";
 import React from "react";
 import { SafeAreaView, ScrollView, View } from "react-native";
-
-interface ScreenContainerProps {
-  scrollable?: boolean;
-  children: React.ReactNode;
-}
 
 const ScreenContainer: React.FC<ScreenContainerProps> = ({
   scrollable = true,
@@ -13,7 +9,7 @@ const ScreenContainer: React.FC<ScreenContainerProps> = ({
   <SafeAreaView className="flex-1 bg-white">
     {scrollable ? (
       <ScrollView
-        className="px-4 py-4"
+        className="px-2 py-4"
         contentContainerStyle={{ flexGrow: 1, paddingBottom: 32 }}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
@@ -21,7 +17,7 @@ const ScreenContainer: React.FC<ScreenContainerProps> = ({
         {children}
       </ScrollView>
     ) : (
-      <View className="flex-1 px-4 py-4">{children}</View>
+      <View className="flex-1 px-2 py-4">{children}</View>
     )}
   </SafeAreaView>
 );

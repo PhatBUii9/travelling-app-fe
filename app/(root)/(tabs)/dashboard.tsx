@@ -20,10 +20,9 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { useUserLocationStore } from "@/store/userLocationStore";
 import { useRouter, RelativePathString } from "expo-router";
 import { ROUTES } from "@/constant/routes";
-import { Trip } from "@/types/type";
+import { SectionKey, Trip } from "@/types/type";
 import { Region } from "react-native-maps";
 
-type SectionKey = "header" | "suggested" | "upcoming" | "shared";
 const SECTIONS: SectionKey[] = ["header", "suggested", "upcoming", "shared"];
 
 const Dashboard: React.FC = () => {
@@ -134,7 +133,6 @@ const Dashboard: React.FC = () => {
                 <SuggestedLocation trip={item} />
               )}
               onSeeMore={nav(ROUTES.ROOT.TRIPS.SUGGESTED)}
-              simulateError
             />
           );
         case "upcoming":

@@ -246,7 +246,13 @@ declare interface UseTripsResult {
   data: Trip[];
   isLoading: boolean;
   isError: boolean;
+  isEmpty: boolean;
   refetch: () => void;
+}
+
+interface TripListProps {
+  title: string;
+  filter: "all" | "upcoming" | "shared";
 }
 
 declare interface TripCarouselProps {
@@ -287,6 +293,11 @@ interface GoogleInputProps {
   onSubmit: (query: string) => void;
 }
 
+interface ScreenContainerProps {
+  scrollable?: boolean;
+  children: React.ReactNode;
+}
+
 export type Member = {
   id: string;
   username: string;
@@ -309,3 +320,5 @@ export type Trip = {
   trending?: boolean;
   viewedAt?: string;
 };
+
+type SectionKey = "header" | "suggested" | "upcoming" | "shared";

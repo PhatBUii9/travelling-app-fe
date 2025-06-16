@@ -20,13 +20,14 @@ const TripCarousel: React.FC<TripCarouselProps> = React.memo(
       data = [],
       isLoading,
       isError,
+      isEmpty,
       refetch,
     } = useTrips({
       filter,
       simulateError,
     });
 
-    const canSeeMore = !isLoading && !isError;
+    const canSeeMore = !isLoading && !isError && !isEmpty;
 
     return (
       <View className="mb-6">
