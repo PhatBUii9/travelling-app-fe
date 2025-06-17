@@ -113,6 +113,15 @@ declare interface IFormInputs {
   smsEnum?: EmailEnum;
 }
 
+declare interface ITripPlanInputs {
+  title: string;
+  destination: string;
+  startDate: string;
+  endDate: string;
+  description?: string;
+  imageUrl?: string;
+}
+
 declare interface EmailOTPRequest {
   username: string;
   email: string;

@@ -33,6 +33,8 @@ const Layout = () => {
       <Stack.Screen name="suggested" options={{ title: "Suggested Trips" }} />
       <Stack.Screen name="upcoming" options={{ title: "Upcoming Trips" }} />
       <Stack.Screen name="shared" options={{ title: "Shared with Me" }} />
+      <Stack.Screen name="create" options={{ title: "Plan a Trip" }} />
+      <Stack.Screen name="preview" options={{ title: "Trip Preview" }} />
     </Stack>
   );
 };

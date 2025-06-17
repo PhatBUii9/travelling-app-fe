@@ -176,8 +176,7 @@ const Dashboard: React.FC = () => {
       </ScreenContainer>
 
       <TouchableOpacity
-        //onPress={() => router.push(ROUTES.ROOT.TRIP_CREATE)}
-        onPress={() => console.log("Create a trip plan pressed!")}
+        onPress={() => router.push(ROUTES.ROOT.TRIPS.TRIP_CREATE)}
         className="bg-primary-500 rounded-full w-16 h-16 justify-center items-center absolute bottom-6 right-6 shadow-lg shadow-gray-200"
         accessibilityRole="button"
         accessibilityLabel="Create a trip plan"

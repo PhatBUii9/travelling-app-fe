@@ -6,7 +6,6 @@ import {
   Text,
   Image,
   TextInput,
-  Platform,
   Keyboard,
 } from "react-native";
 import { InputFieldProps } from "@/types/type";

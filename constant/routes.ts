@@ -16,6 +16,8 @@ export const ROUTES = {
     },
     TRIPS: {
       TRIP_DETAIL: "/(root)/(trips)/[tripId]" as RelativePathString,
+      TRIP_CREATE: "/(root)/(trips)/create" as RelativePathString,
+      TRIP_PREVIEW: "/(root)/(trips)/preview" as RelativePathString,
       SHARED: "/(root)/(trips)/shared" as RelativePathString,
       SUGGESTED: "/(root)/(trips)/suggested" as RelativePathString,
       UPCOMING: "/(root)/(trips)/upcoming" as RelativePathString,

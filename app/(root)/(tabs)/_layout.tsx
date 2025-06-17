@@ -54,7 +54,7 @@ const Layout = () => {
         }}
       />
       <Tabs.Screen
-        name="chat"
+        name="trip"
         options={{
           tabBarIcon: ({ focused }: { focused: boolean }) => (
             <TabIcon source={icons.chat} focused={focused} label="Trips" />
