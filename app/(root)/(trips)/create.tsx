@@ -1,8 +1,10 @@
 import CustomButton from "@/components/CustomButton";
+import DateInput from "@/components/DateInput";
 import InputField from "@/components/InputField";
 import ScreenContainer from "@/components/ScreenContainer";
 import { icons } from "@/constant";
 import { ITripPlanInputs } from "@/types/type";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { TouchableOpacity, View, Text, Image } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -12,6 +14,7 @@ const create = () => {
     control,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<ITripPlanInputs>();
 
   const handleNext = () => {};
@@ -48,30 +51,28 @@ const create = () => {
           maxLength={100}
         />
         <View className="flex-row">
-          <View className="flex-1 pr-2">
-            <InputField
+          <View className="flex-1 mr-2">
+            <DateInput
               control={control}
               name="startDate"
               label="From"
-              labelStyle="text-[20px] mb-0"
               placeholder="Start date"
-              className="flex-1"
-              inputStyle="h-10 py-1 px-4"
-              containerStyle="border-gray-300"
-              icon={icons.calendar}
+              minimumDate={new Date()}
+              rules={{ required: "Start date is required" }}
             />
           </View>
-          <View className="flex-1 pl-2">
-            <InputField
+          <View className="flex-1 ml-2">
+            <DateInput
               control={control}
               name="endDate"
               label="To"
-              labelStyle="text-[20px] mb-0"
               placeholder="End date"
-              inputStyle="h-10 py-1 px-4"
-              className="flex-1"
-              containerStyle="border-gray-300"
-              icon={icons.calendar}
+              minimumDate={watch("startDate")}
+              rules={{
+                required: "End date is required",
+                validate: (d: Date) =>
+                  d >= watch("startDate") || "End must be after start",
+              }}
             />
           </View>
         </View>

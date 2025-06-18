@@ -1,4 +1,30 @@
+import { RegisterOptions } from "react-hook-form";
 import { TextInputProps, TouchableOpacityProps, ViewStyle } from "react-native";
+
+export type Member = {
+  id: string;
+  username: string;
+  email?: string;
+  avatar?: string;
+};
+
+export type Trip = {
+  id: string;
+  title: string;
+  destination: string;
+  dates: string;
+  imageUrl: string | number;
+  createdAt: string;
+  members?: Member[];
+  status: "upcoming" | "completed" | "cancelled";
+  shared?: boolean;
+  locationTag?: string;
+  recentlyViewed?: boolean;
+  trending?: boolean;
+  viewedAt?: string;
+};
+
+type SectionKey = "header" | "suggested" | "upcoming" | "shared";
 
 // Driver and Ride Types
 declare interface Driver {
@@ -116,8 +142,8 @@ declare interface IFormInputs {
 declare interface ITripPlanInputs {
   title: string;
   destination: string;
-  startDate: string;
-  endDate: string;
+  startDate: Date;
+  endDate: Date;
   description?: string;
   imageUrl?: string;
 }
@@ -307,27 +333,17 @@ interface ScreenContainerProps {
   children: React.ReactNode;
 }
 
-export type Member = {
-  id: string;
-  username: string;
-  email?: string;
-  avatar?: string;
-};
-
-export type Trip = {
-  id: string;
-  title: string;
-  destination: string;
-  dates: string;
-  imageUrl: string | number;
-  createdAt: string;
-  members?: Member[];
-  status: "upcoming" | "completed" | "cancelled";
-  shared?: boolean;
-  locationTag?: string;
-  recentlyViewed?: boolean;
-  trending?: boolean;
-  viewedAt?: string;
-};
-
-type SectionKey = "header" | "suggested" | "upcoming" | "shared";
+interface DateInputProps {
+  label: string;
+  name: keyof ITripPlanInputs;
+  control: Control<ITripPlanInputs>;
+  rules?: RegisterOptions;
+  minimumDate?: Date;
+  maximumDate?: Date;
+  placeholder?: string;
+  labelStyle?: string;
+  className?: string;
+  containerStyle?: string;
+  iconStyle?: string;
+  inputStyle?: string;
+}
