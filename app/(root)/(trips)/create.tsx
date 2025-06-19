@@ -8,31 +8,81 @@ import { router } from "expo-router";
 import { useForm } from "react-hook-form";
 import { TouchableOpacity, View, Text, Image } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import * as ImagePicker from "expo-image-picker";
 
 const create = () => {
   const {
     control,
+    setValue,
     handleSubmit,
     formState: { errors },
     watch,
-  } = useForm<ITripPlanInputs>();
+  } = useForm<ITripPlanInputs>({
+    defaultValues: {
+      title: "",
+      destination: "",
+      startDate: new Date(),
+      endDate: undefined,
+      description: "",
+      imageUrl: undefined,
+    },
+  });
 
-  const onNextPress = () => {
-    router.push(ROUTES.ROOT.TRIPS.TRIP_PREVIEW);
+  const imageUrl = watch("imageUrl");
+  const onNextPress = (data: ITripPlanInputs) => {
+    console.log(data);
+    router.push({
+      pathname: ROUTES.ROOT.TRIPS.TRIP_PREVIEW,
+      params: {
+        title: data.title,
+        destination: data.destination,
+        startDate: data.startDate.toISOString(),
+        endDate: data.endDate.toISOString(),
+        description: data.description,
+        imageUrl: data.imageUrl,
+      },
+    });
   };
-  const handleCancel = () => {};
-  const onSelectCoverImage = () => {};
+  const handleCancel = () => {
+    router.back();
+  };
+
+  const onSelectCoverImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      quality: 1,
+      allowsEditing: true,
+      aspect: [16, 9],
+    });
+
+    console.log(result);
+
+    if (!result.canceled && result.assets.length > 0) {
+      const uri = result.assets[0].uri;
+      setValue("imageUrl", uri, { shouldValidate: true });
+    }
+  };
 
   return (
     <ScreenContainer>
       <View className="py-1 px-4">
         <TouchableOpacity onPress={onSelectCoverImage}>
-          <View className="w-full h-[120px] bg-gray-100 rounded-3xl flex items-center justify-center border border-gray-300 mb-4">
-            <Icon name="camera" size={26} color="#0286FF" />
-            <Text className="font-JakartaSemiBold text-md text-primary-500 mt-2">
-              Select Cover Image
-            </Text>
-          </View>
+          {imageUrl ? (
+            <Image
+              source={{ uri: imageUrl }}
+              className="w-full aspect-[16/9] rounded-3xl mb-4"
+              resizeMode="cover"
+              accessibilityLabel="Cover Image"
+              alt="Trip Cover Image"
+            />
+          ) : (
+            <View className="w-full h-[120px] bg-gray-100 rounded-3xl flex items-center justify-center border border-gray-300 mb-4">
+              <Icon name="camera" size={26} color="#0286FF" />
+              <Text className="font-JakartaSemiBold text-md text-primary-500 mt-2">
+                Select Cover Image
+              </Text>
+            </View>
+          )}
         </TouchableOpacity>
         <InputField
           control={control}
@@ -71,14 +121,15 @@ const create = () => {
               rules={{
                 required: "End date is required",
                 validate: (d: Date) =>
-                  d >= watch("startDate") || "End must be after start",
+                  d >= watch("startDate") ||
+                  "End date must be after start date",
               }}
             />
           </View>
         </View>
         <InputField
           control={control}
-          name="decription"
+          name="description"
           label="Description"
           labelStyle="text-[20px] mb-0"
           placeholder="Add a description"

@@ -19,14 +19,12 @@ const DateInput: React.FC<DateInputProps> = ({
   labelStyle = "",
   containerStyle = "",
 }) => {
-  const [show, setShow] = useState(false);
-
   return (
     <Controller
       control={control}
       name={name}
       rules={rules}
-      defaultValue={undefined}
+      defaultValue={new Date()}
       render={({ field: { value, onChange }, fieldState: { error } }) => (
         <View className={`my-2 w-full ${className}`}>
           {label && (
@@ -54,10 +52,7 @@ const DateInput: React.FC<DateInputProps> = ({
               minimumDate={minimumDate}
               maximumDate={maximumDate}
               onChange={(event: DateTimePickerEvent, selectedDate?: Date) => {
-                setShow(false);
-                if (event.type === "set" && selectedDate) {
-                  onChange(selectedDate);
-                }
+                onChange(selectedDate);
               }}
             />
           </View>

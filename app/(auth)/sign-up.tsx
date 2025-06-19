@@ -35,13 +35,11 @@ const SignUp = () => {
   } = useForm<IFormInputs>();
 
   const pwd = watch("password");
-  // const email = watch("email");
-  // const phone = watch("phoneNumber");
   const { showLoading, hideLoading } = useLoading();
   const { data, setData } = useRegistration();
 
   const onRegisterPressed = async (form: IFormInputs) => {
-    // 1) Require either email or phone
+    // Require either email or phone
     if (!form.email && !form.phoneNumber) {
       setError("email", {
         type: "manual",
