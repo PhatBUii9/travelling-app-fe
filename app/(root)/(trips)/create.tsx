@@ -2,9 +2,9 @@ import CustomButton from "@/components/CustomButton";
 import DateInput from "@/components/DateInput";
 import InputField from "@/components/InputField";
 import ScreenContainer from "@/components/ScreenContainer";
-import { icons } from "@/constant";
+import { ROUTES } from "@/constant/routes";
 import { ITripPlanInputs } from "@/types/type";
-import { useState } from "react";
+import { router } from "expo-router";
 import { useForm } from "react-hook-form";
 import { TouchableOpacity, View, Text, Image } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -17,7 +17,9 @@ const create = () => {
     watch,
   } = useForm<ITripPlanInputs>();
 
-  const handleNext = () => {};
+  const onNextPress = () => {
+    router.push(ROUTES.ROOT.TRIPS.TRIP_PREVIEW);
+  };
   const handleCancel = () => {};
   const onSelectCoverImage = () => {};
 
@@ -56,7 +58,6 @@ const create = () => {
               control={control}
               name="startDate"
               label="From"
-              placeholder="Start date"
               minimumDate={new Date()}
               rules={{ required: "Start date is required" }}
             />
@@ -66,7 +67,6 @@ const create = () => {
               control={control}
               name="endDate"
               label="To"
-              placeholder="End date"
               minimumDate={watch("startDate")}
               rules={{
                 required: "End date is required",
@@ -99,7 +99,7 @@ const create = () => {
         />
         <CustomButton
           title="Next"
-          onPress={handleNext}
+          onPress={handleSubmit(onNextPress)}
           className="flex-1 rounded-xl"
         />
       </View>
