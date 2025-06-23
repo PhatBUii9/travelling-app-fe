@@ -1,6 +1,7 @@
+import HeaderLeft from "@/components/HeaderLeft";
 import { Stack, useRouter } from "expo-router";
 import { TouchableOpacity } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
+
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 const Layout = () => {
@@ -11,14 +12,7 @@ const Layout = () => {
       screenOptions={{
         headerShown: true,
         headerBackTitleVisible: false,
-        headerLeft: () => (
-          <TouchableOpacity
-            onPress={() => router.back()}
-            style={{ paddingHorizontal: 16 }}
-          >
-            <Icon name="chevron-left" size={24} color="#000" />
-          </TouchableOpacity>
-        ),
+        headerLeft: HeaderLeft,
         headerTintColor: "#000",
         headerRight: () => (
           <TouchableOpacity
@@ -35,6 +29,7 @@ const Layout = () => {
       <Stack.Screen name="shared" options={{ title: "Shared with Me" }} />
       <Stack.Screen name="create" options={{ title: "Plan a Trip" }} />
       <Stack.Screen name="preview" options={{ title: "Trip Preview" }} />
+      <Stack.Screen name="plan-trip" options={{ headerShown: false }} />
     </Stack>
   );
 };

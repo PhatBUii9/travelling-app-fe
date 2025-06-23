@@ -46,6 +46,7 @@ import melbourne from "@/assets/images/melbourne.jpeg";
 import perisher from "@/assets/images/perisher.jpeg";
 import phuquoc from "@/assets/images/phuquoc.jpeg";
 import whitsundays from "@/assets/images/whitsundays.jpeg";
+import startTrip from "@/assets/images/start-trip.png";
 
 export const images = {
   onboarding1,
@@ -69,6 +70,7 @@ export const images = {
   perisher,
   phuquoc,
   whitsundays,
+  startTrip,
 };
 
 export const icons = {

@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Image, Text } from "react-native";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, Stack, useLocalSearchParams } from "expo-router";
 import ScreenContainer from "@/components/ScreenContainer";
 import CustomButton from "@/components/CustomButton";
 
@@ -32,6 +32,7 @@ export default function Preview() {
 
   return (
     <ScreenContainer>
+      <Stack.Screen options={{ headerRight: () => {} }} />
       <View className="px-4 pt-4">
         <View
           className="rounded-3xl overflow-hidden"

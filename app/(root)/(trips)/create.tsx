@@ -4,13 +4,13 @@ import InputField from "@/components/InputField";
 import ScreenContainer from "@/components/ScreenContainer";
 import { ROUTES } from "@/constant/routes";
 import { ITripPlanInputs } from "@/types/type";
-import { router } from "expo-router";
+import { router, Stack } from "expo-router";
 import { useForm } from "react-hook-form";
 import { TouchableOpacity, View, Text, Image } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import * as ImagePicker from "expo-image-picker";
 
-const create = () => {
+const Create = () => {
   const {
     control,
     setValue,
@@ -65,6 +65,7 @@ const create = () => {
 
   return (
     <ScreenContainer>
+      <Stack.Screen options={{ headerRight: () => {} }} />
       <View className="py-1 px-4">
         <TouchableOpacity onPress={onSelectCoverImage}>
           {imageUrl ? (
@@ -158,4 +159,4 @@ const create = () => {
   );
 };
 
-export default create;
+export default Create;

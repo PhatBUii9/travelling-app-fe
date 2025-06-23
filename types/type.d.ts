@@ -266,6 +266,8 @@ declare interface AuthContextType {
   user: User | null;
 }
 
+declare interface TripPlannerContextType {}
+
 interface SectionHeaderProps {
   title: string;
   onPress?: () => void;
@@ -347,3 +349,8 @@ interface DateInputProps {
   iconStyle?: string;
   inputStyle?: string;
 }
+
+type ProgressBarProps = {
+  currentStep: number;
+  totalSteps: number;
+};
