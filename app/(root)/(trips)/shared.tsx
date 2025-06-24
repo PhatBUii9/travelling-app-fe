@@ -1,5 +1,5 @@
-import TripCard from "@/components/Card/TripCard";
-import TripList from "@/components/TripList";
+import TripCard from "@/components/card/TripCard";
+import TripList from "@/components/trip/TripList";
 import { mockTrips } from "@/data/mockTrip";
 import { Trip } from "@/types/type";
 import { useCallback, useMemo } from "react";

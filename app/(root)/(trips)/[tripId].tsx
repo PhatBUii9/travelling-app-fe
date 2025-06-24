@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { mockTrips } from "@/data/mockTrip";
 import Icon from "react-native-vector-icons/FontAwesome";
-import MemberAvatar from "@/components/MemberAvatar";
+import MemberAvatar from "@/components/trip/MemberAvatar";
 import { useLayoutEffect, useState } from "react";
 import { Trip } from "@/types/type";
 import { useNavigation } from "expo-router";

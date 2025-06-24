@@ -10,12 +10,12 @@ import {
 } from "react-native";
 import * as Location from "expo-location";
 import { useAuth } from "@/contexts/AuthContext";
-import ScreenContainer from "@/components/ScreenContainer";
-import GoogleTextInput from "@/components/GoogleTextInput";
-import MiniMap from "@/components/MiniMap";
-import TripCarousel from "@/components/TripCarousel";
-import SuggestedLocation from "@/components/Card/SuggestedLocation";
-import TripPreviewCard from "@/components/Card/TripPreviewCard";
+import ScreenContainer from "@/components/common/ScreenContainer";
+import GoogleTextInput from "@/components/common/GoogleTextInput";
+import MiniMap from "@/components/trip/MiniMap";
+import TripCarousel from "@/components/trip/TripCarousel";
+import SuggestedLocation from "@/components/card/SuggestedLocation";
+import TripPreviewCard from "@/components/card/TripPreviewCard";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useUserLocationStore } from "@/store/userLocationStore";
 import { useRouter, RelativePathString } from "expo-router";

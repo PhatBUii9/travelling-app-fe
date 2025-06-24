@@ -8,10 +8,10 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Trip, TripListProps } from "@/types/type";
-import TripCard from "@/components/Card/TripCard";
+import TripCard from "@/components/card/TripCard";
 import { images } from "@/constant";
 import useTrips from "@/hooks/useTrips";
-import EmptyStateCard from "./EmptyStateCard";
+import EmptyStateCard from "../card/EmptyStateCard";
 
 const TripList: React.FC<TripListProps> = ({ filter, title }) => {
   const renderItem = useCallback(

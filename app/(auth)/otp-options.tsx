@@ -1,5 +1,5 @@
 import { View, Text, Alert } from "react-native";
-import CustomButton from "@/components/CustomButton";
+import CustomButton from "@/components/common/CustomButton";
 import { Link, useRouter, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { sendEmailOTP } from "@/services/api/authService";

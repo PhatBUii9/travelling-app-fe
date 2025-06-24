@@ -1,5 +1,5 @@
-import ErrorFallback from "@/components/ErrorFallback";
-import LoadingSkeleton from "@/components/LoadingSkeleton";
+import ErrorFallback from "@/components/common/ErrorFallback";
+import LoadingSkeleton from "@/components/common/LoadingSkeleton";
 import { View, Text } from "react-native";
 
 const Home = () => {

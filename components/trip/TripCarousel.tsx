@@ -1,9 +1,9 @@
 // components/TripCarousel.tsx
 import React, { useMemo, useState } from "react";
 import { View, FlatList, ListRenderItemInfo } from "react-native";
-import SectionHeader from "@/components/SectionHeader";
-import LoadingSkeleton from "@/components/LoadingSkeleton";
-import EmptyStateCard from "@/components/EmptyStateCard";
+import SectionHeader from "@/components/common/SectionHeader";
+import LoadingSkeleton from "@/components/common/LoadingSkeleton";
+import EmptyStateCard from "@/components/card/EmptyStateCard";
 import useTrips from "@/hooks/useTrips";
 import { TripCarouselProps } from "@/types/type";
 

@@ -1,7 +1,7 @@
-import CustomButton from "@/components/CustomButton";
-import DateInput from "@/components/DateInput";
-import InputField from "@/components/InputField";
-import ScreenContainer from "@/components/ScreenContainer";
+import CustomButton from "@/components/common/CustomButton";
+import DateInput from "@/components/trip/DateInput";
+import InputField from "@/components/common/InputField";
+import ScreenContainer from "@/components/common/ScreenContainer";
 import { ROUTES } from "@/constant/routes";
 import { ITripPlanInputs } from "@/types/type";
 import { router, Stack } from "expo-router";

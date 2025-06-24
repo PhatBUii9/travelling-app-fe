@@ -1,8 +1,8 @@
 import React from "react";
 import { View, Image, Text } from "react-native";
 import { router, Stack, useLocalSearchParams } from "expo-router";
-import ScreenContainer from "@/components/ScreenContainer";
-import CustomButton from "@/components/CustomButton";
+import ScreenContainer from "@/components/common/ScreenContainer";
+import CustomButton from "@/components/common/CustomButton";
 
 export default function Preview() {
   const { title, destination, startDate, endDate, description, imageUrl } =

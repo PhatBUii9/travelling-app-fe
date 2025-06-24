@@ -1,10 +1,18 @@
-import { Text, Image, View, TouchableWithoutFeedback } from "react-native";
-import ScreenContainer from "@/components/ScreenContainer";
+import {
+  Text,
+  Image,
+  View,
+  TouchableWithoutFeedback,
+  Alert,
+} from "react-native";
+import ScreenContainer from "@/components/common/ScreenContainer";
 import { images } from "@/constant";
-import CustomButton from "@/components/CustomButton";
+import CustomButton from "@/components/common/CustomButton";
 import { useState } from "react";
 import { Dimensions } from "react-native";
-import ProgressBar from "@/components/PorgressBar";
+import ProgressBar from "@/components/common/PorgressBar";
+import { router } from "expo-router";
+import { ROUTES } from "@/constant/routes";
 
 const renderOption = (
   label: string,
@@ -32,7 +40,13 @@ const TripWizardStartScreen = () => {
   );
 
   const handleContinue = () => {
-    if (isScratchSelected === null) return;
+    if (isScratchSelected === null) {
+      return;
+    } else if (isScratchSelected) {
+      router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_CITY);
+    } else {
+      Alert.alert("⚠️ Warning", "This feature is not available!");
+    }
   };
 
   return (

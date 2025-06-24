@@ -1,4 +1,4 @@
-import HeaderLeft from "@/components/HeaderLeft";
+import HeaderLeft from "@/components/layout/HeaderLeft";
 import { Stack, useRouter } from "expo-router";
 import { TouchableOpacity } from "react-native";
 

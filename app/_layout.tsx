@@ -9,7 +9,7 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { RegistrationProvider } from "@/contexts/RegistrationContext";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-get-random-values";
-import SheetsPortal from "@/components/SheetsPortal";
+import SheetsPortal from "@/components/layout/SheetsPortal";
 
 // Prevent splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();

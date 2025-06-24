@@ -7,13 +7,13 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import CustomButton from "@/components/CustomButton";
-import InputField from "@/components/InputField";
+import CustomButton from "@/components/common/CustomButton";
+import InputField from "@/components/common/InputField";
 import { Link, RelativePathString, useRouter } from "expo-router";
 import { IFormInputs } from "@/types/type";
 import validationRules from "@/utils/validationRules";
 import { SafeAreaView } from "react-native-safe-area-context";
-import SocialButtons from "@/components/SocialButtons";
+import SocialButtons from "@/components/common/SocialButtons";
 import { withLoading } from "@/utils/withLoading";
 import { useLoading } from "@/contexts/LoadingContext";
 import { useAuth } from "@/contexts/AuthContext";

@@ -1,6 +1,6 @@
-import HeaderLeft from "@/components/HeaderLeft";
+import HeaderLeft from "@/components/layout/HeaderLeft";
 import { TripPlannerProvider } from "@/contexts/TripPlannerContext";
-import { Stack, useRouter } from "expo-router";
+import { Stack } from "expo-router";
 
 const Layout = () => {
   return (

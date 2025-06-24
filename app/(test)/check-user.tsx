@@ -8,7 +8,7 @@ import {
   Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import CustomButton from "@/components/CustomButton";
+import CustomButton from "@/components/common/CustomButton";
 import { checkUsernameExists } from "@/services/api/authService";
 
 const CheckUsername = () => {

@@ -1,4 +1,4 @@
-import TripList from "@/components/TripList";
+import TripList from "@/components/trip/TripList";
 
 const Upcoming = () => {
   return <TripList title="upcoming trips" filter="upcoming" />;

@@ -266,7 +266,15 @@ declare interface AuthContextType {
   user: User | null;
 }
 
-declare interface TripPlannerContextType {}
+interface TripPlannerContextType {
+  tripTitle: string;
+  cities: CityBlock[];
+  setTripTitle: (title: string) => void;
+  addCity: (city: CityBlock) => void;
+  updateCity: (cityId: string, updated: Partial<CityBlock>) => void;
+  removeCity: (cityId: string) => void;
+  resetTrip: () => void;
+}
 
 interface SectionHeaderProps {
   title: string;
@@ -354,3 +362,32 @@ type ProgressBarProps = {
   currentStep: number;
   totalSteps: number;
 };
+
+export type CityBlock = {
+  cityId: string;
+  cityName: string;
+  country: string;
+  imageURL: string;
+  startDate: string;
+  endDate: string;
+  places: string[];
+  restaurants?: string[];
+  accommodations?: string[];
+};
+
+type TripPlannerContextType = {
+  tripTitle: string;
+  cities: CityBlock[];
+  setTripTitle: (title: string) => void;
+  addCity: (city: CityBlock) => void;
+  updateCity: (cityId: string, updated: Partial<CityBlock>) => void;
+  removeCity: (cityId: string) => void;
+  resetTrip: () => void;
+};
+
+type SearchBarProps = {
+  placeholder: string;
+  value: string;
+  onChangeText: (text: string) => void;
+  className?: string;
+} & TextInputProps;

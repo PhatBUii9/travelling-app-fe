@@ -1,4 +1,4 @@
-import TripList from "@/components/TripList";
+import TripList from "@/components//trip/TripList";
 import { mockTrips } from "@/data/mockTrip";
 
 const Suggested = () => {

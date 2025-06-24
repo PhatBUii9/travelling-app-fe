@@ -1,7 +1,7 @@
 import { useForm, Controller } from "react-hook-form";
 import { View, Text, ScrollView } from "react-native";
-import CustomButton from "@/components/CustomButton";
-import InputField from "@/components/InputField";
+import CustomButton from "@/components/common/CustomButton";
+import InputField from "@/components/common/InputField";
 import { Link, useRouter } from "expo-router";
 import { IFormInputs } from "@/types/type";
 import { SafeAreaView } from "react-native-safe-area-context";

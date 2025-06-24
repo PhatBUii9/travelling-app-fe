@@ -1,6 +1,6 @@
 // components/SheetsPortal.tsx
 import ActionSheet from "react-native-actions-sheet";
-import TripActionSheet from "./TripActionSheet";
+import TripActionSheet from "../trip/TripActionSheet";
 
 const SheetsPortal = () => {
   return (

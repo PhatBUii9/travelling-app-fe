@@ -1,4 +1,4 @@
-import CustomButton from "@/components/CustomButton";
+import CustomButton from "@/components/common/CustomButton";
 import { ROUTES } from "@/constant/routes";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "expo-router";
