@@ -1,22 +1,22 @@
-import CityCard from "@/components/card/CityCard";
-import CustomButton from "@/components/common/CustomButton";
-import ProgressBar from "@/components/common/PorgressBar";
-import ScreenContainer from "@/components/common/ScreenContainer";
-import SearchBar from "@/components/common/SearchBar";
-import { ROUTES } from "@/constant/routes";
-import { mockCities } from "@/data/mockCities";
-import { useTripPlanner } from "@/hooks/useTripPlanner";
-import { router } from "expo-router";
-import { useState } from "react";
-import { View, Text, FlatList } from "react-native";
+import CityCard from '@/components/card/CityCard';
+import CustomButton from '@/components/common/CustomButton';
+import ProgressBar from '@/components/common/PorgressBar';
+import ScreenContainer from '@/components/common/ScreenContainer';
+import SearchBar from '@/components/common/SearchBar';
+import { ROUTES } from '@/constant/routes';
+import { mockCities } from '@/data/mockCities';
+import { useTripPlanner } from '@/hooks/useTripPlanner';
+import { router } from 'expo-router';
+import { useState } from 'react';
+import { View, Text, FlatList } from 'react-native';
 
 const SelectCityScreen = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const { addCity } = useTripPlanner();
 
   const data = mockCities.filter((c) =>
-    c.name.toLowerCase().includes(searchTerm.toLowerCase())
+    c.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const handleContinue = () => {
@@ -27,8 +27,8 @@ const SelectCityScreen = () => {
       cityName: city.name,
       country: city.country,
       imageURL: city.image,
-      startDate: "",
-      endDate: "",
+      startDate: '',
+      endDate: '',
       places: [],
       restaurants: [],
       accommodations: [],
@@ -71,6 +71,13 @@ const SelectCityScreen = () => {
                 onPress={() => setSelectedId(item.id)}
               />
             )}
+            ListEmptyComponent={() => (
+              <View className="w-full items-center mt-8">
+                <Text className="text-center font-JakartaMedium text-md">
+                  No result
+                </Text>
+              </View>
+            )}
           />
         </View>
         <View className="w-full px-4">
@@ -79,7 +86,7 @@ const SelectCityScreen = () => {
             onPress={handleContinue}
             disabled={selectedId === null}
             className={`rounded-xl ${
-              selectedId === null ? "bg-gray-300" : "bg-blue-500"
+              selectedId === null ? 'bg-gray-300' : 'bg-blue-500'
             }`}
             textVariant="default"
           />
