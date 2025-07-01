@@ -7,13 +7,17 @@ import { ROUTES } from "@/constant/routes";
 import { mockPlaces } from "@/data/mockPlaces";
 import { useTripPlanner } from "@/hooks/useTripPlanner";
 import { router } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View, Text, FlatList } from "react-native";
 
 const SelectPlacesScreen = () => {
+  const { cities, currentCityId, updateCity } = useTripPlanner();
+  const current = cities.find((c) => c.cityId === currentCityId);
+
+  const [selectedIds, setSelectedIds] = useState<string[]>(
+    current?.places ?? [],
+  );
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const { currentCityId, updateCity } = useTripPlanner();
 
   const data = mockPlaces.filter((place) =>
     place.name.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -24,6 +28,18 @@ const SelectPlacesScreen = () => {
     updateCity(currentCityId, { places: selectedIds });
     router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_DATES);
   };
+
+  useEffect(() => {
+    setSelectedIds(current?.places ?? []);
+  }, [current?.places]);
+
+  if (!current) {
+    return (
+      <View className="flex-1 justify-center items-center">
+        <Text className="text-lg font-JakartaMedium">No city selected</Text>
+      </View>
+    );
+  }
 
   return (
     <>
