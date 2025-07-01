@@ -1,8 +1,8 @@
 import { CityBlock, TripPlannerContextType } from "@/types/type";
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState } from "react";
 
 const TripPlannerContext = createContext<TripPlannerContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export const TripPlannerProvider = ({
@@ -10,8 +10,9 @@ export const TripPlannerProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [tripTitle, setTripTitle] = useState("");
+  const [tripTitle, setTripTitle] = useState<string>("");
   const [cities, setCities] = useState<CityBlock[]>([]);
+  const [currentCityId, setCurrentCityId] = useState<string | null>(null);
 
   const addCity = (city: CityBlock) => {
     setCities((prev) => [...prev, city]);
@@ -20,8 +21,8 @@ export const TripPlannerProvider = ({
   const updateCity = (cityId: string, updated: Partial<CityBlock>) => {
     setCities((prev) =>
       prev.map((city) =>
-        city.cityId === cityId ? { ...city, ...updated } : city
-      )
+        city.cityId === cityId ? { ...city, ...updated } : city,
+      ),
     );
   };
 
@@ -32,6 +33,11 @@ export const TripPlannerProvider = ({
   const resetTrip = () => {
     setTripTitle("");
     setCities([]);
+    setCurrentCityId(null);
+  };
+
+  const setCurrentCity = (cityId: string) => {
+    setCurrentCityId(cityId);
   };
 
   return (
@@ -39,7 +45,9 @@ export const TripPlannerProvider = ({
       value={{
         tripTitle,
         cities,
+        currentCityId,
         setTripTitle,
+        setCurrentCity,
         addCity,
         updateCity,
         removeCity,

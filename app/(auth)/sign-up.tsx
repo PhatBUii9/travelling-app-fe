@@ -1,22 +1,12 @@
 import { useForm } from "react-hook-form";
-import {
-  View,
-  Text,
-  ScrollView,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import { View, Text, Alert, Platform } from "react-native";
 import CustomButton from "@/components/common/CustomButton";
 import InputField from "@/components/common/InputField";
 import { Link, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import validationRules from "@/utils/validationRules";
 import { IFormInputs } from "@/types/type";
-import {
-  checkUserDetail,
-  checkUsernameExists,
-} from "@/services/api/authService";
+import { checkUserDetail } from "@/services/api/authService";
 import { useLoading } from "@/contexts/LoadingContext";
 import { withLoading } from "@/utils/withLoading";
 import { useRegistration } from "@/contexts/RegistrationContext";
@@ -26,13 +16,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 const SignUp = () => {
   const router = useRouter();
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    watch,
-    setError,
-  } = useForm<IFormInputs>();
+  const { control, handleSubmit, watch, setError } = useForm<IFormInputs>();
 
   const pwd = watch("password");
   const { showLoading, hideLoading } = useLoading();
@@ -113,7 +97,7 @@ const SignUp = () => {
           default:
             Alert.alert(
               "Register Error",
-              checkDetail.message || "Unexpected error"
+              checkDetail.message || "Unexpected error",
             );
             return;
         }
@@ -130,7 +114,7 @@ const SignUp = () => {
         router.push(ROUTES.AUTH.OTP_OPTIONS);
       },
       showLoading,
-      hideLoading
+      hideLoading,
     );
   };
 

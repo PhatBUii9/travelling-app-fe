@@ -1,5 +1,5 @@
 import { RegisterOptions } from "react-hook-form";
-import { TextInputProps, TouchableOpacityProps, ViewStyle } from "react-native";
+import { TextInputProps, TouchableOpacityProps } from "react-native";
 
 export type Member = {
   id: string;
@@ -241,7 +241,7 @@ declare interface LoadingContextType {
 declare type WithLoadingFunction = (
   action: () => Promise<void>,
   showLoading: () => void,
-  hideLoading: () => void
+  hideLoading: () => void,
 ) => Promise<void>;
 
 declare interface RegContextType {
@@ -269,10 +269,12 @@ declare interface AuthContextType {
 interface TripPlannerContextType {
   tripTitle: string;
   cities: CityBlock[];
+  currentCityId: string | null;
   setTripTitle: (title: string) => void;
   addCity: (city: CityBlock) => void;
   updateCity: (cityId: string, updated: Partial<CityBlock>) => void;
   removeCity: (cityId: string) => void;
+  setCurrentCity: (cityId: string) => void;
   resetTrip: () => void;
 }
 
@@ -375,19 +377,26 @@ export type CityBlock = {
   accommodations?: string[];
 };
 
-type TripPlannerContextType = {
-  tripTitle: string;
-  cities: CityBlock[];
-  setTripTitle: (title: string) => void;
-  addCity: (city: CityBlock) => void;
-  updateCity: (cityId: string, updated: Partial<CityBlock>) => void;
-  removeCity: (cityId: string) => void;
-  resetTrip: () => void;
-};
-
 type SearchBarProps = {
   placeholder: string;
   value: string;
   onChangeText: (text: string) => void;
   className?: string;
 } & TextInputProps;
+
+type CityCardProps = {
+  city: string;
+  country: string;
+  imageURL: any;
+  selected?: boolean;
+  onPress?: () => void;
+};
+
+type PlaceCardProps = {
+  id: string;
+  name: string;
+  category: string;
+  imageURL: any;
+  selected?: boolean;
+  onPress?: () => void;
+};

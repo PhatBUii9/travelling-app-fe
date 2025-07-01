@@ -18,7 +18,7 @@ const renderOption = (
   label: string,
   description: string,
   isSelected: boolean,
-  onPress: () => void
+  onPress: () => void,
 ) => (
   <TouchableWithoutFeedback onPress={onPress}>
     <View
@@ -36,7 +36,7 @@ const TripWizardStartScreen = () => {
   const screenWidth = Dimensions.get("window").width;
   const imageSize = screenWidth * 0.65;
   const [isScratchSelected, setIsScratchSelected] = useState<boolean | null>(
-    null
+    null,
   );
 
   const handleContinue = () => {
@@ -73,18 +73,18 @@ const TripWizardStartScreen = () => {
             accessibilityHint="Visual representation of trip creation"
           />
 
-          <View className="w-full my-8">
+          <View className="w-full mt-8 mb-4">
             {renderOption(
               "Start from scratch",
               "Build your trip from ground up",
               isScratchSelected === true,
-              () => setIsScratchSelected(true)
+              () => setIsScratchSelected(true),
             )}
             {renderOption(
               "Start from a recommended city",
               "Get suggestions and ideas for top destinations",
               isScratchSelected === false,
-              () => setIsScratchSelected(false)
+              () => setIsScratchSelected(false),
             )}
           </View>
         </View>

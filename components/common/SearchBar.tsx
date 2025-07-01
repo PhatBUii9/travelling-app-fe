@@ -1,5 +1,5 @@
 import { SearchBarProps } from "@/types/type";
-import { View, TextInput, TextInputProps } from "react-native";
+import { View, TextInput } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
 
 const SearchBar = ({
