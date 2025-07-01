@@ -29,7 +29,7 @@ const CheckUsername = () => {
       if (exists) {
         Alert.alert(
           "Username Taken",
-          "❌ This username is already registered."
+          "❌ This username is already registered.",
         );
       } else {
         Alert.alert("Username Available", "✅ You can use this username.");

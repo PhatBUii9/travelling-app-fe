@@ -73,12 +73,12 @@ const Dashboard: React.FC = () => {
         Alert.alert("Error", "Failed to look up location.");
       }
     },
-    [setDestination]
+    [setDestination],
   );
 
   const nav = useCallback(
     (path: RelativePathString) => () => router.push(path),
-    [router]
+    [router],
   );
 
   let mapRegion: Region;
@@ -159,7 +159,7 @@ const Dashboard: React.FC = () => {
           );
       }
     },
-    [user, mapRegion, onPickLocation, nav]
+    [user, mapRegion, onPickLocation, nav],
   );
 
   return (

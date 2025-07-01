@@ -1,4 +1,5 @@
 import PlaceCard from "@/components/card/PlaceCard";
+import TripLoadingSkeleton from "@/components/card/TripLoadingSkeleton";
 import CustomButton from "@/components/common/CustomButton";
 import ProgressBar from "@/components/common/PorgressBar";
 import ScreenContainer from "@/components/common/ScreenContainer";
@@ -11,6 +12,9 @@ import { useEffect, useState } from "react";
 import { View, Text, FlatList } from "react-native";
 
 const SelectPlacesScreen = () => {
+  const SKELETON_COUNT = 4;
+  const skeletonData = Array.from({ length: SKELETON_COUNT });
+
   const { cities, currentCityId, updateCity } = useTripPlanner();
   const current = cities.find((c) => c.cityId === currentCityId);
 
@@ -18,6 +22,7 @@ const SelectPlacesScreen = () => {
     current?.places ?? [],
   );
   const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const data = mockPlaces.filter((place) =>
     place.name.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -63,43 +68,52 @@ const SelectPlacesScreen = () => {
             testID="search-bar"
           />
 
-          <FlatList
-            data={data}
-            keyExtractor={(item) => item.id}
-            ItemSeparatorComponent={() => <View className="h-3" />}
-            showsVerticalScrollIndicator={false}
-            testID="place-list"
-            renderItem={({ item }) => (
-              <PlaceCard
-                id={item.id}
-                name={item.name}
-                category={item.category}
-                imageURL={item.image}
-                selected={selectedIds.includes(item.id)}
-                onPress={() => {
-                  setSelectedIds((prev) => {
-                    if (prev.includes(item.id)) {
-                      // remove
-                      return prev.filter((id) => id !== item.id);
-                    } else {
-                      // add
-                      return [...prev, item.id];
-                    }
-                  });
-                }}
-              />
-            )}
-            ListEmptyComponent={() => (
-              <View className="w-full items-center mt-8">
-                <Text
-                  className="text-center font-JakartaMedium text-md"
-                  testID="no-result"
-                >
-                  No result
-                </Text>
-              </View>
-            )}
-          />
+          {isLoading ? (
+            <FlatList
+              data={skeletonData}
+              keyExtractor={(_, i) => `skel-${i}`}
+              renderItem={() => <TripLoadingSkeleton />}
+              showsVerticalScrollIndicator={false}
+            />
+          ) : (
+            <FlatList
+              data={data}
+              keyExtractor={(item) => item.id}
+              ItemSeparatorComponent={() => <View className="h-3" />}
+              showsVerticalScrollIndicator={false}
+              testID="place-list"
+              renderItem={({ item }) => (
+                <PlaceCard
+                  id={item.id}
+                  name={item.name}
+                  category={item.category}
+                  imageURL={item.image}
+                  selected={selectedIds.includes(item.id)}
+                  onPress={() => {
+                    setSelectedIds((prev) => {
+                      if (prev.includes(item.id)) {
+                        // remove
+                        return prev.filter((id) => id !== item.id);
+                      } else {
+                        // add
+                        return [...prev, item.id];
+                      }
+                    });
+                  }}
+                />
+              )}
+              ListEmptyComponent={() => (
+                <View className="w-full items-center mt-8">
+                  <Text
+                    className="text-center font-JakartaMedium text-md"
+                    testID="no-result"
+                  >
+                    No result
+                  </Text>
+                </View>
+              )}
+            />
+          )}
         </View>
         <View className="w-full px-4">
           <CustomButton

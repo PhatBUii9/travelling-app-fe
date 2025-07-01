@@ -20,7 +20,7 @@ const LoadingSkeleton = () => {
           duration: 600,
           useNativeDriver: true,
         }),
-      ])
+      ]),
     );
     pulse.start();
     return () => pulse.stop();

@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 // components/UpcomingTripCard.tsx
 import { ROUTES } from "@/constant/routes";
 import { Trip } from "@/types/type";
@@ -27,7 +28,7 @@ const TripPreviewCard = React.memo(({ trip }: { trip: Trip }) => {
       pathname: ROUTES.ROOT.TRIPS.TRIP_DETAIL,
       params: { tripId: id },
     });
-  }, [id]);
+  }, [id, router]);
 
   return (
     <TouchableOpacity

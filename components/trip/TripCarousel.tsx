@@ -1,6 +1,7 @@
+/* eslint-disable react/display-name */
 // components/TripCarousel.tsx
-import React, { useMemo, useState } from "react";
-import { View, FlatList, ListRenderItemInfo } from "react-native";
+import React from "react";
+import { View, FlatList } from "react-native";
 import SectionHeader from "@/components/common/SectionHeader";
 import LoadingSkeleton from "@/components/common/LoadingSkeleton";
 import EmptyStateCard from "@/components/card/EmptyStateCard";
@@ -72,7 +73,7 @@ const TripCarousel: React.FC<TripCarouselProps> = React.memo(
         )}
       </View>
     );
-  }
+  },
 );
 
 export default TripCarousel;
