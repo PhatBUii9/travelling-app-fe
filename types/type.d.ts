@@ -370,8 +370,8 @@ export type CityBlock = {
   cityName: string;
   country: string;
   imageURL: string;
-  startDate: string;
-  endDate: string;
+  startDate: Date;
+  endDate: Date;
   places: string[];
   restaurants?: string[];
   accommodations?: string[];
@@ -400,3 +400,11 @@ type PlaceCardProps = {
   selected?: boolean;
   onPress?: () => void;
 };
+
+interface DateCardProps {
+  title: string;
+  value: Date;
+  onChange: (date: Date) => void;
+  minDate?: Date;
+  maxDate?: Date;
+}

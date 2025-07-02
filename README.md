@@ -48,3 +48,38 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+## 🗓️ Week 2 – Select Cities & Places
+
+### Goals
+
+Build out the city + place selection flows and wire up our global planning context, then polish with skeleton loaders and consistent UI components.
+
+### Day 1: `SelectCitiesScreen.tsx`
+
+- **UI**: Full-screen list of mock cities
+- **Selection**: Tapping a card highlights & stores in context
+- **Nav**: “Continue” pushes to Pick Places screen
+
+### Day 2: `SelectPlacesScreen.tsx`
+
+- **Data**: Filter `mockPlaces` by name
+- **UI**: Scrollable list of `PlaceCard`s
+- **Selection**: Multi-select with checkmarks, stored in context
+- **Nav**: “Continue” pushes to Date-range screen
+
+### Day 3: State Management & Debugging
+
+- **Persistence**: Verify selections survive screen hops
+- **Context**: Refactored shape to include `currentCityId`, `places[]`
+- **Debug**: (Planned) JSON dump screen for rapid QA
+- **Loading**: Added `PlaceLoadingSkeleton` with fade-in animation
+
+### Day 4: Component Polishing
+
+- **Components**: Extracted `CityCard`, `PlaceCard`
+- **Styling**: Unified spacing, borders, typography
+- **UX**: Fade-in skeletons for polish
+- **Docs**: ✔️ _This README section_
+
+---

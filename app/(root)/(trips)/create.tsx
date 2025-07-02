@@ -1,14 +1,14 @@
-import CustomButton from '@/components/common/CustomButton';
-import DateInput from '@/components/trip/DateInput';
-import InputField from '@/components/common/InputField';
-import ScreenContainer from '@/components/common/ScreenContainer';
-import { ROUTES } from '@/constant/routes';
-import { ITripPlanInputs } from '@/types/type';
-import { router, Stack } from 'expo-router';
-import { useForm } from 'react-hook-form';
-import { TouchableOpacity, View, Text, Image } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import * as ImagePicker from 'expo-image-picker';
+import CustomButton from "@/components/common/CustomButton";
+import DateInput from "@/components/trip/DateInput";
+import InputField from "@/components/common/InputField";
+import ScreenContainer from "@/components/common/ScreenContainer";
+import { ROUTES } from "@/constant/routes";
+import { ITripPlanInputs } from "@/types/type";
+import { router, Stack } from "expo-router";
+import { useForm } from "react-hook-form";
+import { TouchableOpacity, View, Text, Image } from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome";
+import * as ImagePicker from "expo-image-picker";
 
 const Create = () => {
   const {
@@ -19,16 +19,16 @@ const Create = () => {
     watch,
   } = useForm<ITripPlanInputs>({
     defaultValues: {
-      title: '',
-      destination: '',
+      title: "",
+      destination: "",
       startDate: new Date(),
       endDate: undefined,
-      description: '',
+      description: "",
       imageUrl: undefined,
     },
   });
 
-  const imageUrl = watch('imageUrl');
+  const imageUrl = watch("imageUrl");
   const onNextPress = (data: ITripPlanInputs) => {
     console.log(data);
     router.push({
@@ -49,7 +49,7 @@ const Create = () => {
 
   const onSelectCoverImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
+      mediaTypes: ["images"],
       quality: 1,
       allowsEditing: true,
       aspect: [16, 9],
@@ -59,7 +59,7 @@ const Create = () => {
 
     if (!result.canceled && result.assets.length > 0) {
       const uri = result.assets[0].uri;
-      setValue('imageUrl', uri, { shouldValidate: true });
+      setValue("imageUrl", uri, { shouldValidate: true });
     }
   };
 
@@ -110,7 +110,7 @@ const Create = () => {
               name="startDate"
               label="From"
               minimumDate={new Date()}
-              rules={{ required: 'Start date is required' }}
+              rules={{ required: "Start date is required" }}
             />
           </View>
           <View className="flex-1 ml-2">
@@ -118,12 +118,12 @@ const Create = () => {
               control={control}
               name="endDate"
               label="To"
-              minimumDate={watch('startDate')}
+              minimumDate={watch("startDate")}
               rules={{
-                required: 'End date is required',
+                required: "End date is required",
                 validate: (d: Date) =>
-                  d >= watch('startDate') ||
-                  'End date must be after start date',
+                  d >= watch("startDate") ||
+                  "End date must be after start date",
               }}
             />
           </View>
