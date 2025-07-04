@@ -1,6 +1,6 @@
 import PlaceCard from "@/components/card/PlaceCard";
 import TripLoadingSkeleton from "@/components/card/TripLoadingSkeleton";
-import CustomButton from "@/components/common/CustomButton";
+import BottomStickyButton from "@/components/common/BottomStickyButton";
 import ProgressBar from "@/components/common/PorgressBar";
 import ScreenContainer from "@/components/common/ScreenContainer";
 import SearchBar from "@/components/common/SearchBar";
@@ -50,24 +50,7 @@ const SelectPlacesScreen = () => {
     <>
       <ProgressBar currentStep={3} totalSteps={6} />
       <ScreenContainer scrollable={false}>
-        <View className="flex-1 py-1 px-4">
-          <View className="items-center mx-8 mb-8">
-            <Text className="font-JakartaExtraBold text-heading-lg mb-3">
-              Select Places
-            </Text>
-            <Text className="text-base text-center font-JakartaMedium text-secondary-700 ">
-              Choose from these points of interest to visit during your trip.
-            </Text>
-          </View>
-
-          <SearchBar
-            placeholder="Search places..."
-            value={searchTerm}
-            onChangeText={setSearchTerm}
-            className="mb-8"
-            testID="search-bar"
-          />
-
+        <View className="flex-1">
           {isLoading ? (
             <FlatList
               data={skeletonData}
@@ -82,6 +65,36 @@ const SelectPlacesScreen = () => {
               ItemSeparatorComponent={() => <View className="h-3" />}
               showsVerticalScrollIndicator={false}
               testID="place-list"
+              contentContainerStyle={{
+                paddingHorizontal: 16,
+                paddingBottom: 16,
+                paddingTop: 8,
+              }}
+              ListHeaderComponent={
+                <View className="mt-1 mb-6">
+                  <View className="items-center mx-8 mb-6">
+                    <Text className="font-JakartaExtraBold text-heading-lg mb-3">
+                      Select Places
+                    </Text>
+                    <Text className="text-base text-center font-JakartaMedium text-secondary-700 mb-3">
+                      Choose from these points of interest to visit during your
+                      trip.
+                    </Text>
+                  </View>
+
+                  <SearchBar
+                    placeholder="Search places..."
+                    value={searchTerm}
+                    onChangeText={setSearchTerm}
+                    className="mb-10"
+                    testID="search-bar"
+                  />
+
+                  <Text className="text-heading-md font-JakartaSemiBold">
+                    Popular Restaurants
+                  </Text>
+                </View>
+              }
               renderItem={({ item }) => (
                 <PlaceCard
                   id={item.id}
@@ -115,26 +128,15 @@ const SelectPlacesScreen = () => {
             />
           )}
         </View>
-        <View className="w-full px-4">
-          <CustomButton
-            title="Continue"
-            onPress={handleContinue}
-            disabled={selectedIds.length === 0}
-            className={`rounded-xl ${
-              selectedIds.length === 0 ? "bg-gray-300" : "bg-blue-500"
-            }`}
-            textVariant="default"
-            testID="continue-button"
-          />
-          {selectedIds.length === 0 && (
-            <Text
-              className="text-sm text-red-500 text-center"
-              testID="Continue"
-            >
-              Please select an option to continue.
-            </Text>
-          )}
-        </View>
+        <BottomStickyButton
+          title="Continue"
+          onPress={handleContinue}
+          error={
+            selectedIds.length === 0
+              ? "Please select an option to continue."
+              : undefined
+          }
+        />
       </ScreenContainer>
     </>
   );

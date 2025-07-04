@@ -21,7 +21,7 @@ const ScreenContainer: React.FC<ScreenContainerProps> = ({
       {scrollable ? (
         <ScrollView
           className="px-2 py-4"
-          contentContainerStyle={{ flexGrow: 1, paddingBottom: 32 }}
+          contentContainerStyle={{ flexGrow: 1, paddingBottom: 18 }}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="always"
         >

@@ -1,0 +1,42 @@
+export const mockRestaurants = [
+  {
+    id: "cucina1",
+    name: "Cantina e Cucina",
+    image: require("@/assets/images/cities/sydney.jpeg"),
+    rating: 4.7,
+    cuisine: "Italian",
+    cityId: "rome",
+  },
+  {
+    id: "pergola1",
+    name: "La Pergola",
+    image: require("@/assets/images/cities/sydney.jpeg"),
+    rating: 4.9,
+    cuisine: "Fine Dining",
+    cityId: "rome",
+  },
+  {
+    id: "roscioli1",
+    name: "Roscioli",
+    image: require("@/assets/images/cities/sydney.jpeg"),
+    rating: 4.6,
+    cuisine: "Roman",
+    cityId: "rome",
+  },
+  {
+    id: "trattoria2",
+    name: "Trattoria da Enzo",
+    image: require("@/assets/images/cities/sydney.jpeg"),
+    rating: 4.5,
+    cuisine: "Traditional",
+    cityId: "rome",
+  },
+  {
+    id: "osteria3",
+    name: "Osteria dell’Ingegno",
+    image: require("@/assets/images/cities/sydney.jpeg"),
+    rating: 4.3,
+    cuisine: "Modern Italian",
+    cityId: "rome",
+  },
+];

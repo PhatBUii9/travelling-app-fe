@@ -408,3 +408,20 @@ interface DateCardProps {
   minDate?: Date;
   maxDate?: Date;
 }
+
+type ResataurantCardProps = {
+  id: string;
+  name: string;
+  cuisine: string;
+  rating: Double;
+  imageURL: any;
+  selected?: boolean;
+  onPress?: () => void;
+};
+
+type BottomStickyButtonProps = {
+  title: string;
+  onPress: () => void;
+  testID?: string;
+  style?: ViewStyle;
+};

@@ -32,7 +32,7 @@ export const ROUTES = {
         SELECT_RESTAURANTS:
           "/(root)/(trips)/plan-trip/select-restaurants" as RelativePathString,
         SELECT_ACCOMMODATION:
-          "/(root)/(trips)/plan-trip/select-accommdation" as RelativePathString,
+          "/(root)/(trips)/plan-trip/select-accommodation" as RelativePathString,
         TRIP_PREVIEW: "/(root)/(trips)/plan-trip/index" as RelativePathString,
       },
     },

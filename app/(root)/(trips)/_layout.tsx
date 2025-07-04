@@ -1,12 +1,10 @@
 import HeaderLeft from "@/components/layout/HeaderLeft";
-import { Stack, useRouter } from "expo-router";
+import { Stack } from "expo-router";
 import { TouchableOpacity } from "react-native";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 const Layout = () => {
-  const router = useRouter();
-
   return (
     <Stack
       screenOptions={{

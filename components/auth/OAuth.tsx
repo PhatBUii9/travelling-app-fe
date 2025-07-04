@@ -1,5 +1,5 @@
 import { View, Text, Image } from "react-native";
-import CustomButton from "./common/CustomButton";
+import CustomButton from "../common/CustomButton";
 import { icons } from "@/constant";
 
 const OAuth = () => {
@@ -30,10 +30,3 @@ const OAuth = () => {
   );
 };
 export default OAuth;
-
-//  <View className="flex-row justify-around items-center">
-//    {" "}
-//    <View className="w-[35%] h-[2px] mx-1 bg-[#E2E8F0] rounded-full" />
-//    <Text className="mx-5">Or</Text>{" "}
-//    <View className="w-[35%] h-[2px] mx-1 bg-[#E2E8F0] rounded-full" />{" "}
-//  </View>;

@@ -1,4 +1,5 @@
 import DateCard from "@/components/card/DateCard";
+import BottomStickyButton from "@/components/common/BottomStickyButton";
 import CustomButton from "@/components/common/CustomButton";
 import ProgressBar from "@/components/common/PorgressBar";
 import ScreenContainer from "@/components/common/ScreenContainer";
@@ -39,7 +40,7 @@ const SelectDatesScreen = () => {
     <>
       <ProgressBar currentStep={4} totalSteps={6} />
       <ScreenContainer scrollable={false}>
-        <View className="py-1 px-4">
+        <View className="my-1 mx-4">
           <View className="items-center mx-8 mb-8">
             <Text className="font-JakartaExtraBold text-heading-lg mb-3">
               Trip Dates

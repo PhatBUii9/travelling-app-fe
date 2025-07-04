@@ -13,6 +13,7 @@ import { Dimensions } from "react-native";
 import ProgressBar from "@/components/common/PorgressBar";
 import { router } from "expo-router";
 import { ROUTES } from "@/constant/routes";
+import BottomStickyButton from "@/components/common/BottomStickyButton";
 
 const renderOption = (
   label: string,
@@ -88,22 +89,15 @@ const TripWizardStartScreen = () => {
             )}
           </View>
         </View>
-        <View className="w-full px-4">
-          <CustomButton
-            title="Continue"
-            onPress={handleContinue}
-            disabled={isScratchSelected === null}
-            className={`rounded-xl ${
-              isScratchSelected === null ? "bg-gray-300" : "bg-blue-500"
-            }`}
-            textVariant="default"
-          />
-          {isScratchSelected === null && (
-            <Text className="text-sm text-red-500 text-center">
-              Please select an option to continue.
-            </Text>
-          )}
-        </View>
+        <BottomStickyButton
+          title="Continue"
+          onPress={handleContinue}
+          error={
+            isScratchSelected === null
+              ? "Please select an option to continue."
+              : undefined
+          }
+        />
       </ScreenContainer>
     </>
   );

@@ -6,7 +6,7 @@ const HeaderLeft = () => {
   return (
     <TouchableOpacity
       onPress={() => router.back()}
-      style={{ paddingHorizontal: 16 }}
+      style={{ paddingHorizontal: 5 }}
     >
       <Icon name="chevron-left" size={24} color="#000" />
     </TouchableOpacity>
