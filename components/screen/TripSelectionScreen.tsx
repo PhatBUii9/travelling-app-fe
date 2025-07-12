@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import { FlatList, ListRenderItem, View, Text } from "react-native";
 import ScreenContainer from "../common/ScreenContainer";
 import SearchBar from "../common/SearchBar";
