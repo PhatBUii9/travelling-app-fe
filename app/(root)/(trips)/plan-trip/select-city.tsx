@@ -9,7 +9,7 @@ import { useState } from "react";
 const SelectCityScreen = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const { cities, addCity, setCurrentCity } = useTripPlanner();
+  const { currentCityId, cities, addCity, setCurrentCity } = useTripPlanner();
 
   const filteredData = mockCities.filter((c) =>
     c.name.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -27,7 +27,7 @@ const SelectCityScreen = () => {
       imageURL: city.image,
       startDate: new Date(),
       endDate: new Date(),
-      places: [],
+      activities: [],
       restaurants: [],
       accommodations: [],
     };
@@ -37,7 +37,7 @@ const SelectCityScreen = () => {
 
     if (!existedCity) addCity(payload);
 
-    router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_PLACES);
+    router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_ACTIVITIES);
   };
 
   return (

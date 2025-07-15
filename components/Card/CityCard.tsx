@@ -21,7 +21,7 @@ const CityCard: React.FC<CityCardProps> = ({
         resizeMode="cover"
         testID="city-image"
       />
-      <View className="flex-1 ml-4">
+      <View className="flex-1 ml-4 gap-1">
         <Text className="text-lg font-JakartaBold text-black">{city}</Text>
         <Text className="text-base font-JakartaMedium text-secondary-700">
           {country}

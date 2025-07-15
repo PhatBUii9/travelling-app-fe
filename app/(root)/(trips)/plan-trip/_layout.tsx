@@ -15,7 +15,7 @@ const Layout = () => {
         <Stack.Screen name="index" options={{ title: "" }} />
         <Stack.Screen name="select-city" options={{ title: "" }} />
         <Stack.Screen name="select-dates" options={{ title: "" }} />
-        <Stack.Screen name="select-places" options={{ title: "" }} />
+        <Stack.Screen name="select-activities" options={{ title: "" }} />
         <Stack.Screen name="select-restaurants" options={{ title: "" }} />
         <Stack.Screen name="select-accommodation" options={{ title: "" }} />
         <Stack.Screen name="trip-preview" options={{ title: "" }} />

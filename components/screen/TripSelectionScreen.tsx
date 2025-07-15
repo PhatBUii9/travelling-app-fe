@@ -30,8 +30,6 @@ const TripSelectionScreen = <T,>({
   searchTerm,
   data,
   sectionTitle,
-  selectedId,
-  selectedIds,
   onSearchTermChange,
   renderItem,
   onContinue,
@@ -67,7 +65,7 @@ const TripSelectionScreen = <T,>({
               ListHeaderComponent={
                 <View className="mt-1 mb-6">
                   <View className="items-center mx-8 mb-6">
-                    <Text className="font-JakartaExtraBold text-heading-lg mb-3">
+                    <Text className="font-JakartaExtraBold text-heading-lg mb-3 text-center">
                       {title}
                     </Text>
                     <Text className="text-base text-center font-JakartaMedium text-secondary-700 mb-3">

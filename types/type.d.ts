@@ -372,7 +372,7 @@ export type CityBlock = {
   imageURL: string;
   startDate: Date;
   endDate: Date;
-  places: string[];
+  activities: string[];
   restaurants?: string[];
   accommodations?: string[];
 };
@@ -392,7 +392,7 @@ type CityCardProps = {
   onPress?: () => void;
 };
 
-type PlaceCardProps = {
+type ActivitiesCardProps = {
   id: string;
   name: string;
   category: string;
@@ -424,4 +424,14 @@ type BottomStickyButtonProps = {
   onPress: () => void;
   testID?: string;
   style?: ViewStyle;
+};
+
+type AccommodationCardProps = {
+  id: string;
+  name: string;
+  rating: Double;
+  imageURL: any;
+  pricePerNight: Double;
+  selected?: boolean;
+  onPress?: () => void;
 };

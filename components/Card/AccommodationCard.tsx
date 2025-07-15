@@ -1,11 +1,11 @@
-import { ResataurantCardProps } from "@/types/type";
+import { AccommodationCardProps } from "@/types/type";
 import { View, Image, Text, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-const RestaurantCard: React.FC<ResataurantCardProps> = ({
+const AccommodationCard: React.FC<AccommodationCardProps> = ({
   id,
   name,
-  cuisine,
+  pricePerNight,
   rating,
   imageURL,
   selected = false,
@@ -14,7 +14,7 @@ const RestaurantCard: React.FC<ResataurantCardProps> = ({
   return (
     <TouchableOpacity
       onPress={onPress}
-      className={`w-full flex-row items-start rounded-2xl p-4 shadow-sm mb-4 ${selected ? "border-blue-500 border bg-blue-50" : "border-gray-200 border bg-white"}`}
+      className={`w-full flex-row items-center rounded-2xl p-4 shadow-sm mb-4 ${selected ? "border-blue-500 border bg-blue-50" : "border-gray-200 border bg-white"}`}
       activeOpacity={0.8}
       testID={`place-card-${id}`}
       accessibilityRole="button"
@@ -24,7 +24,7 @@ const RestaurantCard: React.FC<ResataurantCardProps> = ({
         source={imageURL}
         className="h-16 w-16 rounded-lg"
         resizeMode="cover"
-        testID="city-image"
+        testID="accommodation-image"
       />
       <View className="flex-1 ml-4 gap-1">
         <Text
@@ -34,7 +34,7 @@ const RestaurantCard: React.FC<ResataurantCardProps> = ({
         >
           {name}
         </Text>
-        <View className="flex-row items-center justify-between w-full">
+        <View className="flex-row items-center gap-6 w-full">
           <View className="flex-row items-center">
             <Text className="text-sm font-JakartaMedium text-secondary-700 mr-1">
               {rating}
@@ -42,7 +42,7 @@ const RestaurantCard: React.FC<ResataurantCardProps> = ({
             <Icon name="star" size={14} color="#22C55E" testID="rating-icon" />
           </View>
           <Text className="text-sm font-JakartaSemiBold text-secondary-700 mr-1">
-            {cuisine}
+            ${pricePerNight}/night
           </Text>
         </View>
       </View>
@@ -58,4 +58,4 @@ const RestaurantCard: React.FC<ResataurantCardProps> = ({
   );
 };
 
-export default RestaurantCard;
+export default AccommodationCard;

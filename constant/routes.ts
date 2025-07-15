@@ -25,8 +25,8 @@ export const ROUTES = {
         WIZARD_START: "/(root)/(trips)/plan-trip" as RelativePathString,
         SELECT_CITY:
           "/(root)/(trips)/plan-trip/select-city" as RelativePathString,
-        SELECT_PLACES:
-          "/(root)/(trips)/plan-trip/select-places" as RelativePathString,
+        SELECT_ACTIVITIES:
+          "/(root)/(trips)/plan-trip/select-activities" as RelativePathString,
         SELECT_DATES:
           "/(root)/(trips)/plan-trip/select-dates" as RelativePathString,
         SELECT_RESTAURANTS:
