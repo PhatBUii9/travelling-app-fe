@@ -18,7 +18,7 @@ const Layout = () => {
         <Stack.Screen name="select-activities" options={{ title: "" }} />
         <Stack.Screen name="select-restaurants" options={{ title: "" }} />
         <Stack.Screen name="select-accommodation" options={{ title: "" }} />
-        <Stack.Screen name="trip-preview" options={{ title: "" }} />
+        <Stack.Screen name="trip-review" options={{ title: "" }} />
       </Stack>
     </TripPlannerProvider>
   );

@@ -9,6 +9,7 @@
 
 // export default Home;
 
+import Collapsible from "react-native-collapsible";
 import CustomButton from "@/components/common/CustomButton";
 import DateInput from "@/components/trip/DateInput";
 import InputField from "@/components/common/InputField";
@@ -20,6 +21,7 @@ import { useForm } from "react-hook-form";
 import { TouchableOpacity, View, Text, Image } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import * as ImagePicker from "expo-image-picker";
+import { useState } from "react";
 
 const Create = () => {
   const {
@@ -38,6 +40,8 @@ const Create = () => {
       imageUrl: undefined,
     },
   });
+
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   const imageUrl = watch("imageUrl");
   const onNextPress = (data: ITripPlanInputs) => {
@@ -75,98 +79,100 @@ const Create = () => {
   };
 
   return (
-    <ScreenContainer>
-      <Stack.Screen options={{ headerRight: () => null }} />
-      <View className="py-1 px-4">
-        <TouchableOpacity onPress={onSelectCoverImage}>
-          {imageUrl ? (
-            <Image
-              source={{ uri: imageUrl }}
-              className="w-full aspect-[16/9] rounded-3xl mb-4"
-              resizeMode="cover"
-              accessibilityLabel="Cover Image"
-              alt="Trip Cover Image"
-            />
-          ) : (
-            <View className="w-full h-[120px] bg-gray-100 rounded-3xl flex items-center justify-center border border-gray-300 mb-4">
-              <Icon name="camera" size={26} color="#0286FF" />
-              <Text className="font-JakartaSemiBold text-md text-primary-500 mt-2">
-                Select Cover Image
-              </Text>
+    <Collapsible collapsed={isCollapsed}>
+      <ScreenContainer>
+        <Stack.Screen options={{ headerRight: () => null }} />
+        <View className="py-1 px-4">
+          <TouchableOpacity onPress={onSelectCoverImage}>
+            {imageUrl ? (
+              <Image
+                source={{ uri: imageUrl }}
+                className="w-full aspect-[16/9] rounded-3xl mb-4"
+                resizeMode="cover"
+                accessibilityLabel="Cover Image"
+                alt="Trip Cover Image"
+              />
+            ) : (
+              <View className="w-full h-[120px] bg-gray-100 rounded-3xl flex items-center justify-center border border-gray-300 mb-4">
+                <Icon name="camera" size={26} color="#0286FF" />
+                <Text className="font-JakartaSemiBold text-md text-primary-500 mt-2">
+                  Select Cover Image
+                </Text>
+              </View>
+            )}
+          </TouchableOpacity>
+          <InputField
+            control={control}
+            name="title"
+            label="Title"
+            labelStyle="text-[20px] mb-0"
+            placeholder="Trip name..."
+            inputStyle="h-10 py-1 px-4"
+            maxLength={50}
+          />
+          <InputField
+            control={control}
+            name="destination"
+            label="Destination"
+            labelStyle="text-[20px] mb-0"
+            placeholder="Where to go..."
+            inputStyle="h-10 py-1 px-4"
+            maxLength={100}
+          />
+          <View className="flex-row">
+            <View className="flex-1 mr-2">
+              <DateInput
+                control={control}
+                name="startDate"
+                label="From"
+                minimumDate={new Date()}
+                rules={{ required: "Start date is required" }}
+              />
             </View>
-          )}
-        </TouchableOpacity>
-        <InputField
-          control={control}
-          name="title"
-          label="Title"
-          labelStyle="text-[20px] mb-0"
-          placeholder="Trip name..."
-          inputStyle="h-10 py-1 px-4"
-          maxLength={50}
-        />
-        <InputField
-          control={control}
-          name="destination"
-          label="Destination"
-          labelStyle="text-[20px] mb-0"
-          placeholder="Where to go..."
-          inputStyle="h-10 py-1 px-4"
-          maxLength={100}
-        />
-        <View className="flex-row">
-          <View className="flex-1 mr-2">
-            <DateInput
-              control={control}
-              name="startDate"
-              label="From"
-              minimumDate={new Date()}
-              rules={{ required: "Start date is required" }}
-            />
+            <View className="flex-1 ml-2">
+              <DateInput
+                control={control}
+                name="endDate"
+                label="To"
+                minimumDate={watch("startDate")}
+                rules={{
+                  required: "End date is required",
+                  validate: (d: Date) =>
+                    d >= watch("startDate") ||
+                    "End date must be after start date",
+                }}
+              />
+            </View>
           </View>
-          <View className="flex-1 ml-2">
-            <DateInput
-              control={control}
-              name="endDate"
-              label="To"
-              minimumDate={watch("startDate")}
-              rules={{
-                required: "End date is required",
-                validate: (d: Date) =>
-                  d >= watch("startDate") ||
-                  "End date must be after start date",
-              }}
-            />
-          </View>
+          <InputField
+            control={control}
+            name="description"
+            label="Description"
+            labelStyle="text-[20px] mb-0"
+            placeholder="Add a description"
+            multiline
+            numberOfLines={4}
+            maxLength={300}
+            inputStyle="h-28 text-top"
+            textAlignVertical="top"
+          />
         </View>
-        <InputField
-          control={control}
-          name="description"
-          label="Description"
-          labelStyle="text-[20px] mb-0"
-          placeholder="Add a description"
-          multiline
-          numberOfLines={4}
-          maxLength={300}
-          inputStyle="h-28 text-top"
-          textAlignVertical="top"
-        />
-      </View>
-      <View className="flex-row space-x-4">
-        <CustomButton
-          title="Cancel"
-          onPress={handleCancel}
-          bgVariant="outline"
-          textVariant="primary"
-          className="flex-1 rounded-xl"
-        />
-        <CustomButton
-          title="Next"
-          onPress={handleSubmit(onNextPress)}
-          className="flex-1 rounded-xl"
-        />
-      </View>
-    </ScreenContainer>
+        <View className="flex-row space-x-4">
+          <CustomButton
+            title="Cancel"
+            onPress={handleCancel}
+            bgVariant="outline"
+            textVariant="primary"
+            className="flex-1 rounded-xl"
+          />
+          <CustomButton
+            title="Next"
+            onPress={handleSubmit(onNextPress)}
+            className="flex-1 rounded-xl"
+          />
+        </View>
+      </ScreenContainer>
+    </Collapsible>
   );
 };
 

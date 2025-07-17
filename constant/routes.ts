@@ -22,7 +22,7 @@ export const ROUTES = {
       SUGGESTED: "/(root)/(trips)/suggested" as RelativePathString,
       UPCOMING: "/(root)/(trips)/upcoming" as RelativePathString,
       PLAN_TRIP: {
-        WIZARD_START: "/(root)/(trips)/plan-trip" as RelativePathString,
+        WIZARD_START: "/(root)/(trips)/plan-trip/" as RelativePathString,
         SELECT_CITY:
           "/(root)/(trips)/plan-trip/select-city" as RelativePathString,
         SELECT_ACTIVITIES:
@@ -33,7 +33,8 @@ export const ROUTES = {
           "/(root)/(trips)/plan-trip/select-restaurants" as RelativePathString,
         SELECT_ACCOMMODATION:
           "/(root)/(trips)/plan-trip/select-accommodation" as RelativePathString,
-        TRIP_PREVIEW: "/(root)/(trips)/plan-trip/index" as RelativePathString,
+        TRIP_REVIEW:
+          "/(root)/(trips)/plan-trip/trip-review" as RelativePathString,
       },
     },
   },

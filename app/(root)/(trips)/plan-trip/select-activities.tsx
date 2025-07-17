@@ -32,6 +32,12 @@ const SelectActivitiesScreen = () => {
     setSelectedIds(current?.activities ?? []);
   }, [current?.activities]);
 
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => setIsLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, [currentCityId]);
+
   if (!current) return null;
 
   return (
@@ -47,7 +53,7 @@ const SelectActivitiesScreen = () => {
       selectedIds={selectedIds}
       onContinue={handleContinue}
       isLoading={isLoading}
-      renderItem={({ item }) => (
+      renderItem={({ item }: { item: any }) => (
         <ActivitiesCard
           id={item.id}
           name={item.name}

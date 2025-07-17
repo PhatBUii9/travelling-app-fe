@@ -4,12 +4,13 @@ import { ROUTES } from "@/constant/routes";
 import { mockCities } from "@/data/mockCities";
 import { useTripPlanner } from "@/hooks/useTripPlanner";
 import { router } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const SelectCityScreen = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const { currentCityId, cities, addCity, setCurrentCity } = useTripPlanner();
+  const [isLoading, setIsLoading] = useState(false);
 
   const filteredData = mockCities.filter((c) =>
     c.name.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -40,6 +41,12 @@ const SelectCityScreen = () => {
     router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_ACTIVITIES);
   };
 
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => setIsLoading(false), 700);
+    return () => clearTimeout(timer);
+  }, [currentCityId]);
+
   return (
     <TripSelectionScreen
       currentStep={2}
@@ -51,7 +58,8 @@ const SelectCityScreen = () => {
       data={filteredData}
       sectionTitle="Popular Cities"
       selectedId={selectedId ?? undefined}
-      renderItem={({ item }) => (
+      isLoading={isLoading}
+      renderItem={({ item }: { item: any }) => (
         <CityCard
           city={item.name}
           country={item.country}

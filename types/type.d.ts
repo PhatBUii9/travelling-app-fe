@@ -435,3 +435,20 @@ type AccommodationCardProps = {
   selected?: boolean;
   onPress?: () => void;
 };
+
+interface TripSelectionProps<T> {
+  currentStep: number;
+  totalStep: number;
+  title: string;
+  subtitle: string;
+  searchTerm: string;
+  data: T[];
+  sectionTitle?: string;
+  onSearchTermChange: (text: string) => void;
+  selectedId?: string;
+  selectedIds?: string[];
+  renderItem: ListRenderItem<T>;
+  onContinue: () => void;
+  error?: string;
+  isLoading?: boolean;
+}

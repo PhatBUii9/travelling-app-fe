@@ -1,0 +1,226 @@
+export const mockActivitiesResponse = {
+  success: true,
+  data: [
+    // Rome
+    {
+      id: "colosseum",
+      name: "Colosseum",
+      imageUrl: "/assets/images/cities/rome.jpg",
+      category: "History",
+      cityId: "rome",
+    },
+    {
+      id: "pantheon",
+      name: "Pantheon",
+      imageUrl: "/assets/images/cities/rome.jpg",
+      category: "Architecture",
+      cityId: "rome",
+    },
+    {
+      id: "trevi-fountain",
+      name: "Trevi Fountain",
+      imageUrl: "/assets/images/cities/rome.jpg",
+      category: "Sightseeing",
+      cityId: "rome",
+    },
+    {
+      id: "vatican-museum",
+      name: "Vatican Museums",
+      imageUrl: "/assets/images/cities/rome.jpg",
+      category: "Art & Culture",
+      cityId: "rome",
+    },
+    {
+      id: "roman-forum",
+      name: "Roman Forum",
+      imageUrl: "/assets/images/cities/rome.jpg",
+      category: "History",
+      cityId: "rome",
+    },
+
+    // Paris
+    {
+      id: "eiffel-tower",
+      name: "Eiffel Tower",
+      imageUrl: "/assets/images/cities/paris.webp",
+      category: "Sightseeing",
+      cityId: "paris",
+    },
+    {
+      id: "louvre",
+      name: "Louvre Museum",
+      imageUrl: "/assets/images/cities/paris.webp",
+      category: "Art & Culture",
+      cityId: "paris",
+    },
+    {
+      id: "montmartre",
+      name: "Montmartre",
+      imageUrl: "/assets/images/cities/paris.webp",
+      category: "Scenic Walk",
+      cityId: "paris",
+    },
+    {
+      id: "notre-dame",
+      name: "Notre-Dame Cathedral",
+      imageUrl: "/assets/images/cities/paris.webp",
+      category: "Architecture",
+      cityId: "paris",
+    },
+    {
+      id: "sacre-coeur",
+      name: "Sacré-Cœur Basilica",
+      imageUrl: "/assets/images/cities/paris.webp",
+      category: "Religion",
+      cityId: "paris",
+    },
+
+    // Tokyo
+    {
+      id: "tokyo-tower",
+      name: "Tokyo Tower",
+      imageUrl: "/assets/images/cities/tokyo.jpg",
+      category: "Sightseeing",
+      cityId: "tokyo",
+    },
+    {
+      id: "shinjuku-garden",
+      name: "Shinjuku Gyoen National Garden",
+      imageUrl: "/assets/images/cities/tokyo.jpg",
+      category: "Nature",
+      cityId: "tokyo",
+    },
+    {
+      id: "teamlab-borderless",
+      name: "TeamLab Borderless",
+      imageUrl: "/assets/images/cities/tokyo.jpg",
+      category: "Art & Culture",
+      cityId: "tokyo",
+    },
+    {
+      id: "asakusa-sensoji",
+      name: "Senso-ji Temple",
+      imageUrl: "/assets/images/cities/tokyo.jpg",
+      category: "History",
+      cityId: "tokyo",
+    },
+    {
+      id: "ueno-zoo",
+      name: "Ueno Zoo",
+      imageUrl: "/assets/images/cities/tokyo.jpg",
+      category: "Family",
+      cityId: "tokyo",
+    },
+
+    // New York
+    {
+      id: "central-park",
+      name: "Central Park",
+      imageUrl: "/assets/images/cities/newyork.jpeg",
+      category: "Nature",
+      cityId: "newyork",
+    },
+    {
+      id: "times-square",
+      name: "Times Square",
+      imageUrl: "/assets/images/cities/newyork.jpeg",
+      category: "Entertainment",
+      cityId: "newyork",
+    },
+    {
+      id: "statue-liberty",
+      name: "Statue of Liberty",
+      imageUrl: "/assets/images/cities/newyork.jpeg",
+      category: "Sightseeing",
+      cityId: "newyork",
+    },
+    {
+      id: "met-museum",
+      name: "The Met Museum",
+      imageUrl: "/assets/images/cities/newyork.jpeg",
+      category: "Art & Culture",
+      cityId: "newyork",
+    },
+    {
+      id: "brooklyn-bridge",
+      name: "Brooklyn Bridge",
+      imageUrl: "/assets/images/cities/newyork.jpeg",
+      category: "Scenic Walk",
+      cityId: "newyork",
+    },
+
+    // Barcelona
+    {
+      id: "sagrada-familia",
+      name: "Sagrada Família",
+      imageUrl: "/assets/images/cities/barcelona.jpg",
+      category: "Architecture",
+      cityId: "barcelona",
+    },
+    {
+      id: "park-guell",
+      name: "Park Güell",
+      imageUrl: "/assets/images/cities/barcelona.jpg",
+      category: "Art & Culture",
+      cityId: "barcelona",
+    },
+    {
+      id: "la-rambla",
+      name: "La Rambla",
+      imageUrl: "/assets/images/cities/barcelona.jpg",
+      category: "Shopping",
+      cityId: "barcelona",
+    },
+    {
+      id: "barceloneta-beach",
+      name: "Barceloneta Beach",
+      imageUrl: "/assets/images/cities/barcelona.jpg",
+      category: "Relaxation",
+      cityId: "barcelona",
+    },
+    {
+      id: "gothic-quarter",
+      name: "Gothic Quarter",
+      imageUrl: "/assets/images/cities/barcelona.jpg",
+      category: "History",
+      cityId: "barcelona",
+    },
+
+    // Sydney
+    {
+      id: "opera-house",
+      name: "Sydney Opera House",
+      imageUrl: "/assets/images/cities/sydney.jpeg",
+      category: "Sightseeing",
+      cityId: "sydney",
+    },
+    {
+      id: "harbour-bridge",
+      name: "Sydney Harbour Bridge",
+      imageUrl: "/assets/images/cities/sydney.jpeg",
+      category: "Scenic Walk",
+      cityId: "sydney",
+    },
+    {
+      id: "bondi-beach",
+      name: "Bondi Beach",
+      imageUrl: "/assets/images/cities/sydney.jpeg",
+      category: "Beach",
+      cityId: "sydney",
+    },
+    {
+      id: "taronga-zoo",
+      name: "Taronga Zoo",
+      imageUrl: "/assets/images/cities/sydney.jpeg",
+      category: "Family",
+      cityId: "sydney",
+    },
+    {
+      id: "darling-harbour",
+      name: "Darling Harbour",
+      imageUrl: "/assets/images/cities/sydney.jpeg",
+      category: "Entertainment",
+      cityId: "sydney",
+    },
+  ],
+};

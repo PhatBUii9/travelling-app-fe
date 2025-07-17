@@ -1,26 +1,59 @@
-import { FlatList, ListRenderItem, View, Text } from "react-native";
+/**
+ * TripSelectionScreen
+ *
+ */
+
+import { FlatList, View, Text } from "react-native";
 import ScreenContainer from "../common/ScreenContainer";
 import SearchBar from "../common/SearchBar";
 import ProgressBar from "../common/PorgressBar";
 import BottomStickyButton from "../common/BottomStickyButton";
 import TripLoadingSkeleton from "../card/TripLoadingSkeleton";
+import { TripSelectionProps } from "@/types/type";
+import { useMemo } from "react";
 
-interface TripSelectionProps<T> {
-  currentStep: number;
-  totalStep: number;
+type HeaderProps = {
   title: string;
   subtitle: string;
   searchTerm: string;
-  data: T[];
-  sectionTitle?: string;
   onSearchTermChange: (text: string) => void;
-  selectedId?: string;
-  selectedIds?: string[];
-  renderItem: ListRenderItem<T>;
-  onContinue: () => void;
-  error?: string;
-  isLoading?: boolean;
-}
+  sectionTitle?: string;
+};
+
+const Header = ({
+  title,
+  subtitle,
+  searchTerm,
+  onSearchTermChange,
+  sectionTitle,
+}: HeaderProps) => {
+  return (
+    <View className="mt-1 mb-6">
+      <View className="items-center mx-8 mb-6">
+        <Text className="font-JakartaExtraBold text-heading-lg mb-3 text-center">
+          {title}
+        </Text>
+        <Text className="text-base text-center font-JakartaMedium text-secondary-700 mb-3">
+          {subtitle}
+        </Text>
+      </View>
+
+      <SearchBar
+        placeholder="Search places..."
+        value={searchTerm}
+        onChangeText={onSearchTermChange}
+        className="mb-10"
+        testID="search-bar"
+      />
+
+      {sectionTitle && (
+        <Text className="text-heading-md font-JakartaSemiBold">
+          {sectionTitle}
+        </Text>
+      )}
+    </View>
+  );
+};
 
 const TripSelectionScreen = <T,>({
   currentStep,
@@ -39,6 +72,19 @@ const TripSelectionScreen = <T,>({
   const SKELETON_COUNT = 4;
   const skeletonData = Array.from({ length: SKELETON_COUNT });
 
+  const MemoHeader = useMemo(
+    () => (
+      <Header
+        title={title}
+        subtitle={subtitle}
+        searchTerm={searchTerm}
+        onSearchTermChange={onSearchTermChange}
+        sectionTitle={sectionTitle}
+      />
+    ),
+    [title, subtitle, searchTerm, onSearchTermChange, sectionTitle],
+  );
+
   return (
     <>
       <ProgressBar currentStep={currentStep} totalSteps={totalStep} />
@@ -49,7 +95,9 @@ const TripSelectionScreen = <T,>({
               data={skeletonData}
               keyExtractor={(_, i) => `skel-${i}`}
               renderItem={() => <TripLoadingSkeleton />}
+              ItemSeparatorComponent={() => <View className="h-3" />}
               showsVerticalScrollIndicator={false}
+              ListHeaderComponent={MemoHeader}
             />
           ) : (
             <FlatList
@@ -62,32 +110,7 @@ const TripSelectionScreen = <T,>({
                 paddingBottom: 16,
                 paddingTop: 8,
               }}
-              ListHeaderComponent={
-                <View className="mt-1 mb-6">
-                  <View className="items-center mx-8 mb-6">
-                    <Text className="font-JakartaExtraBold text-heading-lg mb-3 text-center">
-                      {title}
-                    </Text>
-                    <Text className="text-base text-center font-JakartaMedium text-secondary-700 mb-3">
-                      {subtitle}
-                    </Text>
-                  </View>
-
-                  <SearchBar
-                    placeholder="Search places..."
-                    value={searchTerm}
-                    onChangeText={onSearchTermChange}
-                    className="mb-10"
-                    testID="search-bar"
-                  />
-
-                  {sectionTitle && (
-                    <Text className="text-heading-md font-JakartaSemiBold">
-                      {sectionTitle}
-                    </Text>
-                  )}
-                </View>
-              }
+              ListHeaderComponent={MemoHeader}
               renderItem={renderItem}
               ListEmptyComponent={() => (
                 <View className="w-full items-center mt-8">

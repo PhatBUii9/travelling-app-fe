@@ -26,7 +26,7 @@ const SelectAccommodationScreen = () => {
   const handleContinue = () => {
     if (!currentCityId) return;
     updateCity(currentCityId, { restaurants: selectedIds });
-    router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.TRIP_PREVIEW);
+    router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.TRIP_REVIEW);
   };
 
   useEffect(() => {
@@ -43,7 +43,7 @@ const SelectAccommodationScreen = () => {
             <TouchableOpacity
               onPress={() => {
                 if (!currentCityId) return;
-                router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.TRIP_PREVIEW);
+                router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.TRIP_REVIEW);
                 updateCity(currentCityId, { accommodations: [] });
               }}
               style={{ paddingHorizontal: 5 }}
