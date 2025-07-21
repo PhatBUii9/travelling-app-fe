@@ -1,4 +1,4 @@
-import { View, Text, Image, Platform } from "react-native";
+import { View, Image, Platform } from "react-native";
 import CustomButton from "./CustomButton";
 import { icons } from "@/constant";
 

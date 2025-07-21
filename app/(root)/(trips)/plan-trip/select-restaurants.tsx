@@ -33,6 +33,12 @@ const SelectRestaurantsScreen = () => {
     setSelectedIds(current?.restaurants ?? []);
   }, [current?.restaurants]);
 
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => setIsLoading(false), 700);
+    return () => clearTimeout(timer);
+  }, [currentCityId]);
+
   if (!current) return null;
 
   return (
@@ -65,7 +71,7 @@ const SelectRestaurantsScreen = () => {
         selectedIds={selectedIds}
         onContinue={handleContinue}
         isLoading={isLoading}
-        renderItem={({ item }) => (
+        renderItem={({ item }: { item: any }) => (
           <RestaurantCard
             id={item.id}
             name={item.name}

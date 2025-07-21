@@ -452,3 +452,11 @@ interface TripSelectionProps<T> {
   error?: string;
   isLoading?: boolean;
 }
+
+type HeaderProps = {
+  title: string;
+  subtitle: string;
+  searchTerm: string;
+  onSearchTermChange: (text: string) => void;
+  sectionTitle?: string;
+};

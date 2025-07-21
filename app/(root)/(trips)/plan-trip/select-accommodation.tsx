@@ -33,6 +33,12 @@ const SelectAccommodationScreen = () => {
     setSelectedIds(current?.accommodations ?? []);
   }, [current?.accommodations]);
 
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => setIsLoading(false), 700);
+    return () => clearTimeout(timer);
+  }, [currentCityId]);
+
   if (!current) return null;
 
   return (
@@ -54,7 +60,7 @@ const SelectAccommodationScreen = () => {
         }}
       />
       <TripSelectionScreen
-        currentStep={5}
+        currentStep={6}
         totalStep={6}
         title="Select Accommodations"
         subtitle={`Choose wher you will stay in ${current.cityName} (optional)`}
@@ -65,7 +71,7 @@ const SelectAccommodationScreen = () => {
         selectedIds={selectedIds}
         onContinue={handleContinue}
         isLoading={isLoading}
-        renderItem={({ item }) => (
+        renderItem={({ item }: { item: any }) => (
           <AccommodationCard
             id={item.id}
             name={item.name}

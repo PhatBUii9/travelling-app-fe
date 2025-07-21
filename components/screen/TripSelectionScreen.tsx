@@ -9,16 +9,8 @@ import SearchBar from "../common/SearchBar";
 import ProgressBar from "../common/PorgressBar";
 import BottomStickyButton from "../common/BottomStickyButton";
 import TripLoadingSkeleton from "../card/TripLoadingSkeleton";
-import { TripSelectionProps } from "@/types/type";
+import { HeaderProps, TripSelectionProps } from "@/types/type";
 import { useMemo } from "react";
-
-type HeaderProps = {
-  title: string;
-  subtitle: string;
-  searchTerm: string;
-  onSearchTermChange: (text: string) => void;
-  sectionTitle?: string;
-};
 
 const Header = ({
   title,
