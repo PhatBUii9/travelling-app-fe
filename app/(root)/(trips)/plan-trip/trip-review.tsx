@@ -10,25 +10,47 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
-import ScreenContainer from "@/components/common/ScreenContainer";
 import { FlatList } from "react-native-actions-sheet";
 import { CityBlock } from "@/types/type";
 import TripCityBlock from "@/components/trip/trip-review/TripCityBlock";
-import BottomStickyButton from "@/components/common/BottomStickyButton";
-import { router } from "expo-router";
+import { router, Tabs } from "expo-router";
 import { ROUTES } from "@/constant/routes";
 import CustomButton from "@/components/common/CustomButton";
 
 const TripReview = () => {
   const { tripTitle, setTripTitle } = useTripPlanner();
   const [editOpen, setEditOpen] = useState(false);
-  const { cities } = useTripPlanner();
-  const [confirmDisabled, setConfirmDisabled] = useState(false);
+  const { cities, resetTrip } = useTripPlanner();
+  const confirmDisabled = cities.length === 0;
 
-  const onConfirm = () => {};
+  const onConfirm = () => {
+    if (cities.length === 0) return;
+    console.log(cities);
+    resetTrip();
+    router.push(ROUTES.ROOT.TABS.DASHBOARD);
+  };
 
-  const onDiscard = () => {};
+  const onDiscard = () => {
+    console.log("onDiscard called");
+    Alert.alert("Discard Trip", "Do you want to discard your trips?", [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      {
+        text: "OK",
+        style: "destructive",
+        onPress: () => {
+          console.log("Ok Pressed");
+          resetTrip();
+          //router.push(ROUTES.ROOT.TABS.DASHBOARD);
+        },
+      },
+    ]);
+  };
 
   const onAddCity = () => {
     router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_CITY);
@@ -50,10 +72,12 @@ const TripReview = () => {
           <View className="flex-1 px-2 py-4">
             <FlatList
               data={cities}
-              keyExtractor={(item) => (item as any).id}
+              keyExtractor={(item) => item.cityId}
               ItemSeparatorComponent={() => <View className="h-3" />}
               showsVerticalScrollIndicator={false}
-              ListHeaderComponent={TripSummaryHeader}
+              ListHeaderComponent={() => (
+                <TripSummaryHeader title="Trip" subtitle="trip" />
+              )}
               contentContainerStyle={{
                 paddingHorizontal: 16,
                 paddingBottom: 16,
