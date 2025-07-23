@@ -25,7 +25,7 @@ const SelectAccommodationScreen = () => {
 
   const handleContinue = () => {
     if (!currentCityId) return;
-    updateCity(currentCityId, { restaurants: selectedIds });
+    updateCity(currentCityId, { accommodations: selectedIds });
     router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.TRIP_REVIEW);
   };
 

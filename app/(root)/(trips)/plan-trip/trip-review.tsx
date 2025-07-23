@@ -52,6 +52,8 @@ const TripReview = () => {
     ]);
   };
 
+  console.log(cities);
+
   const onAddCity = () => {
     router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_CITY);
   };
@@ -85,9 +87,13 @@ const TripReview = () => {
               }}
               renderItem={({ item }: { item: CityBlock }) => (
                 <TripCityBlock
-                  name={item.cityName}
+                  cityName={item.cityName}
+                  country={item.country}
                   startDate={item.startDate}
                   endDate={item.endDate}
+                  activities={item.activities}
+                  restaurants={item.restaurants}
+                  accommodations={item.accommodations}
                 />
               )}
               ListEmptyComponent={() => (
@@ -99,32 +105,32 @@ const TripReview = () => {
               )}
               ListFooterComponent={() => (
                 <TouchableOpacity
-                  className="justify-center items-center"
+                  className="justify-center items-center mt-2"
                   onPress={onAddCity}
                 >
                   <Text className="text-primary-600">+ Add Another City</Text>
                 </TouchableOpacity>
               )}
             />
-            <View className="flex-row justify-between px-4 pb-4">
-              <CustomButton
-                title="Discard"
-                onPress={onDiscard}
-                className="rounded-xl flex-1 mr-2"
-                textVariant="primary"
-                bgVariant="google"
-              />
-              <CustomButton
-                title="Confirm"
-                onPress={onConfirm}
-                disabled={confirmDisabled}
-                className={`rounded-xl flex-1 ml-2 ${confirmDisabled ? "bg-gray-300" : "bg-blue-500"}`}
-                textVariant="default"
-              />
-            </View>
           </View>
         </KeyboardAvoidingView>
       </SafeAreaView>
+      <View className="flex-row justify-between px-4 pb-10">
+        <CustomButton
+          title="Discard"
+          onPress={onDiscard}
+          className="rounded-xl flex-1 mr-2"
+          textVariant="primary"
+          bgVariant="google"
+        />
+        <CustomButton
+          title="Confirm"
+          onPress={onConfirm}
+          disabled={confirmDisabled}
+          className={`rounded-xl flex-1 ml-2 ${confirmDisabled ? "bg-gray-300" : "bg-blue-500"}`}
+          textVariant="default"
+        />
+      </View>
     </>
   );
 };
