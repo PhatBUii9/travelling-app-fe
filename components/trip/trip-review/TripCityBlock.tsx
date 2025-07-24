@@ -127,7 +127,7 @@ const TripCityBlock = ({
     .filter(Boolean);
 
   return (
-    <View className="bg-white px-4 pb-4 pt-2 rounded-3xl mb-5">
+    <View className="bg-white px-4 pb-4 pt-2 rounded-3xl">
       <View className="flex-row items-center justify-between mb-1">
         <Text className="text-heading-md font-JakartaBold">{cityName}</Text>
         <TouchableOpacity
@@ -291,6 +291,7 @@ const TripCityBlock = ({
         onAdd={handleAdd}
         isListEmpty={fullAccommodations.length === 0}
       />
+      <Divider />
     </View>
   );
 };
