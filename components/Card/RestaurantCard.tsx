@@ -1,6 +1,7 @@
 import { ResataurantCardProps } from "@/types/type";
 import { View, Image, Text, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import MaterialIcon from "react-native-vector-icons/MaterialIcons";
 
 const RestaurantCard: React.FC<ResataurantCardProps> = ({
   id,
@@ -41,9 +42,12 @@ const RestaurantCard: React.FC<ResataurantCardProps> = ({
             </Text>
             <Icon name="star" size={14} color="#22C55E" testID="rating-icon" />
           </View>
-          <Text className="text-sm font-JakartaSemiBold text-secondary-700 mr-1">
-            {cuisine}
-          </Text>
+          <View className="flex-row items-center">
+            <MaterialIcon name="food-bank" size={16} color="#000" />
+            <Text className="text-sm font-JakartaSemiBold text-secondary-700 mx-1">
+              {cuisine}
+            </Text>
+          </View>
         </View>
       </View>
       {selected && (
