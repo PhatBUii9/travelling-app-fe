@@ -27,7 +27,7 @@ type EditCityProps = {
 const TripReview = () => {
   const { tripTitle, setTripTitle } = useTripPlanner();
   const [editOpen, setEditOpen] = useState(false);
-  const { cities, resetTrip, setCurrentCity } = useTripPlanner();
+  const { cities, resetTrip } = useTripPlanner();
   const confirmDisabled = cities.length === 0;
 
   const handleAdd = ({ cityId, type }: EditCityProps) => {

@@ -41,7 +41,7 @@ const SelectCityScreen = () => {
 
     router.push({
       pathname: ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_ACTIVITIES,
-      params: { options: "create" },
+      params: { options: "create", cityId: city.id },
     });
   };
 

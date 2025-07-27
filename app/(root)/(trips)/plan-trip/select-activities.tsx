@@ -7,46 +7,47 @@ import { router, useLocalSearchParams } from "expo-router";
 import { mockActivities } from "@/data/mockActivities";
 
 const SelectActivitiesScreen = () => {
-  const { cities, currentCityId, updateCity, setCurrentCity } =
-    useTripPlanner();
+  const { cities, setCurrentCity, updateCity } = useTripPlanner();
   const { cityId: rawCityId, options } = useLocalSearchParams();
-  let cityId = Array.isArray(rawCityId) ? rawCityId[0] : rawCityId;
 
-  useEffect(() => {
-    if (options === "edit" && cityId && cityId !== currentCityId)
-      setCurrentCity(cityId);
-  }, [cityId, currentCityId, setCurrentCity, options]);
+  // Always extract string from cityId param (may be array)
+  const cityId = Array.isArray(rawCityId) ? rawCityId[0] : rawCityId;
 
-  const current = cities.find((c) => c.cityId === currentCityId);
+  // Always get the correct city by cityId param
+  const current = cities.find((c) => c.cityId === cityId);
 
+  // Initialize selectedIds from the correct city's activities
   const [selectedIds, setSelectedIds] = useState<string[]>(
     current?.activities ?? [],
   );
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  // On cityId change, set context and sync local selection state
   useEffect(() => {
+    if (cityId) setCurrentCity(cityId);
     setSelectedIds(current?.activities ?? []);
-  }, [current?.activities]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cityId, current?.activities, setCurrentCity]);
 
   useEffect(() => {
     setIsLoading(true);
     const timer = setTimeout(() => setIsLoading(false), 700);
     return () => clearTimeout(timer);
-  }, [currentCityId, searchTerm]);
+  }, [cityId, searchTerm]);
 
+  // Only show activities for the correct city
   const data = mockActivities.filter(
     (activity) =>
       activity.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      activity.cityId === currentCityId,
+      activity.cityId === cityId,
   );
 
   const handleContinue = () => {
-    if (!currentCityId || selectedIds.length === 0) return;
-    updateCity(currentCityId, { activities: selectedIds });
+    if (!cityId || selectedIds.length === 0) return;
+    updateCity(cityId, { activities: selectedIds });
     if (options === "edit") {
       router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.TRIP_REVIEW);
-      cityId = "";
     } else {
       router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_DATES);
     }
