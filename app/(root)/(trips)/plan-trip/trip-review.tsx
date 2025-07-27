@@ -15,15 +15,77 @@ import {
 import { FlatList } from "react-native-actions-sheet";
 import { CityBlock } from "@/types/type";
 import TripCityBlock from "@/components/trip/trip-review/TripCityBlock";
-import { router } from "expo-router";
+import { RelativePathString, router } from "expo-router";
 import { ROUTES } from "@/constant/routes";
 import CustomButton from "@/components/common/CustomButton";
+
+type EditCityProps = {
+  cityId: string;
+  type: "activity" | "restaurant" | "accommodation";
+};
 
 const TripReview = () => {
   const { tripTitle, setTripTitle } = useTripPlanner();
   const [editOpen, setEditOpen] = useState(false);
-  const { cities, resetTrip } = useTripPlanner();
+  const { cities, resetTrip, setCurrentCity } = useTripPlanner();
   const confirmDisabled = cities.length === 0;
+
+  const handleAdd = ({ cityId, type }: EditCityProps) => {
+    let path: RelativePathString;
+
+    switch (type) {
+      case "activity":
+        path = ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_ACTIVITIES;
+        break;
+      case "restaurant":
+        path = ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_RESTAURANTS;
+        break;
+      case "accommodation":
+        path = ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_ACCOMMODATION;
+        break;
+      default:
+        path = ROUTES.ROOT.TRIPS.PLAN_TRIP.TRIP_REVIEW;
+        break;
+    }
+
+    router.push({
+      pathname: path,
+      params: {
+        options: "edit",
+        cityId: cityId,
+      },
+    });
+  };
+
+  const handleEdit = ({ cityId, type }: EditCityProps) => {
+    let path: RelativePathString;
+
+    switch (type) {
+      case "activity":
+        path = ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_ACTIVITIES;
+        break;
+      case "restaurant":
+        path = ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_RESTAURANTS;
+        break;
+      case "accommodation":
+        path = ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_ACCOMMODATION;
+        break;
+      default:
+        path = ROUTES.ROOT.TRIPS.PLAN_TRIP.TRIP_REVIEW;
+        break;
+    }
+
+    router.push({
+      pathname: path,
+      params: {
+        options: "edit",
+        cityId: cityId,
+      },
+    });
+  };
+  const handleDelete = () => {};
+
+  const handleToggleExpand = () => {};
 
   const onConfirm = () => {
     if (cities.length === 0) return;
@@ -82,6 +144,7 @@ const TripReview = () => {
               }}
               renderItem={({ item }: { item: CityBlock }) => (
                 <TripCityBlock
+                  cityId={item.cityId}
                   cityName={item.cityName}
                   country={item.country}
                   startDate={item.startDate}
@@ -89,6 +152,10 @@ const TripReview = () => {
                   activities={item.activities}
                   restaurants={item.restaurants}
                   accommodations={item.accommodations}
+                  onAdd={handleAdd}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                  onToggleExpand={handleToggleExpand}
                 />
               )}
               ListEmptyComponent={() => (

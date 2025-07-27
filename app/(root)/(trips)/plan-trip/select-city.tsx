@@ -34,11 +34,15 @@ const SelectCityScreen = () => {
     };
 
     const existedCity = cities.find((c) => c.cityId === selectedId);
+
     setCurrentCity(city.id);
 
     if (!existedCity) addCity(payload);
 
-    router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_ACTIVITIES);
+    router.push({
+      pathname: ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_ACTIVITIES,
+      params: { options: "create" },
+    });
   };
 
   useEffect(() => {
@@ -69,9 +73,7 @@ const SelectCityScreen = () => {
         />
       )}
       onContinue={handleContinue}
-      error={
-        selectedId === null ? "Please select an option to continue." : undefined
-      }
+      error={!selectedId ? "Please select an option to continue." : undefined}
     />
   );
 };

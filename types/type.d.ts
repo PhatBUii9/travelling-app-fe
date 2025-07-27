@@ -460,3 +460,34 @@ type HeaderProps = {
   onSearchTermChange: (text: string) => void;
   sectionTitle?: string;
 };
+
+type TripCityBlockProps = {
+  cityId: string;
+  cityName: string;
+  country: string;
+  startDate: Date;
+  endDate: Date;
+  activities: string[];
+  restaurants?: string[];
+  accommodations?: string[];
+  onAdd: (args: {
+    cityId: string;
+    type: "activity" | "restaurant" | "accommodation";
+  }) => void;
+  onEdit: (args: {
+    cityId: string;
+    type: "activity" | "restaurant" | "accommodation";
+  }) => void;
+  onDelete: () => void;
+  expanded?: boolean;
+  onToggleExpand?: () => void;
+};
+
+type SectionProps = {
+  title: string;
+  data: any[];
+  renderItem: (item: any) => React.ReactNode;
+  onAdd: () => void;
+  onEdit: () => void;
+  isListEmpty: boolean;
+};

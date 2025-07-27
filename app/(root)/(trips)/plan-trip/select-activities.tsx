@@ -3,11 +3,20 @@ import ActivitiesCard from "@/components/card/ActivitiesCard";
 import { ROUTES } from "@/constant/routes";
 import { useTripPlanner } from "@/hooks/useTripPlanner";
 import { useEffect, useState } from "react";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { mockActivities } from "@/data/mockActivities";
 
 const SelectActivitiesScreen = () => {
-  const { cities, currentCityId, updateCity } = useTripPlanner();
+  const { cities, currentCityId, updateCity, setCurrentCity } =
+    useTripPlanner();
+  const { cityId: rawCityId, options } = useLocalSearchParams();
+  let cityId = Array.isArray(rawCityId) ? rawCityId[0] : rawCityId;
+
+  useEffect(() => {
+    if (options === "edit" && cityId && cityId !== currentCityId)
+      setCurrentCity(cityId);
+  }, [cityId, currentCityId, setCurrentCity, options]);
+
   const current = cities.find((c) => c.cityId === currentCityId);
 
   const [selectedIds, setSelectedIds] = useState<string[]>(
@@ -15,6 +24,16 @@ const SelectActivitiesScreen = () => {
   );
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setSelectedIds(current?.activities ?? []);
+  }, [current?.activities]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => setIsLoading(false), 700);
+    return () => clearTimeout(timer);
+  }, [currentCityId, searchTerm]);
 
   const data = mockActivities.filter(
     (activity) =>
@@ -25,18 +44,13 @@ const SelectActivitiesScreen = () => {
   const handleContinue = () => {
     if (!currentCityId || selectedIds.length === 0) return;
     updateCity(currentCityId, { activities: selectedIds });
-    router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_DATES);
+    if (options === "edit") {
+      router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.TRIP_REVIEW);
+      cityId = "";
+    } else {
+      router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_DATES);
+    }
   };
-
-  useEffect(() => {
-    setSelectedIds(current?.activities ?? []);
-  }, [current?.activities]);
-
-  useEffect(() => {
-    setIsLoading(true);
-    const timer = setTimeout(() => setIsLoading(false), 1000);
-    return () => clearTimeout(timer);
-  }, [currentCityId]);
 
   if (!current) return null;
 
