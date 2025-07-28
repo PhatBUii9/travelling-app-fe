@@ -3,14 +3,21 @@ import TripSelectionScreen from "@/components/screen/TripSelectionScreen";
 import { ROUTES } from "@/constant/routes";
 import { mockRestaurants } from "@/data/mockRestaurants";
 import { useTripPlanner } from "@/hooks/useTripPlanner";
-import { router, Stack } from "expo-router";
+import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Text, TouchableOpacity } from "react-native";
 
 const SelectRestaurantsScreen = () => {
-  const { cities, currentCityId, updateCity } = useTripPlanner();
-  const current = cities.find((c) => c.cityId === currentCityId);
+  const { cities, setCurrentCity, updateCity } = useTripPlanner();
 
+  const { cityId: rawCityId, options } = useLocalSearchParams();
+
+  // Always extract string from cityId param (may be array)
+  const cityId = Array.isArray(rawCityId) ? rawCityId[0] : rawCityId;
+
+  const current = cities.find((c) => c.cityId === cityId);
+
+  // Initialize selectedIds from the correct city's activities
   const [selectedIds, setSelectedIds] = useState<string[]>(
     current?.restaurants ?? [],
   );
@@ -20,13 +27,29 @@ const SelectRestaurantsScreen = () => {
   const data = mockRestaurants.filter(
     (restaurant) =>
       restaurant.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      restaurant.cityId === currentCityId,
+      restaurant.cityId === cityId,
   );
 
+  // On cityId change, set context and sync local selection state
+  useEffect(() => {
+    if (cityId && current?.cityId !== cityId) {
+      setCurrentCity(cityId);
+    }
+    // Only depends on cityId, not current?.activities!
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cityId]);
+
   const handleContinue = () => {
-    if (!currentCityId) return;
-    updateCity(currentCityId, { restaurants: selectedIds });
-    router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_ACCOMMODATION);
+    if (!cityId || selectedIds.length === 0) return;
+    updateCity(cityId, { restaurants: selectedIds });
+    if (options === "edit") {
+      router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.TRIP_REVIEW);
+    } else {
+      router.push({
+        pathname: ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_ACCOMMODATION,
+        params: { cityId, options },
+      });
+    }
   };
 
   useEffect(() => {
@@ -37,7 +60,7 @@ const SelectRestaurantsScreen = () => {
     setIsLoading(true);
     const timer = setTimeout(() => setIsLoading(false), 700);
     return () => clearTimeout(timer);
-  }, [currentCityId]);
+  }, [cityId, searchTerm]);
 
   if (!current) return null;
 
@@ -48,9 +71,9 @@ const SelectRestaurantsScreen = () => {
           headerRight: () => (
             <TouchableOpacity
               onPress={() => {
-                if (!currentCityId) return;
+                if (!cityId) return;
                 router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_ACCOMMODATION);
-                updateCity(currentCityId, { restaurants: [] });
+                updateCity(cityId, { restaurants: [] });
               }}
               style={{ paddingHorizontal: 5 }}
             >

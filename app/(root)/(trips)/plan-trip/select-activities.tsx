@@ -16,19 +16,26 @@ const SelectActivitiesScreen = () => {
   // Always get the correct city by cityId param
   const current = cities.find((c) => c.cityId === cityId);
 
-  // Initialize selectedIds from the correct city's activities
+  // Local selection state
   const [selectedIds, setSelectedIds] = useState<string[]>(
     current?.activities ?? [],
   );
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // On cityId change, set context and sync local selection state
+  // Only set current city if needed (avoids loops)
   useEffect(() => {
-    if (cityId) setCurrentCity(cityId);
-    setSelectedIds(current?.activities ?? []);
+    if (cityId && current?.cityId !== cityId) {
+      setCurrentCity(cityId);
+    }
+    // Only depends on cityId, not current?.activities!
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cityId, current?.activities, setCurrentCity]);
+  }, [cityId]);
+
+  // Only update local state when activities array changes
+  useEffect(() => {
+    setSelectedIds(current?.activities ?? []);
+  }, [current?.activities]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -36,7 +43,6 @@ const SelectActivitiesScreen = () => {
     return () => clearTimeout(timer);
   }, [cityId, searchTerm]);
 
-  // Only show activities for the correct city
   const data = mockActivities.filter(
     (activity) =>
       activity.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
@@ -49,7 +55,10 @@ const SelectActivitiesScreen = () => {
     if (options === "edit") {
       router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.TRIP_REVIEW);
     } else {
-      router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_DATES);
+      router.push({
+        pathname: ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_DATES,
+        params: { cityId, options },
+      });
     }
   };
 

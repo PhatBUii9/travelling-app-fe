@@ -1,19 +1,22 @@
 import DateCard from "@/components/card/DateCard";
-import BottomStickyButton from "@/components/common/BottomStickyButton";
 import CustomButton from "@/components/common/CustomButton";
 import ProgressBar from "@/components/common/PorgressBar";
 import ScreenContainer from "@/components/common/ScreenContainer";
 import { ROUTES } from "@/constant/routes";
 import { useTripPlanner } from "@/hooks/useTripPlanner";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 
 const SelectDatesScreen = () => {
+  const { cityId: rawCityId, options } = useLocalSearchParams();
+  // Always extract string from cityId param (may be array)
+  const cityId = Array.isArray(rawCityId) ? rawCityId[0] : rawCityId;
+
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const { cities, currentCityId, updateCity } = useTripPlanner();
-  const current = cities.find((c) => c.cityId === currentCityId);
+  const { cities, updateCity } = useTripPlanner();
+  const current = cities.find((c) => c.cityId === cityId);
 
   const isInvalidDate = !startDate || !endDate || endDate < startDate;
 
@@ -24,9 +27,16 @@ const SelectDatesScreen = () => {
     );
 
   const handleContinue = () => {
-    if (!currentCityId || isInvalidDate) return;
-    updateCity(currentCityId, { startDate, endDate });
-    router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_RESTAURANTS);
+    if (!cityId || isInvalidDate) return;
+    updateCity(cityId, { startDate, endDate });
+    if (options === "edit") {
+      router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.TRIP_REVIEW);
+    } else {
+      router.push({
+        pathname: ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_RESTAURANTS,
+        params: { cityId, options },
+      });
+    }
   };
 
   useEffect(() => {

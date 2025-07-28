@@ -21,7 +21,7 @@ import CustomButton from "@/components/common/CustomButton";
 
 type EditCityProps = {
   cityId: string;
-  type: "activity" | "restaurant" | "accommodation";
+  type: "activity" | "restaurant" | "accommodation" | "date";
 };
 
 const TripReview = () => {
@@ -42,6 +42,9 @@ const TripReview = () => {
         break;
       case "accommodation":
         path = ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_ACCOMMODATION;
+        break;
+      case "date":
+        path = ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_DATES;
         break;
       default:
         path = ROUTES.ROOT.TRIPS.PLAN_TRIP.TRIP_REVIEW;
@@ -69,6 +72,9 @@ const TripReview = () => {
         break;
       case "accommodation":
         path = ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_ACCOMMODATION;
+        break;
+      case "date":
+        path = ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_DATES;
         break;
       default:
         path = ROUTES.ROOT.TRIPS.PLAN_TRIP.TRIP_REVIEW;

@@ -103,9 +103,14 @@ const TripCityBlock = ({
         )}
       </TouchableOpacity>
       <View className="flex-row items-end justify-between mb-5">
-        <Text className="text-md font-JakartaSemiBold text-secondary-600">
-          {formatDate(startDate)} - {formatDate(endDate)}
-        </Text>
+        <View className="flex-row items-center">
+          <Text className="text-md font-JakartaSemiBold text-secondary-600 mr-5">
+            {formatDate(startDate)} - {formatDate(endDate)}
+          </Text>
+          <TouchableOpacity>
+            <Icon name="edit" size={16} color="#000" />
+          </TouchableOpacity>
+        </View>
         <TouchableOpacity onPress={onDelete} accessibilityLabel="Remove city">
           <Icon name="trash" size={24} color="#FF0000" />
         </TouchableOpacity>
