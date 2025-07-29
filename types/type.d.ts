@@ -476,7 +476,7 @@ type TripCityBlockProps = {
   }) => void;
   onEdit: (args: {
     cityId: string;
-    type: "activity" | "restaurant" | "accommodation";
+    type: "activity" | "restaurant" | "accommodation" | "date";
   }) => void;
   onDelete: () => void;
   expanded?: boolean;

@@ -40,9 +40,9 @@ const SelectRestaurantsScreen = () => {
   }, [cityId]);
 
   const handleContinue = () => {
-    if (!cityId || selectedIds.length === 0) return;
+    if (!cityId) return;
     updateCity(cityId, { restaurants: selectedIds });
-    if (options === "edit") {
+    if (options !== "create") {
       router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.TRIP_REVIEW);
     } else {
       router.push({

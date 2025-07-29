@@ -54,7 +54,7 @@ const TripReview = () => {
     router.push({
       pathname: path,
       params: {
-        options: "edit",
+        options: "add",
         cityId: cityId,
       },
     });
@@ -114,7 +114,7 @@ const TripReview = () => {
         onPress: () => {
           console.log("Ok Pressed");
           resetTrip();
-          //router.push(ROUTES.ROOT.TABS.DASHBOARD);
+          router.push(ROUTES.ROOT.TABS.DASHBOARD);
         },
       },
     ]);

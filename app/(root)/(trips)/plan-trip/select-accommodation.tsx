@@ -10,7 +10,7 @@ import { Text, TouchableOpacity } from "react-native";
 const SelectAccommodationScreen = () => {
   const { cities, setCurrentCity, updateCity } = useTripPlanner();
 
-  const { cityId: rawCityId, options } = useLocalSearchParams();
+  const { cityId: rawCityId } = useLocalSearchParams();
 
   // Always extract string from cityId param (may be array)
   const cityId = Array.isArray(rawCityId) ? rawCityId[0] : rawCityId;
@@ -38,7 +38,7 @@ const SelectAccommodationScreen = () => {
   }, [cityId]);
 
   const handleContinue = () => {
-    if (!cityId || selectedIds.length === 0) return;
+    if (!cityId) return;
     updateCity(cityId, { accommodations: selectedIds });
     router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.TRIP_REVIEW);
   };

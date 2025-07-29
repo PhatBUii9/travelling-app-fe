@@ -79,7 +79,7 @@ const TripCityBlock = ({
     .filter(Boolean);
 
   return (
-    <View className="bg-white px-4 pb-4 pt-2 rounded-3xl mb-4">
+    <View className="bg-white px-5 py-5 rounded-3xl mb-4">
       <TouchableOpacity
         className="flex-row items-center justify-between mb-1"
         onPress={onToggleExpand}
@@ -97,7 +97,7 @@ const TripCityBlock = ({
         {onToggleExpand && (
           <MaterialIcon
             name={expanded ? "expand-less" : "expand-more"}
-            size={28}
+            size={32}
             color="#0286FF"
           />
         )}
@@ -107,7 +107,10 @@ const TripCityBlock = ({
           <Text className="text-md font-JakartaSemiBold text-secondary-600 mr-5">
             {formatDate(startDate)} - {formatDate(endDate)}
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => onEdit({ cityId, type: "date" })}
+            accessibilityLabel="Edit date"
+          >
             <Icon name="edit" size={16} color="#000" />
           </TouchableOpacity>
         </View>

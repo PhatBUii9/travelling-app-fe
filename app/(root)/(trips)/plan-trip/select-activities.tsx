@@ -52,7 +52,7 @@ const SelectActivitiesScreen = () => {
   const handleContinue = () => {
     if (!cityId || selectedIds.length === 0) return;
     updateCity(cityId, { activities: selectedIds });
-    if (options === "edit") {
+    if (options !== "create") {
       router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.TRIP_REVIEW);
     } else {
       router.push({

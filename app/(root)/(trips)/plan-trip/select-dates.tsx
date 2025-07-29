@@ -29,7 +29,7 @@ const SelectDatesScreen = () => {
   const handleContinue = () => {
     if (!cityId || isInvalidDate) return;
     updateCity(cityId, { startDate, endDate });
-    if (options === "edit") {
+    if (options !== "create") {
       router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.TRIP_REVIEW);
     } else {
       router.push({
