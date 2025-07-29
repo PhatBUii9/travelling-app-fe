@@ -114,7 +114,10 @@ const TripCityBlock = ({
             <Icon name="edit" size={16} color="#000" />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={onDelete} accessibilityLabel="Remove city">
+        <TouchableOpacity
+          onPress={() => onDelete(cityId)}
+          accessibilityLabel="Remove city"
+        >
           <Icon name="trash" size={24} color="#FF0000" />
         </TouchableOpacity>
       </View>

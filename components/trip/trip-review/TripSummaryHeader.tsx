@@ -1,5 +1,8 @@
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Image } from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import { useForm } from "react-hook-form";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 interface TripSummaryHeaderProps {
   title: string;

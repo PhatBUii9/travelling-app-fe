@@ -11,6 +11,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  LayoutAnimation,
+  UIManager,
 } from "react-native";
 import { FlatList } from "react-native-actions-sheet";
 import { CityBlock } from "@/types/type";
@@ -27,8 +29,16 @@ type EditCityProps = {
 const TripReview = () => {
   const { tripTitle, setTripTitle } = useTripPlanner();
   const [editOpen, setEditOpen] = useState(false);
-  const { cities, resetTrip } = useTripPlanner();
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const { cities, resetTrip, removeCity } = useTripPlanner();
   const confirmDisabled = cities.length === 0;
+
+  if (
+    Platform.OS === "android" &&
+    UIManager.setLayoutAnimationEnabledExperimental
+  ) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
 
   const handleAdd = ({ cityId, type }: EditCityProps) => {
     let path: RelativePathString;
@@ -89,9 +99,17 @@ const TripReview = () => {
       },
     });
   };
-  const handleDelete = () => {};
+  const handleDelete = (cityId: string) => {
+    removeCity(cityId);
+  };
 
-  const handleToggleExpand = () => {};
+  const handleToggleExpand = (cityId: string) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+    setExpanded((prev) => ({
+      ...prev,
+      [cityId]: !prev[cityId],
+    }));
+  };
 
   const onConfirm = () => {
     if (cities.length === 0) return;
@@ -161,7 +179,8 @@ const TripReview = () => {
                   onAdd={handleAdd}
                   onEdit={handleEdit}
                   onDelete={handleDelete}
-                  onToggleExpand={handleToggleExpand}
+                  onToggleExpand={() => handleToggleExpand(item.cityId)}
+                  expanded={!!expanded[item.cityId]}
                 />
               )}
               ListEmptyComponent={() => (

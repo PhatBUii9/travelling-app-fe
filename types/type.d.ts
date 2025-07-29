@@ -478,7 +478,7 @@ type TripCityBlockProps = {
     cityId: string;
     type: "activity" | "restaurant" | "accommodation" | "date";
   }) => void;
-  onDelete: () => void;
+  onDelete: (cityId: string) => void;
   expanded?: boolean;
   onToggleExpand?: () => void;
 };
