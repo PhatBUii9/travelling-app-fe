@@ -491,3 +491,20 @@ type SectionProps = {
   onEdit: () => void;
   isListEmpty: boolean;
 };
+
+interface TripTitleEditModalProps {
+  visible: boolean;
+  initialTitle: string;
+  onSave: (newTitle: string) => void;
+  onCancel: () => void;
+}
+
+type TripDraft = {
+  id: string;
+  title: string;
+  createdAt: string;
+  updatedAt?: string;
+  startDate: string;
+  endDate: string;
+  cities: CityBlock[];
+};

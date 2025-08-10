@@ -11,7 +11,7 @@ export const ROUTES = {
   ROOT: {
     TABS: {
       DASHBOARD: "/(root)/(tabs)/dashboard" as RelativePathString,
-      CHAT: "/(root)/(tabs)/chat" as RelativePathString,
+      TRIP: "/(root)/(tabs)/my-trip" as RelativePathString,
       PROFILE: "/(root)/(tabs)/profile" as RelativePathString,
     },
     TRIPS: {
