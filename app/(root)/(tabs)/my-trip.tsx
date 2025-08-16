@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useCallback } from "react";
 import {
   SafeAreaView,
   View,
@@ -9,12 +9,20 @@ import {
   RefreshControl,
   ActivityIndicator,
   Alert,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from "react-native";
 import { router } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import TripsDebug from "@/components/debug/TripsDebug";
 import { ROUTES } from "@/constant/routes";
-import { useTrips, TripWithMetadata } from "@/hooks/useTrips";
+import { useTrips } from "@/hooks/useTrips";
+import { TripWithMetadata } from "@/types/type";
+import { timeAgo } from "@/utils/time";
+
+// --- simple module-level cache so scroll survives unmount/remount ---
+let lastOffsetY = 0;
 
 export default function MyTripsScreen() {
   const {
@@ -28,11 +36,37 @@ export default function MyTripsScreen() {
     clearError,
   } = useTrips();
 
+  const listRef = useRef<FlatList<TripWithMetadata>>(null);
+
+  // Show any error as an alert
   useEffect(() => {
     if (error) {
       Alert.alert("Error", error, [{ text: "OK", onPress: clearError }]);
     }
   }, [error, clearError]);
+
+  // Restore scroll position and refresh metadata when screen focuses
+  useFocusEffect(
+    useCallback(() => {
+      // restore without animation to avoid jump
+      requestAnimationFrame(() => {
+        listRef.current?.scrollToOffset({
+          offset: lastOffsetY,
+          animated: false,
+        });
+      });
+      // refresh to pick up latest viewed/favorite state
+      refreshTrips();
+
+      return () => {
+        // no-op on blur
+      };
+    }, [refreshTrips]),
+  );
+
+  const onScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    lastOffsetY = e.nativeEvent.contentOffset.y || 0;
+  }, []);
 
   const formatDate = (iso?: string) => {
     if (!iso) return "";
@@ -46,7 +80,7 @@ export default function MyTripsScreen() {
 
   const handlePress = async (id: string) => {
     await markViewed(id);
-    router.push({ pathname: `/trips/review/${id}` as any });
+    router.push(`/review/${id}`);
   };
 
   const renderTripCard = ({ item }: { item: TripWithMetadata }) => {
@@ -105,7 +139,7 @@ export default function MyTripsScreen() {
 
           {item.viewedAt && (
             <Text className="text-xs text-gray-400 mt-1">
-              Last viewed: {formatDate(item.viewedAt)}
+              Viewed {timeAgo(item.viewedAt)}
             </Text>
           )}
         </View>
@@ -165,9 +199,12 @@ export default function MyTripsScreen() {
 
       {/* Trip List */}
       <FlatList
+        ref={listRef}
         data={trips}
         keyExtractor={(t) => t.id}
         renderItem={renderTripCard}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
         contentContainerStyle={{
           padding: 16,
           paddingBottom: 120,

@@ -8,35 +8,11 @@ import {
   toggleFavorite as toggleFavoriteStorage,
   markViewed as markViewedStorage,
 } from "@/utils/tripStorage";
-import { TripDraft } from "@/types/type";
+import { TripDraft, TripWithMetadata, UseTripsReturn } from "@/types/type";
 
 // keep these in sync with tripStorage.tsx
 const FAV_KEY = "@wm/favorites";
 const VIEW_KEY = "@wm/viewed";
-
-export interface TripWithMetadata extends TripDraft {
-  isFavorite?: boolean;
-  viewedAt?: string;
-  lastViewed?: string; // optional: not used now
-}
-
-interface UseTripsReturn {
-  trips: TripWithMetadata[];
-  isLoading: boolean;
-  isRefreshing: boolean;
-  error: string | null;
-  loadTrips: () => Promise<void>;
-  refreshTrips: () => Promise<void>;
-  createTrip: (draft: TripDraft) => Promise<TripDraft | null>;
-  updateTrip: (
-    id: string,
-    updates: Partial<TripDraft>,
-  ) => Promise<TripDraft | null>;
-  deleteTrip: (id: string) => Promise<boolean>;
-  toggleFavorite: (id: string) => Promise<boolean>;
-  markViewed: (id: string) => Promise<void>;
-  clearError: () => void;
-}
 
 const mergeMetadata = async (
   base: TripDraft[],
