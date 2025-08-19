@@ -24,6 +24,11 @@ import CustomButton from "@/components/common/CustomButton";
 import { addTrip } from "@/utils/tripStorage";
 import { v4 as uuidv4 } from "uuid";
 import { withLoading } from "@/utils/withLoading";
+import {
+  TripSchema,
+  toCityForValidation,
+  getZodErrorMessages,
+} from "@/validation/trip";
 
 type EditCityProps = {
   cityId: string;
@@ -125,12 +130,43 @@ export default function TripReview() {
   };
 
   const handleConfirm = () => {
+    // Keep your existing quick checks for UX
     if (!isValid) return;
     if (!tripTitle) {
       Alert.alert("Please enter a title for your trip");
       return;
     }
 
+    // Build dates for validation (global start/end = min/max over city dates)
+    const parsedCities = cities.map(toCityForValidation);
+    if (parsedCities.length === 0) {
+      Alert.alert("Please add at least one city");
+      return;
+    }
+    const globalStart = new Date(
+      Math.min(...parsedCities.map((c) => c.startDate.getTime())),
+    );
+    const globalEnd = new Date(
+      Math.max(...parsedCities.map((c) => c.endDate.getTime())),
+    );
+
+    // Validate with Zod
+    const validateResult = TripSchema.safeParse({
+      title: tripTitle,
+      startDate: globalStart,
+      endDate: globalEnd,
+      cities: parsedCities,
+    });
+
+    if (!validateResult.success) {
+      Alert.alert(
+        "Please fix these issues",
+        getZodErrorMessages(validateResult.error),
+      );
+      return;
+    }
+
+    // If we reach here, schema validation passed — proceed with your confirm flow
     Alert.alert("Confirm Trip", "Do you want to create this trip?", [
       { text: "Cancel", style: "cancel" },
       {
@@ -140,16 +176,16 @@ export default function TripReview() {
           await withLoading(
             async () => {
               const newTripId = uuidv4();
-              addTrip({
+              await addTrip({
                 id: newTripId,
                 title: tripTitle,
                 createdAt: new Date().toISOString(),
-                startDate: new Date(earliestTs).toISOString(),
-                endDate: new Date(latestTs).toISOString(),
-                cities,
+                startDate: globalStart.toISOString(),
+                endDate: globalEnd.toISOString(),
+                cities, // store original (your storage shape), not converted Dates
               });
               router.push(ROUTES.ROOT.TABS.DASHBOARD);
-              resetTrip();
+              resetTrip(); // keeps your “reopen Plan is clean” requirement
             },
             showLoading,
             hideLoading,
@@ -176,6 +212,24 @@ export default function TripReview() {
   const handleAddCity = () => {
     router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_CITY);
   };
+
+  const canSubmit = useMemo(() => {
+    if (!tripTitle || cities.length === 0) return false;
+    const parsedCities = cities.map(toCityForValidation);
+    const globalStart = new Date(
+      Math.min(...parsedCities.map((c) => c.startDate.getTime())),
+    );
+    const globalEnd = new Date(
+      Math.max(...parsedCities.map((c) => c.endDate.getTime())),
+    );
+    const res = TripSchema.safeParse({
+      title: tripTitle,
+      startDate: globalStart,
+      endDate: globalEnd,
+      cities: parsedCities,
+    });
+    return res.success;
+  }, [tripTitle, cities]);
 
   return (
     <SafeAreaView className="flex-1 mx-2 mb-3 rounded-3xl">
@@ -261,10 +315,8 @@ export default function TripReview() {
           <CustomButton
             title="Confirm"
             onPress={handleConfirm}
-            disabled={!isValid}
-            className={`rounded-xl flex-1 ml-2 ${
-              !isValid ? "bg-gray-300" : "bg-blue-500"
-            }`}
+            disabled={!canSubmit}
+            className={`rounded-xl flex-1 ml-2 ${!canSubmit ? "bg-gray-300" : "bg-blue-500"}`}
             textVariant="default"
           />
         </View>

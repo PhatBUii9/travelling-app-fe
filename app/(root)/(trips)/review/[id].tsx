@@ -18,6 +18,7 @@ import {
   useFocusEffect,
   useLocalSearchParams,
   router,
+  RelativePathString,
 } from "expo-router";
 import { ROUTES } from "@/constant/routes";
 import { timeAgo } from "@/utils/time";
@@ -181,7 +182,7 @@ export default function TripDetail() {
   };
 
   // ----- city handlers for TripCityBlock -----
-  const pushEdit = (pathname: string, cityId: string) =>
+  const pushEdit = (pathname: RelativePathString, cityId: string) =>
     router.push({
       pathname,
       params: { mode: "edit-saved", tripId: String(id), cityId },
