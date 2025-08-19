@@ -1,70 +1,83 @@
-/* eslint-disable react/display-name */
-// components/UpcomingTripCard.tsx
-import { ROUTES } from "@/constant/routes";
-import { Trip } from "@/types/type";
-import { useRouter } from "expo-router";
-import React, { useCallback } from "react";
-import {
-  useWindowDimensions,
-  TouchableOpacity,
-  View,
-  Image,
-  Text,
-} from "react-native";
+// components/card/TripPreviewCard.tsx
+import React, { useMemo } from "react";
+import { View, Text, TouchableOpacity, Image } from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { TripDraft } from "@/types/type";
 
-const TripPreviewCard = React.memo(({ trip }: { trip: Trip }) => {
-  const { id, title, dates, imageUrl } = trip;
-  const router = useRouter();
+type Props = {
+  trip: TripDraft;
+  isFavorite?: boolean; // parent controls this
+  onToggleFavorite?: () => void; // parent handles optimistic + storage
+  onPress?: () => void;
+};
 
-  const { width: SCREEN_WIDTH } = useWindowDimensions();
-  const rawWidth = SCREEN_WIDTH * 0.4;
-  const MAX_CARD = 240;
-  const cardWidth = Math.min(rawWidth, MAX_CARD);
-  const cardHeight = cardWidth * 1.1;
-  const imageHeight = cardWidth * 0.5;
+const formatRange = (start?: string, end?: string) => {
+  const fmt = (iso?: string) =>
+    iso
+      ? new Date(iso).toLocaleDateString(undefined, {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        })
+      : "";
+  if (!start || !end) return "No dates set";
+  return `${fmt(start)} - ${fmt(end)}`;
+};
 
-  const onCardPress = useCallback(() => {
-    router.push({
-      pathname: ROUTES.ROOT.TRIPS.TRIP_DETAIL,
-      params: { tripId: id },
-    });
-  }, [id, router]);
+const TripPreviewCard: React.FC<Props> = ({
+  trip,
+  isFavorite = false,
+  onToggleFavorite,
+  onPress,
+}) => {
+  const cover = useMemo(() => {
+    const c0 = trip.cities?.[0];
+    if (!c0?.imageURL) return require("@/assets/images/empty_trips.png");
+    return typeof c0.imageURL === "number" ? c0.imageURL : { uri: c0.imageURL };
+  }, [trip]);
 
   return (
     <TouchableOpacity
-      onPress={onCardPress}
-      style={{
-        width: cardWidth,
-        height: cardHeight,
-      }}
-      className="bg-gray-50 flex-none rounded-2xl shadow-md shadow-gray-200 overflow-hidden mr-3"
-      accessibilityRole="button"
-      accessibilityLabel={`Upcoming trip: ${title}`}
-      accessibilityHint={`View details for ${title}.`}
+      onPress={onPress}
+      activeOpacity={0.8}
+      className="w-64 mr-4 bg-white rounded-2xl overflow-hidden shadow"
     >
-      {/* The image container: */}
-      <Image
-        source={typeof imageUrl === "string" ? { uri: imageUrl } : imageUrl}
-        style={{
-          width: cardWidth,
-          height: imageHeight,
-        }}
-        resizeMode="cover"
-      />
+      <View className="w-full h-32">
+        <Image source={cover} className="w-full h-full" resizeMode="cover" />
+        {onToggleFavorite && (
+          <TouchableOpacity
+            onPress={(e) => {
+              e.stopPropagation();
+              onToggleFavorite();
+            }}
+            className="absolute top-2 right-2 bg-white/80 rounded-full px-2 py-1"
+            accessibilityLabel={
+              isFavorite ? "Unfavorite trip" : "Favorite trip"
+            }
+          >
+            <Icon
+              name={isFavorite ? "star" : "star-o"}
+              size={18}
+              color="#f59e0b"
+            />
+          </TouchableOpacity>
+        )}
+      </View>
 
-      {/* Text area below the image */}
-      <View className="px-4 py-2 flex-1">
-        <Text
-          className="font-JakartaSemiBold text-base text-primary-900"
-          numberOfLines={2}
-          ellipsizeMode="tail"
-        >
-          {title}
+      <View className="p-3">
+        <Text className="text-base font-JakartaBold" numberOfLines={1}>
+          {trip.title}
         </Text>
-        <Text className="mt-1 text-secondary-600 text-sm">{dates}</Text>
+        <Text className="text-xs text-gray-500" numberOfLines={1}>
+          {formatRange(trip.startDate, trip.endDate)}
+        </Text>
+        <Text className="text-xs text-gray-500 mt-1">
+          {trip.cities?.length ?? 0}{" "}
+          {trip.cities?.length === 1 ? "city" : "cities"}
+        </Text>
       </View>
     </TouchableOpacity>
   );
-});
+};
 
 export default TripPreviewCard;

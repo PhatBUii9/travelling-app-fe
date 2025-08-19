@@ -200,3 +200,62 @@ export const removeCityFromTrip = async (
   await updateTrip(tripId, updates);
   return true;
 };
+
+// ---- Favorites & Recently Viewed helpers (exports) ----
+export const getFavoriteIds = async (): Promise<Set<string>> => {
+  const raw = await AsyncStorage.getItem(FAV_KEY);
+  return new Set(raw ? (JSON.parse(raw) as string[]) : []);
+};
+
+export const isFavorite = async (id: string): Promise<boolean> => {
+  const favs = await getFavoriteIds();
+  return favs.has(id);
+};
+
+export const setFavorite = async (id: string, next: boolean): Promise<void> => {
+  const favs = await getFavoriteIds();
+  if (next) favs.add(id);
+  else favs.delete(id);
+  await AsyncStorage.setItem(FAV_KEY, JSON.stringify([...favs]));
+};
+
+/** Return all trips whose IDs are currently favorited (sorted by updatedAt desc) */
+export const getFavoriteTrips = async (): Promise<TripDraft[]> => {
+  const [all, favs] = await Promise.all([getTrips(), getFavoriteIds()]);
+  const list = all.filter((t) => favs.has(t.id));
+  // sort newest updatedAt/createdAt first
+  return list.sort((a, b) => {
+    const aT = new Date(a.updatedAt ?? a.createdAt).getTime();
+    const bT = new Date(b.updatedAt ?? b.createdAt).getTime();
+    return bT - aT;
+  });
+};
+
+// Recently viewed map: { [tripId]: ISOString }
+export const getRecentlyViewedMap = async (): Promise<
+  Record<string, string>
+> => {
+  const raw = await AsyncStorage.getItem(VIEW_KEY);
+  return raw ? (JSON.parse(raw) as Record<string, string>) : {};
+};
+
+export const getRecentlyViewedIds = async (limit = 5): Promise<string[]> => {
+  const viewed = await getRecentlyViewedMap();
+  // entries: [id, iso]
+  return Object.entries(viewed)
+    .sort((a, b) => new Date(b[1]).getTime() - new Date(a[1]).getTime())
+    .slice(0, limit)
+    .map(([id]) => id);
+};
+
+export const getRecentlyViewedTrips = async (
+  limit = 5,
+): Promise<TripDraft[]> => {
+  const [all, ids] = await Promise.all([
+    getTrips(),
+    getRecentlyViewedIds(limit),
+  ]);
+  // Keep order by ids array
+  const map = new Map(all.map((t) => [t.id, t]));
+  return ids.map((id) => map.get(id)).filter(Boolean) as TripDraft[];
+};

@@ -18,6 +18,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import TripsDebug from "@/components/debug/TripsDebug";
 import { ROUTES } from "@/constant/routes";
 import { useTrips } from "@/hooks/useTrips";
+import { useFavoritesStore } from "@/store/favoritesStore";
 import { TripWithMetadata } from "@/types/type";
 import { timeAgo } from "@/utils/time";
 
@@ -31,10 +32,14 @@ export default function MyTripsScreen() {
     isRefreshing,
     error,
     refreshTrips,
-    toggleFavorite,
     markViewed,
     clearError,
   } = useTrips();
+
+  // favorites store
+  const favIds = useFavoritesStore((s) => s.favIds);
+  const hydrateFavs = useFavoritesStore((s) => s.hydrate);
+  const toggleFav = useFavoritesStore((s) => s.toggle);
 
   const listRef = useRef<FlatList<TripWithMetadata>>(null);
 
@@ -45,23 +50,19 @@ export default function MyTripsScreen() {
     }
   }, [error, clearError]);
 
-  // Restore scroll position and refresh metadata when screen focuses
+  // Restore scroll position and refresh data when screen focuses
   useFocusEffect(
     useCallback(() => {
-      // restore without animation to avoid jump
       requestAnimationFrame(() => {
         listRef.current?.scrollToOffset({
           offset: lastOffsetY,
           animated: false,
         });
       });
-      // refresh to pick up latest viewed/favorite state
       refreshTrips();
-
-      return () => {
-        // no-op on blur
-      };
-    }, [refreshTrips]),
+      hydrateFavs(); // keep star states in sync with Dashboard
+      return () => {};
+    }, [refreshTrips, hydrateFavs]),
   );
 
   const onScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -80,7 +81,10 @@ export default function MyTripsScreen() {
 
   const handlePress = async (id: string) => {
     await markViewed(id);
-    router.push(`/review/${id}`);
+    router.push({
+      pathname: ROUTES.ROOT.TRIPS.REVIEW.DETAIL,
+      params: { id },
+    });
   };
 
   const renderTripCard = ({ item }: { item: TripWithMetadata }) => {
@@ -91,6 +95,7 @@ export default function MyTripsScreen() {
     const cityNames = item.cities.map((c: any) => c.cityName).join(", ");
     const startDate = item.startDate ? formatDate(item.startDate) : "";
     const endDate = item.endDate ? formatDate(item.endDate) : "";
+    const isFav = !!favIds[item.id];
 
     return (
       <TouchableOpacity
@@ -110,14 +115,15 @@ export default function MyTripsScreen() {
             <TouchableOpacity
               onPress={(e) => {
                 e.stopPropagation();
-                toggleFavorite(item.id);
+                // single store drives both screens
+                toggleFav(item.id);
               }}
               className="ml-2 p-1"
             >
               <Icon
-                name={item.isFavorite ? "heart" : "heart-o"}
+                name={isFav ? "star" : "star-o"}
                 size={20}
-                color={item.isFavorite ? "#EF4444" : "#9CA3AF"}
+                color="#f59e0b"
               />
             </TouchableOpacity>
           </View>
@@ -230,7 +236,7 @@ export default function MyTripsScreen() {
         <Text className="text-white text-2xl">＋</Text>
       </TouchableOpacity>
 
-      {/* Debug Tools - Remove in production */}
+      {/* Debug Tools */}
       <TripsDebug visible={__DEV__} onDataCleared={refreshTrips} />
     </SafeAreaView>
   );

@@ -15,12 +15,14 @@ export const ROUTES = {
       PROFILE: "/(root)/(tabs)/profile" as RelativePathString,
     },
     TRIPS: {
-      TRIP_DETAIL: "/(root)/(trips)/[tripId]" as RelativePathString,
+      TRIP_DETAIL: "/(root)/(trips)/[id]" as RelativePathString, // <-- matches [id].tsx
+
       TRIP_CREATE: "/(root)/(trips)/create" as RelativePathString,
       TRIP_PREVIEW: "/(root)/(trips)/preview" as RelativePathString,
       SHARED: "/(root)/(trips)/shared" as RelativePathString,
       SUGGESTED: "/(root)/(trips)/suggested" as RelativePathString,
       UPCOMING: "/(root)/(trips)/upcoming" as RelativePathString,
+
       PLAN_TRIP: {
         WIZARD_START: "/(root)/(trips)/plan-trip/" as RelativePathString,
         SELECT_CITY:
@@ -35,6 +37,10 @@ export const ROUTES = {
           "/(root)/(trips)/plan-trip/select-accommodation" as RelativePathString,
         TRIP_REVIEW:
           "/(root)/(trips)/plan-trip/trip-review" as RelativePathString,
+      },
+
+      REVIEW: {
+        DETAIL: "/(root)/(trips)/review/[id]" as RelativePathString,
       },
     },
   },
