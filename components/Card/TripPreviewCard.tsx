@@ -6,8 +6,8 @@ import { TripDraft } from "@/types/type";
 
 type Props = {
   trip: TripDraft;
-  isFavorite?: boolean; // parent controls this
-  onToggleFavorite?: () => void; // parent handles optimistic + storage
+  isFavorite?: boolean;
+  onToggleFavorite?: () => void;
   onPress?: () => void;
 };
 

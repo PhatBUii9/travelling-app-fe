@@ -1,3 +1,4 @@
+// app/(root)/(tabs)/my-trip.tsx
 import React, { useEffect, useRef, useCallback } from "react";
 import {
   SafeAreaView,
@@ -18,28 +19,16 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import TripsDebug from "@/components/debug/TripsDebug";
 import { ROUTES } from "@/constant/routes";
 import { useTrips } from "@/hooks/useTrips";
-import { useFavoritesStore } from "@/store/favoritesStore";
 import { TripWithMetadata } from "@/types/type";
 import { timeAgo } from "@/utils/time";
+import { tripsService } from "@/services/tripsService";
 
 // --- simple module-level cache so scroll survives unmount/remount ---
 let lastOffsetY = 0;
 
 export default function MyTripsScreen() {
-  const {
-    trips,
-    isLoading,
-    isRefreshing,
-    error,
-    refreshTrips,
-    markViewed,
-    clearError,
-  } = useTrips();
-
-  // favorites store
-  const favIds = useFavoritesStore((s) => s.favIds);
-  const hydrateFavs = useFavoritesStore((s) => s.hydrate);
-  const toggleFav = useFavoritesStore((s) => s.toggle);
+  const { trips, isLoading, isRefreshing, error, refreshTrips, clearError } =
+    useTrips();
 
   const listRef = useRef<FlatList<TripWithMetadata>>(null);
 
@@ -50,7 +39,7 @@ export default function MyTripsScreen() {
     }
   }, [error, clearError]);
 
-  // Restore scroll position and refresh data when screen focuses
+  // Restore scroll position and refresh metadata when screen focuses
   useFocusEffect(
     useCallback(() => {
       requestAnimationFrame(() => {
@@ -60,9 +49,8 @@ export default function MyTripsScreen() {
         });
       });
       refreshTrips();
-      hydrateFavs(); // keep star states in sync with Dashboard
       return () => {};
-    }, [refreshTrips, hydrateFavs]),
+    }, [refreshTrips]),
   );
 
   const onScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -79,12 +67,22 @@ export default function MyTripsScreen() {
     });
   };
 
+  // Use service for metadata actions so we can swap storage later
   const handlePress = async (id: string) => {
-    await markViewed(id);
+    await tripsService.markViewed(id);
     router.push({
       pathname: ROUTES.ROOT.TRIPS.REVIEW.DETAIL,
       params: { id },
     });
+  };
+
+  const handleToggleFavorite = async (id: string) => {
+    try {
+      await tripsService.toggleFavorite(id);
+    } finally {
+      // refresh list to reflect star state
+      refreshTrips();
+    }
   };
 
   const renderTripCard = ({ item }: { item: TripWithMetadata }) => {
@@ -95,7 +93,6 @@ export default function MyTripsScreen() {
     const cityNames = item.cities.map((c: any) => c.cityName).join(", ");
     const startDate = item.startDate ? formatDate(item.startDate) : "";
     const endDate = item.endDate ? formatDate(item.endDate) : "";
-    const isFav = !!favIds[item.id];
 
     return (
       <TouchableOpacity
@@ -115,13 +112,12 @@ export default function MyTripsScreen() {
             <TouchableOpacity
               onPress={(e) => {
                 e.stopPropagation();
-                // single store drives both screens
-                toggleFav(item.id);
+                handleToggleFavorite(item.id);
               }}
               className="ml-2 p-1"
             >
               <Icon
-                name={isFav ? "star" : "star-o"}
+                name={item.isFavorite ? "star" : "star-o"}
                 size={20}
                 color="#f59e0b"
               />
@@ -236,7 +232,7 @@ export default function MyTripsScreen() {
         <Text className="text-white text-2xl">＋</Text>
       </TouchableOpacity>
 
-      {/* Debug Tools */}
+      {/* Debug Tools - Remove in production */}
       <TripsDebug visible={__DEV__} onDataCleared={refreshTrips} />
     </SafeAreaView>
   );

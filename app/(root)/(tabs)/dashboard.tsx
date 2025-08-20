@@ -4,7 +4,6 @@ import { View, Text, TouchableOpacity, FlatList, Alert } from "react-native";
 import * as Location from "expo-location";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useRouter } from "expo-router";
-import { useFocusEffect } from "@react-navigation/native";
 
 import { useAuth } from "@/contexts/AuthContext";
 import ScreenContainer from "@/components/common/ScreenContainer";
@@ -13,11 +12,11 @@ import MiniMap from "@/components/trip/MiniMap";
 import TripPreviewCard from "@/components/card/TripPreviewCard";
 
 import { useUserLocationStore } from "@/store/userLocationStore";
-import { useFavoritesStore } from "@/store/favoritesStore";
 import { ROUTES } from "@/constant/routes";
 import { TripDraft } from "@/types/type";
-import { getFavoriteTrips, getRecentlyViewedTrips } from "@/utils/tripStorage";
+import { tripsService } from "@/services/tripsService";
 
+// --- Small internal components ---
 const SectionHeader = ({
   title,
   onSeeAll,
@@ -27,7 +26,7 @@ const SectionHeader = ({
 }) => (
   <View className="flex-row items-center justify-between mb-2 mt-6 px-1">
     <Text className="text-xl font-JakartaBold">{title}</Text>
-    {!!onSeeAll && (
+    {onSeeAll && (
       <TouchableOpacity onPress={onSeeAll}>
         <Text className="text-primary-600">See all</Text>
       </TouchableOpacity>
@@ -50,15 +49,11 @@ const EmptyRow = ({ message }: { message: string }) => (
 );
 
 const Dashboard: React.FC = () => {
+  // ---------- Auth / router ----------
   const { user } = useAuth();
   const router = useRouter();
 
-  // favorites store
-  const favIds = useFavoritesStore((s) => s.favIds);
-  const hydrateFavs = useFavoritesStore((s) => s.hydrate);
-  const toggleFav = useFavoritesStore((s) => s.toggle);
-
-  // location store
+  // ---------- Location store ----------
   const setUserLocation = useUserLocationStore((s) => s.setUserLocation);
   const setDestination = useUserLocationStore((s) => s.setDestination);
   const userLat = useUserLocationStore((s) => s.userLat);
@@ -66,11 +61,14 @@ const Dashboard: React.FC = () => {
   const destLat = useUserLocationStore((s) => s.destLat);
   const destLng = useUserLocationStore((s) => s.destLng);
 
+  // ---------- Local UI state ----------
   const [hasPermissions, setHasPermissions] = useState(false);
   const [loading, setLoading] = useState(true);
   const [favorites, setFavorites] = useState<TripDraft[]>([]);
   const [recent, setRecent] = useState<TripDraft[]>([]);
+  const [favIds, setFavIds] = useState<Record<string, boolean>>({});
 
+  // ---------- Map region ----------
   const defaultRegion = useMemo(
     () => ({
       latitude: -37.8098,
@@ -91,6 +89,7 @@ const Dashboard: React.FC = () => {
     return defaultRegion;
   }, [defaultRegion, destLat, destLng, hasPermissions, userLat, userLng]);
 
+  // ---------- Ask for device location once ----------
   useEffect(() => {
     (async () => {
       try {
@@ -108,6 +107,7 @@ const Dashboard: React.FC = () => {
     })();
   }, [setUserLocation]);
 
+  // ---------- Search handler ----------
   const onPickLocation = useCallback(
     async (query: string) => {
       try {
@@ -117,54 +117,69 @@ const Dashboard: React.FC = () => {
         } else {
           Alert.alert("No results", "Couldn't find that address.");
         }
-      } catch {
+      } catch (e) {
         Alert.alert("Error", "Failed to look up location.");
       }
     },
     [setDestination],
   );
 
+  // ---------- Navigation helpers ----------
   const goTrip = (id: string) =>
-    router.push({ pathname: ROUTES.ROOT.TRIPS.REVIEW.DETAIL, params: { id } });
+    router.push({
+      pathname: ROUTES.ROOT.TRIPS.REVIEW.DETAIL,
+      params: { id },
+    });
 
+  // ---------- Load dashboard data via service ----------
   const load = useCallback(async () => {
     setLoading(true);
+
     const [favTrips, recentTrips] = await Promise.all([
-      getFavoriteTrips(),
-      getRecentlyViewedTrips(5),
+      tripsService.favorites(5),
+      tripsService.recentlyViewed(5),
     ]);
-    setFavorites(favTrips.slice(0, 5));
+
+    // build fav map for instant UI
+    const map: Record<string, boolean> = {};
+    await Promise.all(
+      favTrips.map(async (t) => {
+        map[t.id] = await tripsService.isFavorite(t.id);
+      }),
+    );
+
+    setFavorites(favTrips);
     setRecent(recentTrips);
+    setFavIds(map);
     setLoading(false);
   }, []);
 
-  // initial mount
   useEffect(() => {
     load();
-    hydrateFavs();
-  }, [load, hydrateFavs]);
+  }, [load]);
 
-  // when favIds change (from any screen), re-pull favorites list
-  useEffect(() => {
-    (async () => {
-      const favTrips = await getFavoriteTrips();
-      setFavorites(favTrips.slice(0, 5));
-    })();
-  }, [favIds]);
-
-  // also refresh when this tab regains focus
-  useFocusEffect(
-    useCallback(() => {
-      hydrateFavs();
-      load();
-      return () => {};
-    }, [hydrateFavs, load]),
-  );
+  // ---------- Optimistic favorite toggle via service ----------
+  const onToggleFavorite = useCallback(async (trip: TripDraft) => {
+    // optimistic
+    setFavIds((prev) => ({ ...prev, [trip.id]: !prev[trip.id] }));
+    try {
+      await tripsService.toggleFavorite(trip.id);
+      const nextFavs = await tripsService.favorites(5);
+      setFavorites(nextFavs);
+      setFavIds((prev) => ({
+        ...prev,
+        [trip.id]: !!nextFavs.find((t) => t.id === trip.id),
+      }));
+    } catch {
+      // revert
+      setFavIds((prev) => ({ ...prev, [trip.id]: !prev[trip.id] }));
+    }
+  }, []);
 
   return (
     <View className="flex-1 relative">
       <ScreenContainer scrollable>
-        {/* Header / Search / Map (unchanged) */}
+        {/* ====== KEEP: Header / Search / Map ====== */}
         <View className="justify-center items-center mb-4">
           <Text className="text-3xl font-JakartaSemiBold">
             Welcome back, {user?.username ?? "traveler"} 👋
@@ -180,11 +195,12 @@ const Dashboard: React.FC = () => {
         <Text className="text-xl font-JakartaBold mt-5 mb-2">
           Your Current Location
         </Text>
+
         <View className="h-[200px] mb-6">
           <MiniMap region={mapRegion} />
         </View>
 
-        {/* Favorites */}
+        {/* ====== Favorites ====== */}
         <SectionHeader title="Favorites" />
         {loading ? (
           <SkeletonRow />
@@ -197,19 +213,18 @@ const Dashboard: React.FC = () => {
             keyExtractor={(t) => t.id}
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingVertical: 4 }}
-            extraData={favIds}
             renderItem={({ item }) => (
               <TripPreviewCard
                 trip={item}
                 isFavorite={!!favIds[item.id]}
-                onToggleFavorite={() => toggleFav(item.id)}
+                onToggleFavorite={() => onToggleFavorite(item)}
                 onPress={() => goTrip(item.id)}
               />
             )}
           />
         )}
 
-        {/* Recently Viewed */}
+        {/* ====== Recently Viewed ====== */}
         <SectionHeader title="Recently Viewed" />
         {loading ? (
           <SkeletonRow />
@@ -222,12 +237,11 @@ const Dashboard: React.FC = () => {
             keyExtractor={(t) => t.id}
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingVertical: 4 }}
-            extraData={favIds}
             renderItem={({ item }) => (
               <TripPreviewCard
                 trip={item}
                 isFavorite={!!favIds[item.id]}
-                onToggleFavorite={() => toggleFav(item.id)}
+                onToggleFavorite={() => onToggleFavorite(item)}
                 onPress={() => goTrip(item.id)}
               />
             )}
@@ -235,7 +249,7 @@ const Dashboard: React.FC = () => {
         )}
       </ScreenContainer>
 
-      {/* FAB */}
+      {/* FAB: Create Trip */}
       <TouchableOpacity
         onPress={() => router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.WIZARD_START)}
         className="bg-primary-500 rounded-full w-16 h-16 justify-center items-center absolute bottom-6 right-6 shadow-lg shadow-gray-200"
