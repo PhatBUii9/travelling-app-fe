@@ -2,74 +2,133 @@ import TripSelectionScreen from "@/components/screen/TripSelectionScreen";
 import ActivitiesCard from "@/components/card/ActivitiesCard";
 import { ROUTES } from "@/constant/routes";
 import { useTripPlanner } from "@/hooks/useTripPlanner";
-import { useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
+import { useEffect, useMemo, useState } from "react";
+import {
+  getTripById,
+  updateTrip as updateTripStorage,
+} from "@/utils/tripStorage";
 import { mockActivities } from "@/data/mockActivities";
+import type { CityBlock, TripDraft } from "@/types/type";
+
+type Params = {
+  cityId?: string | string[];
+  options?: string; // "create" in planner flow
+  mode?: string; // "edit-saved" when editing a persisted trip
+  tripId?: string | string[]; // saved trip id
+};
 
 const SelectActivitiesScreen = () => {
   const { cities, setCurrentCity, updateCity } = useTripPlanner();
-  const { cityId: rawCityId, options } = useLocalSearchParams();
+  const {
+    cityId: rawCityId,
+    options,
+    mode,
+    tripId: rawTripId,
+  } = useLocalSearchParams<Params>();
 
-  // Always extract string from cityId param (may be array)
-  const cityId = Array.isArray(rawCityId) ? rawCityId[0] : rawCityId;
+  const cityId = useMemo(
+    () => (Array.isArray(rawCityId) ? rawCityId[0] : rawCityId) ?? "",
+    [rawCityId],
+  );
+  const tripId = useMemo(
+    () => (Array.isArray(rawTripId) ? rawTripId[0] : rawTripId) ?? "",
+    [rawTripId],
+  );
+  const isEditingSaved = mode === "edit-saved";
 
-  // Always get the correct city by cityId param
-  const current = cities.find((c) => c.cityId === cityId);
+  const currentPlanner = cities.find((c) => c.cityId === cityId);
 
-  // Local selection state
   const [selectedIds, setSelectedIds] = useState<string[]>(
-    current?.activities ?? [],
+    currentPlanner?.activities ?? [],
   );
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // Only set current city if needed (avoids loops)
+  // Prefill selection & keep planner context current city when needed
   useEffect(() => {
-    if (cityId && current?.cityId !== cityId) {
-      setCurrentCity(cityId);
-    }
-    // Only depends on cityId, not current?.activities!
+    (async () => {
+      if (isEditingSaved && tripId && cityId) {
+        const trip = await getTripById(tripId);
+        const city = trip?.cities?.find((c) => c.cityId === cityId);
+        setSelectedIds((city?.activities as string[]) ?? []);
+      } else {
+        setSelectedIds(currentPlanner?.activities ?? []);
+        if (cityId && currentPlanner?.cityId !== cityId) {
+          setCurrentCity(cityId);
+        }
+      }
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cityId]);
+  }, [isEditingSaved, tripId, cityId, currentPlanner?.activities]);
 
-  // Only update local state when activities array changes
-  useEffect(() => {
-    setSelectedIds(current?.activities ?? []);
-  }, [current?.activities]);
-
+  // Loading shimmer on search/city change
   useEffect(() => {
     setIsLoading(true);
-    const timer = setTimeout(() => setIsLoading(false), 700);
-    return () => clearTimeout(timer);
+    const t = setTimeout(() => setIsLoading(false), 700);
+    return () => clearTimeout(t);
   }, [cityId, searchTerm]);
 
-  const data = mockActivities.filter(
-    (activity) =>
-      activity.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      activity.cityId === cityId,
+  const data = useMemo(
+    () =>
+      mockActivities.filter(
+        (a) =>
+          a.cityId === cityId &&
+          a.name.toLowerCase().includes(searchTerm.toLowerCase()),
+      ),
+    [cityId, searchTerm],
   );
 
-  const handleContinue = () => {
-    if (!cityId || selectedIds.length === 0) return;
-    updateCity(cityId, { activities: selectedIds });
-    if (options !== "create") {
-      router.push(ROUTES.ROOT.TRIPS.PLAN_TRIP.TRIP_REVIEW);
-    } else {
-      router.push({
-        pathname: ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_DATES,
-        params: { cityId, options },
-      });
-    }
+  // ---- edit-saved: save to storage then replace -> Dates ----
+  const saveAndGoNextSavedTrip = async (newActivityIds: string[]) => {
+    if (!tripId || !cityId) return;
+    const trip = await getTripById(tripId);
+    if (!trip) return;
+
+    const nextCities: CityBlock[] = (trip.cities || []).map((c) =>
+      c.cityId === cityId ? { ...c, activities: newActivityIds } : c,
+    );
+
+    await updateTripStorage(tripId, {
+      cities: nextCities,
+      updatedAt: new Date().toISOString(),
+    } as Partial<TripDraft>);
+
+    router.replace({
+      pathname: ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_DATES,
+      params: { mode: "edit-saved", tripId, cityId },
+    });
   };
 
-  if (!current) return null;
+  const handleContinue = async () => {
+    if (!cityId || selectedIds.length === 0) return;
+
+    if (isEditingSaved) {
+      await saveAndGoNextSavedTrip(selectedIds);
+      return;
+    }
+
+    // ---- planner flow: update context then push -> Dates ----
+    updateCity(cityId, { activities: selectedIds });
+    router.push({
+      pathname: ROUTES.ROOT.TRIPS.PLAN_TRIP.SELECT_DATES,
+      params: { cityId, options: "create" },
+    });
+  };
+
+  // In planner mode, guard against missing city in context
+  if (!isEditingSaved && !currentPlanner) return null;
 
   return (
     <TripSelectionScreen
       currentStep={3}
       totalStep={6}
       title="Select Activities"
-      subtitle="Choose from these points of interest to visit during your trip."
+      subtitle={
+        isEditingSaved
+          ? "Choose activities to add (optional)"
+          : "Choose from these points of interest to visit during your trip."
+      }
       sectionTitle="Popular Activities"
       searchTerm={searchTerm}
       onSearchTermChange={setSearchTerm}
@@ -77,6 +136,11 @@ const SelectActivitiesScreen = () => {
       selectedIds={selectedIds}
       onContinue={handleContinue}
       isLoading={isLoading}
+      error={
+        selectedIds.length === 0
+          ? "Please select an option to continue."
+          : undefined
+      }
       renderItem={({ item }: { item: any }) => (
         <ActivitiesCard
           id={item.id}
@@ -93,11 +157,6 @@ const SelectActivitiesScreen = () => {
           }
         />
       )}
-      error={
-        selectedIds.length === 0
-          ? "Please select an option to continue."
-          : undefined
-      }
     />
   );
 };

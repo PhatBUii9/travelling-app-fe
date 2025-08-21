@@ -478,7 +478,7 @@ type TripCityBlockProps = {
     cityId: string;
     type: "activity" | "restaurant" | "accommodation" | "date";
   }) => void;
-  onDelete: () => void;
+  onDelete: (cityId: string) => void;
   expanded?: boolean;
   onToggleExpand?: () => void;
 };
@@ -491,3 +491,44 @@ type SectionProps = {
   onEdit: () => void;
   isListEmpty: boolean;
 };
+
+interface TripTitleEditModalProps {
+  visible: boolean;
+  initialTitle: string;
+  onSave: (newTitle: string) => void;
+  onCancel: () => void;
+}
+
+type TripDraft = {
+  id: string;
+  title: string;
+  createdAt: string;
+  updatedAt?: string;
+  startDate: string;
+  endDate: string;
+  cities: CityBlock[];
+};
+
+export interface TripWithMetadata extends TripDraft {
+  isFavorite?: boolean;
+  viewedAt?: string;
+  lastViewed?: string;
+}
+
+interface UseTripsReturn {
+  trips: TripWithMetadata[];
+  isLoading: boolean;
+  isRefreshing: boolean;
+  error: string | null;
+  loadTrips: () => Promise<void>;
+  refreshTrips: () => Promise<void>;
+  createTrip: (draft: TripDraft) => Promise<TripDraft | null>;
+  updateTrip: (
+    id: string,
+    updates: Partial<TripDraft>,
+  ) => Promise<TripDraft | null>;
+  deleteTrip: (id: string) => Promise<boolean>;
+  toggleFavorite: (id: string) => Promise<boolean>;
+  markViewed: (id: string) => Promise<void>;
+  clearError: () => void;
+}

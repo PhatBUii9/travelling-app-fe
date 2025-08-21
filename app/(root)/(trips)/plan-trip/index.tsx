@@ -7,7 +7,6 @@ import {
 } from "react-native";
 import ScreenContainer from "@/components/common/ScreenContainer";
 import { images } from "@/constant";
-import CustomButton from "@/components/common/CustomButton";
 import { useState } from "react";
 import { Dimensions } from "react-native";
 import ProgressBar from "@/components/common/PorgressBar";

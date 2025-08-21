@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import CustomButton from "@/components/common/CustomButton";
 import InputField from "@/components/common/InputField";
-import { Link, RelativePathString, useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { IFormInputs } from "@/types/type";
 import validationRules from "@/utils/validationRules";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -50,7 +50,7 @@ const SignIn = () => {
         router.push(ROUTES.ROOT.TABS.DASHBOARD);
       },
       showLoading,
-      hideLoading
+      hideLoading,
     );
 
     // await withLoading(

@@ -14,6 +14,12 @@ function formatDate(date: Date) {
   });
 }
 
+// >>> helper: accept require() numbers or url strings
+const imgSrc = (img?: any) => {
+  if (!img) return undefined;
+  return typeof img === "number" ? img : { uri: String(img) };
+};
+
 const Divider = () => (
   <View className="h-1 w-full bg-gray-100 rounded-full my-2" />
 );
@@ -68,25 +74,25 @@ const TripCityBlock = ({
 }: TripCityBlockProps) => {
   const fullActivities = activities
     .map((id) => mockActivities.find((a) => a.id === id))
-    .filter(Boolean);
+    .filter(Boolean) as any[];
 
   const fullRestaurants = (restaurants ?? [])
     .map((id) => mockRestaurants.find((a) => a.id === id))
-    .filter(Boolean);
+    .filter(Boolean) as any[];
 
   const fullAccommodations = (accommodations ?? [])
     .map((id) => mockAccommodations.find((a) => a.id === id))
-    .filter(Boolean);
+    .filter(Boolean) as any[];
 
   return (
-    <View className="bg-white px-5 py-5 rounded-3xl mb-4">
+    <View className="bg-white px-5 py-5 rounded-3xl mb-4 shadow-md">
       <TouchableOpacity
         className="flex-row items-center justify-between mb-1"
         onPress={onToggleExpand}
         activeOpacity={onToggleExpand ? 0.7 : 1}
       >
         <View className="flex-row items-end">
-          <Text className="text-heading-md font-JakartaBold mr-3">
+          <Text className="text-heading-sm font-JakartaBold mr-2">
             {cityName}
           </Text>
           <Text className="text-base font-JakartaSemiBold text-secondary-500">
@@ -102,7 +108,8 @@ const TripCityBlock = ({
           />
         )}
       </TouchableOpacity>
-      <View className="flex-row items-end justify-between mb-5">
+
+      <View className="flex-row items-center justify-between mb-5">
         <View className="flex-row items-center">
           <Text className="text-md font-JakartaSemiBold text-secondary-600 mr-5">
             {formatDate(startDate)} - {formatDate(endDate)}
@@ -111,17 +118,20 @@ const TripCityBlock = ({
             onPress={() => onEdit({ cityId, type: "date" })}
             accessibilityLabel="Edit date"
           >
-            <Icon name="edit" size={16} color="#000" />
+            <Icon name="edit" size={20} color="#000" />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={onDelete} accessibilityLabel="Remove city">
+        <TouchableOpacity
+          onPress={() => onDelete(cityId)}
+          accessibilityLabel="Remove city"
+        >
           <Icon name="trash" size={24} color="#FF0000" />
         </TouchableOpacity>
       </View>
 
-      {/* Render sections only if expanded, or always if not using accordion */}
       {expanded !== false && (
         <>
+          {/* Activities */}
           <Section
             title="Activities"
             data={fullActivities}
@@ -133,9 +143,9 @@ const TripCityBlock = ({
                 key={item.id}
                 className="flex-row items-center p-2 bg-gray-50 rounded-xl mb-1"
               >
-                {!!item.image ? (
+                {imgSrc(item.image) ? (
                   <Image
-                    source={item.image}
+                    source={imgSrc(item.image)}
                     className="w-10 h-10 rounded-md mr-3 ml-2"
                   />
                 ) : (
@@ -152,12 +162,7 @@ const TripCityBlock = ({
                     {item.name}
                   </Text>
                   <View className="flex-row items-center">
-                    <Icon
-                      name="tag"
-                      size={12}
-                      color="#0286FF"
-                      testID="category-icon"
-                    />
+                    <Icon name="tag" size={12} color="#0286FF" />
                     <Text className="text-xs font-JakartaMedium text-secondary-600 ml-1">
                       {item.category}
                     </Text>
@@ -168,6 +173,7 @@ const TripCityBlock = ({
           />
           <Divider />
 
+          {/* Restaurants */}
           <Section
             title="Restaurants"
             data={fullRestaurants}
@@ -179,9 +185,9 @@ const TripCityBlock = ({
                 key={item.id}
                 className="flex-row items-center p-2 bg-gray-50 rounded-xl mb-1"
               >
-                {!!item.image ? (
+                {imgSrc(item.image) ? (
                   <Image
-                    source={item.image}
+                    source={imgSrc(item.image)}
                     className="w-10 h-10 rounded-md mr-3 ml-2"
                   />
                 ) : (
@@ -202,12 +208,7 @@ const TripCityBlock = ({
                       <Text className="text-xs font-JakartaMedium text-secondary-600 mr-1">
                         {item.rating}
                       </Text>
-                      <Icon
-                        name="star"
-                        size={14}
-                        color="#22C55E"
-                        testID="rating-icon"
-                      />
+                      <Icon name="star" size={14} color="#22C55E" />
                     </View>
                     <View className="flex-row items-center">
                       <MaterialIcon name="food-bank" size={16} color="#000" />
@@ -222,6 +223,7 @@ const TripCityBlock = ({
           />
           <Divider />
 
+          {/* Accommodations */}
           <Section
             title="Accommodations"
             data={fullAccommodations}
@@ -233,9 +235,9 @@ const TripCityBlock = ({
                 key={item.id}
                 className="flex-row items-center p-2 bg-gray-50 rounded-xl mb-1"
               >
-                {!!item.image ? (
+                {imgSrc(item.image) ? (
                   <Image
-                    source={item.image}
+                    source={imgSrc(item.image)}
                     className="w-10 h-10 rounded-md mr-3 ml-2"
                   />
                 ) : (
@@ -256,12 +258,7 @@ const TripCityBlock = ({
                       <Text className="text-xs font-JakartaMedium text-secondary-600 mr-1">
                         {item.rating}
                       </Text>
-                      <Icon
-                        name="star"
-                        size={14}
-                        color="#22C55E"
-                        testID="rating-icon"
-                      />
+                      <Icon name="star" size={14} color="#22C55E" />
                     </View>
                     <Text className="text-xs font-JakartaSemiBold text-secondary-600 mr-3">
                       ${item.pricePerNight}/night

@@ -2,10 +2,10 @@ import { mockTrips } from "@/data/mockTrip";
 import { Trip, UseTripsOptions, UseTripsResult } from "@/types/type";
 import { useState, useEffect, useCallback } from "react";
 
-function useTrips({
+const useTrips = ({
   filter,
   simulateError = false,
-}: UseTripsOptions): UseTripsResult {
+}: UseTripsOptions): UseTripsResult => {
   const [data, setData] = useState<Trip[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
@@ -56,5 +56,5 @@ function useTrips({
   }, [refetch]);
 
   return { data, isLoading, isError, isEmpty, refetch };
-}
+};
 export default useTrips;

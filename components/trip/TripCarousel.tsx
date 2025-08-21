@@ -5,7 +5,7 @@ import { View, FlatList } from "react-native";
 import SectionHeader from "@/components/common/SectionHeader";
 import LoadingSkeleton from "@/components/common/LoadingSkeleton";
 import EmptyStateCard from "@/components/card/EmptyStateCard";
-import useTrips from "@/hooks/useTrips";
+import useTrips from "@/hooks/useMockTrips";
 import { TripCarouselProps } from "@/types/type";
 
 const TripCarousel: React.FC<TripCarouselProps> = React.memo(
