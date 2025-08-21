@@ -2,6 +2,17 @@ import { EmailOTPRequest, IFormInputs } from "@/types/type";
 
 const BASE_URL = "http://10.0.2.2:8080/The-Project/public/api";
 
+export type ChangePasswordInput = {
+  token?: string | null; // auth token if you have one
+  currentPassword: string;
+  newPassword: string;
+};
+
+export type ChangePasswordResult = {
+  ok: boolean;
+  message?: string;
+};
+
 /**
  * Register a user via POST
  */
@@ -146,4 +157,22 @@ export async function verifyOTP(data: IFormInputs) {
     console.error("Validating OTP Error:", error?.message || error);
     throw new Error(error?.message || "Validating OTP Failed");
   }
+}
+
+export async function changePassword({
+  token,
+  currentPassword,
+  newPassword,
+}: ChangePasswordInput): Promise<ChangePasswordResult> {
+  // TODO: swap to real API call (fetch/axios) later
+  await new Promise((r) => setTimeout(r, 700)); // simulate latency
+
+  // Demo-stub behavior:
+  // - "wrongpass" fails to mimic incorrect current password
+  if (currentPassword === "wrongpass") {
+    return { ok: false, message: "Current password is incorrect." };
+  }
+
+  // - otherwise accept
+  return { ok: true };
 }
